@@ -1,0 +1,24 @@
+git checkout -b develop 
+
+
+
+to merge the code from any sub-branch of develop -> develop
+
+1)git checkout testing/check-functionality
+	by this ,u will be in the testing/check-functionality branch
+2)git add -> git commit->git push
+
+3)then go to the link which is mentioned in the git bash , after commiting.
+4)then go to compare and  pull request, then select the src and destination to merge.
+
+by this develop is updated
+
+//to get the latest code to the local pc from remote git
+1) go to develop branch
+2)then use git pull 
+
+
+
+//to get the code from develop to sub branches of develop
+git merge develop
+
