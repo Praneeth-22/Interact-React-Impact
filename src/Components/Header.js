@@ -3,7 +3,7 @@ import React from 'react'
 function Header() {
   return (
     <div>
-      <p>Header Rohith J</p>
+      <p>Header Rashmitha R</p>
     </div>
   )
 }
