@@ -1,11 +1,11 @@
 import React from 'react'
 
-function Main() {
+function Chat() {
   return (
     <div>
-      <p>main</p>
+      
     </div>
   )
 }
 
-export default Main
+export default Chat
