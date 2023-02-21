@@ -4,6 +4,7 @@ function Home() {
   return (
     <div>
       <p>Home</p>
+      <p>added stmt</p>
     </div>
   )
 }
