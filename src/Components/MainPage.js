@@ -8,7 +8,7 @@ function MainPage() {
   const [openModel, setOpenModel] = useState(false);
   return (
     <Container>
-     
+    <Caterogy setOpenModel={setOpenModel} />
     </Container>
   );
 }
