@@ -1,6 +1,6 @@
 import React from "react";
-import Header from "./Header"
-// import Home from "./Home";
+import Header from "./Header";
+import Home from "./Home";
 import Caterogy from "./Caterogy";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
@@ -18,7 +18,7 @@ function MainPage() {
             click
           </button>
           <Header />
-          {/* <Home /> */}
+          <Home />
         </>
       )}
     </Container>
