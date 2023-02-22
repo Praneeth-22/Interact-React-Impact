@@ -1,7 +1,7 @@
 import React from "react";
 import "../Chat/style.css";
 import Sidebar from "./Sidebar";
-
+import Chatdata from "./Chat";
 
 function Chat() {
   return (
@@ -9,7 +9,7 @@ function Chat() {
       <h1> Students Interaction</h1>
       <div className="ui-body">
         <Sidebar />
-       
+        <Chatdata />
       </div>
     </div>
   );
