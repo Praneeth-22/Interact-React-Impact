@@ -2,7 +2,7 @@ import React from "react";
 import "./loginpage.css";
 import photo from "./img/finallogo.jpg";
 import { Link } from "react-router-dom";
-// import ChatBot from "../ChatBot";
+import ChatBot from "../ChatBot";
 import google from "./img/google.svg";
 import { useNavigate } from "react-router-dom";
 function SignUp() {
@@ -94,7 +94,7 @@ function SignUp() {
           </form>
         </div>
       </div>
-      {/* <ChatBot /> */}
+      <ChatBot />
     </div>
   );
 }

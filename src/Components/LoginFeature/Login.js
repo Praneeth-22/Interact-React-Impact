@@ -3,8 +3,8 @@ import './loginpage.css'
 import { useNavigate } from "react-router-dom";
 import photo from './img/finallogo.jpg'
 import { Link } from "react-router-dom";
-
 import google from './img/google.svg'
+import ChatBot from "../ChatBot";
 
 function Login() {
   const navigate = useNavigate();
@@ -76,7 +76,7 @@ function Login() {
           </form>
         </div>
       </div>
-      {/* <ChatBot /> */}
+      <ChatBot />
     </div>
   );
 }
