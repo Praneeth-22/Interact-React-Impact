@@ -1,17 +1,27 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import styled from "styled-components";
-import downCcon from '../images/down-icon.svg'
-import navHome from '../images/nav-home.svg'
-import user from '../images/user.svg'
-
+import downCcon from "../images/down-icon.svg";
+import navHome from "../images/nav-home.svg";
+import user from "../images/user.svg";
+import logo2 from "../images/logo/logo2.jpg";
+import ChatIcon from "@mui/icons-material/Chat";
+import { useNavigate } from "react-router-dom";
+// import Chat from "./Chat/Chatpage";
 function Header() {
+  const navigate = useNavigate();
+  const loggedOut = () => {
+    navigate("/");
+  };
+  const chatpageRoute = () => {
+    // navigate("/Chat");
+  };
   return (
     <Container>
       <Elements>
         <Logo>
           <a href="/home">
-            <img src="" alt="logo" />
+            <img src={logo2} alt="logo" />
           </a>
         </Logo>
         <Nav>
@@ -20,13 +30,19 @@ function Header() {
               <img src={navHome} alt="" />
               <span>Home</span>
             </a>
+            <a href="/chat">
+              <ChatIcon />
+              <spam style={{ color: "black" }} onClick={chatpageRoute}>
+                Connect
+              </spam>
+            </a>
           </NavList>
           <User>
             <a>
               {/* {props.user && props.user.photoURL ? ( */}
-                {/* <img src={user} alt="" /> */}
+              {/* <img src={user} alt="" /> */}
               {/* ) : ( */}
-                <img src={user} alt="" />
+              <img src={user} alt="" />
               {/* )} */}
               <span>
                 Me
@@ -36,7 +52,7 @@ function Header() {
 
             {/* <SignOut onClick={() => props.signOut()}> */}
             <SignOut>
-              <a>Sign Out</a>
+              <a onClick={loggedOut}>Sign Out</a>
             </SignOut>
           </User>
         </Nav>
