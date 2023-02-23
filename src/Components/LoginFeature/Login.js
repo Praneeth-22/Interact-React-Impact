@@ -1,9 +1,9 @@
-import React from 'react'
-import './loginpage.css'
+import React from "react";
+import "./loginpage.css";
 import { useNavigate } from "react-router-dom";
-import photo from './img/finallogo.jpg'
+import photo from "./img/finallogo.jpg";
 import { Link } from "react-router-dom";
-import google from './img/google.svg'
+import google from "./img/google.svg";
 import ChatBot from "../ChatBot";
 
 function Login() {
@@ -11,7 +11,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     navigate("/home");
-  }
+  };
   return (
     <div className="loginpage">
       <nav className="navbar navbar-expand-lg navbar-light  fixed-top">
@@ -83,4 +83,4 @@ function Login() {
   );
 }
 
-export default Login
+export default Login;

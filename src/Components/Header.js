@@ -32,9 +32,9 @@ function Header() {
             </a>
             <a href="/chat">
               <ChatIcon />
-              <spam style={{ color: "black" }} onClick={chatpageRoute}>
+              <span style={{ color: "black" }} onClick={chatpageRoute}>
                 Connect
-              </spam>
+              </span>
             </a>
           </NavList>
           <User>

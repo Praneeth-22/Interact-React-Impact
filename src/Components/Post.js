@@ -7,19 +7,21 @@ import user from "../images/user.svg";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import NotesOutlinedIcon from "@mui/icons-material/NotesOutlined";
 function Post(props) {
+  const { isOpen, setIsOpen } = props;
   const [text, setText] = useState("");
-  const reset = (e) => {
-    setText("");
-    props.handleClick(e);
-  };
+  console.log("at posts-->props :", props);
   return (
     <>
-      {props.showModal === "open" && (
+      {isOpen && (
         <Container>
           <Content>
             <Header>
               <h2>Create a Post</h2>
-              <button onClick={(e) => reset(e)}>
+              <button
+                onClick={(e) => {
+                  setIsOpen(false);
+                }}
+              >
                 <CloseIcon className="close" />
               </button>
             </Header>

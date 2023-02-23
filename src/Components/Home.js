@@ -24,26 +24,14 @@ import Post from "./Post";
 
 function Home(props) {
   const navigate = useNavigate();
-  const [showModel, setShowModel] = useState("close");
+  const [isOpen , setIsOpen] = useState(false);
 
   const [value, setValue] = useState(3);
   const handleClick = (e) => {
     e.preventDefault();
     console.log("clicked");
-    if (e.target !== e.currentTarget) {
-      return;
-    }
-    switch (showModel) {
-      case "open":
-        setShowModel("close");
-        break;
-      case "close":
-        setShowModel("open");
-        break;
-      default:
-        setShowModel("close");
-        break;
-    }
+    setIsOpen(true)
+
   };
   return (
     <Container>
@@ -241,8 +229,8 @@ function Home(props) {
             </SocialActions>
           </Article>
         </div>
-        {console.log(showModel)}
-        <Post showModel={showModel} handleClick={handleClick} />
+      
+        <Post isOpen={isOpen} setIsOpen={setIsOpen} />
       </HomeContainer>
     </Container>
   );
