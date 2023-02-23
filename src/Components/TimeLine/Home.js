@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import user from "../images/user.svg";
+// import user from '../Components/images/user.svg'
 import EventIcon from "@mui/icons-material/Event";
 import ArticleIcon from "@mui/icons-material/Article";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import demopost from "../images/demoimg.jpg";
+import demopost from './../../images/demoimg.jpg'
 import Rating from "@mui/material/Rating";
 import CommentIcon from "@mui/icons-material/Comment";
 import StarIcon from "@mui/icons-material/Star";
@@ -18,9 +18,12 @@ import CelebrationIcon from "@mui/icons-material/Celebration";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Container from "react-bootstrap/Container";
-import demo2 from "../images/demo2.jpg";
+import demo2 from "./../../images/demo2.jpg";
+// import demo2 from "../images/demo2.jpg";
 import { useNavigate } from "react-router-dom";
 import Post from "./Post";
+import { faker } from "@faker-js/faker";
+import DemoPost from "./DemoPost";
 
 function Home(props) {
   const navigate = useNavigate();
@@ -81,7 +84,7 @@ function Home(props) {
         </Category>
         <ShareBox>
           <div>
-            <img src={user} alt="user" />
+            <img src={faker.image.avatar()} alt="user" />
             <button onClick={handleClick}>Start a post</button>
           </div>
           <div>
@@ -100,134 +103,8 @@ function Home(props) {
           </div>
         </ShareBox>
         <div>
-          <Article>
-            <SharedActor>
-              <a>
-                <img src={user} alt="user" />
-                <div>
-                  <span>Title</span>
-                  <span>Info</span>
-                  <span>Date</span>
-                </div>
-              </a>
-              <button>
-                <MoreHorizIcon />
-              </button>
-            </SharedActor>
-            <Description>Welcome to Ualbany </Description>
-            <SharedImg>
-              <a>
-                <img src={demopost} alt="demo" />
-              </a>
-            </SharedImg>
-            <SocialCounts>
-              <li>
-                <button>
-                  <Rating
-                    name="text-feedback"
-                    value={value}
-                    readOnly
-                    precision={0.5}
-                    emptyIcon={
-                      <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
-                    }
-                  />
-                  <span>{value}</span>
-                </button>
-              </li>
-              <li>
-                <a>
-                  2 <CommentIcon />{" "}
-                </a>
-              </li>
-            </SocialCounts>
-            <SocialActions>
-              <button>
-                <Rating
-                  name="half-rating"
-                  defaultValue={2.5}
-                  precision={0.5}
-                  value={value}
-                  onChange={(event, newValue) => {
-                    setValue(newValue);
-                  }}
-                />
-                <span>Rate</span>
-              </button>
-              <button>
-                <CommentIcon />
-                <span>Comment</span>
-              </button>
-              <button>
-                <ShareOutlinedIcon />
-                <span>Share</span>
-              </button>
-            </SocialActions>
-          </Article>
-          <Article>
-            <SharedActor>
-              <a>
-                <img src={user} alt="user" />
-                <div>
-                  <span>Title</span>
-                  <span>Info</span>
-                  <span>Date</span>
-                </div>
-              </a>
-              <button>
-                <MoreHorizIcon />
-              </button>
-            </SharedActor>
-            <Description>First post </Description>
-            <SharedImg>
-              <a>
-                <img src={demo2} alt="demo2" />
-              </a>
-            </SharedImg>
-            <SocialCounts>
-              <li>
-                <button>
-                  <Rating
-                    name="text-feedback"
-                    value={value}
-                    readOnly
-                    precision={0.5}
-                    emptyIcon={
-                      <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
-                    }
-                  />
-                  <span>{value}</span>
-                </button>
-              </li>
-              <li>
-                <a>
-                  2 <CommentIcon />{" "}
-                </a>
-              </li>
-            </SocialCounts>
-            <SocialActions>
-              <button>
-                <Rating
-                  name="half-rating"
-                  defaultValue={2.5}
-                  precision={0.5}
-                  value={value}
-                  onChange={(event, newValue) => {
-                    setValue(newValue);
-                  }}
-                />
-                <span>Rate</span>
-              </button>
-              <button>
-                <CommentIcon />
-                <span>Comment</span>
-              </button>
-              <button>
-                <ShareOutlinedIcon />
-                <span>Share</span>
-              </button>
-            </SocialActions>
-          </Article>
+          <DemoPost mainimg = {demo2} />
+          <DemoPost/>
         </div>
       
         <Post isOpen={isOpen} setIsOpen={setIsOpen} />

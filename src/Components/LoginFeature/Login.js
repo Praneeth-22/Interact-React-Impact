@@ -46,7 +46,7 @@ function Login() {
         <div className="auth-wrapper">
           <div className="auth-inner">
             <form onSubmit={handleSubmit}>
-              <h3>Sign In</h3>
+              <h3>Login</h3>
               <div className="mb-3">
                 <label>Email address</label>
                 <input

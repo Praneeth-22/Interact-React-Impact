@@ -8,12 +8,13 @@ import { Avatar, IconButton } from "@mui/material";
 import React from "react";
 import "../Chat/style.css";
 import SidebarChat from "./SidebarChat";
+import {faker} from '@faker-js/faker'
 
 function Sidebar() {
   return (
     <div className="side-bar">
       <div className="sidebar-header">
-        <Avatar />
+        <Avatar src={faker.image.avatar()} />
         <div className="sidebar-headerRight"></div>
         <IconButton>
           <DonutLarge />
