@@ -28,7 +28,7 @@ function Login() {
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <Link className="nav-link my-nav-item" to={"/"}>
+                <Link className="nav-link my-nav-item active" to={"/"}>
                   Login
                 </Link>
               </li>
@@ -42,38 +42,40 @@ function Login() {
           </div>
         </div>
       </nav>
-      <div className="auth-wrapper">
-        <div className="auth-inner">
-          <form onSubmit={handleSubmit}>
-            <h3>Sign In</h3>
-            <div className="mb-3">
-              <label>Email address</label>
-              <input
-                type="email"
-                className="form-control"
-                placeholder="Enter email"
-              />
-            </div>
-            <div className="mb-3">
-              <label>Password</label>
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Enter password"
-              />
-            </div>
-            <div className="d-grid">
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
-            </div>
-            <div className="d-grid mt-2">
-              <button type="submit" className="googleBtn">
-                <a>Sign In via Google</a>&nbsp;&nbsp;
-                <img src={google} alt="click" />
-              </button>
-            </div>
-          </form>
+      <div className="notNav">
+        <div className="auth-wrapper">
+          <div className="auth-inner">
+            <form onSubmit={handleSubmit}>
+              <h3>Sign In</h3>
+              <div className="mb-3">
+                <label>Email address</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="Enter email"
+                />
+              </div>
+              <div className="mb-3">
+                <label>Password</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  placeholder="Enter password"
+                />
+              </div>
+              <div className="d-grid">
+                <button type="submit" className="btn btn-primary">
+                  Submit
+                </button>
+              </div>
+              <div className="d-grid mt-2">
+                <button type="submit" className="googleBtn">
+                  <a>Sign In via Google</a>&nbsp;&nbsp;
+                  <img src={google} alt="click" />
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
       <ChatBot />
