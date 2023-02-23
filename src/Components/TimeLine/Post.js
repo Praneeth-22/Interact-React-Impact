@@ -3,29 +3,32 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
-import user from "../images/user.svg";
+// import user from "../images/user.svg";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import NotesOutlinedIcon from "@mui/icons-material/NotesOutlined";
+import {faker} from '@faker-js/faker'
 function Post(props) {
+  const { isOpen, setIsOpen } = props;
   const [text, setText] = useState("");
-  const reset = (e) => {
-    setText("");
-    props.handleClick(e);
-  };
+  console.log("at posts-->props :", props);
   return (
     <>
-      {props.showModal === "open" && (
+      {isOpen && (
         <Container>
           <Content>
             <Header>
               <h2>Create a Post</h2>
-              <button onClick={(e) => reset(e)}>
+              <button
+                onClick={(e) => {
+                  setIsOpen(false);
+                }}
+              >
                 <CloseIcon className="close" />
               </button>
             </Header>
             <SharedContent>
               <UserInfo>
-                <img src={user} alt="" />
+                <img src={faker.image.avatar()} alt="" />
                 <span>Name</span>
               </UserInfo>
               <Editor>
@@ -157,11 +160,10 @@ const PostButton = styled.button`
   border-radius: 20px;
   padding-left: 16px;
   padding-right: 16px;
-  /* background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#0a66c2")};
-  color: ${(props) => (props.disabled ? "rgba(1,1,1,0.2)" : "white")}; */
+  background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#0a66c2")};
+  color: ${(props) => (props.disabled ? "rgba(1,1,1,0.2)" : "white")};
   &:hover {
-    /* background: ${(props) =>
-      props.disabled ? "rgba(0,0,0,0.8)" : "#004182"}; */
+    background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#004182")};
     background: #004182;
   }
 `;
