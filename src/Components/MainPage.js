@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./Header";
-import Home from "./Home";
+import Home from "./TimeLine/Home";
 import Caterogy from "./Caterogy";
 import styled from "styled-components";
 import { useState, useEffect } from "react";

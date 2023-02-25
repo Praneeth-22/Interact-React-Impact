@@ -8,6 +8,7 @@ import {
 import { Avatar, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import "../Chat/style.css";
+import { faker } from "@faker-js/faker";
 
 function Chatdata() {
   const [seed, setSeed] = useState("");
@@ -19,9 +20,9 @@ function Chatdata() {
   return (
     <div className="chat">
       <div className="chat-header">
-        <Avatar src={`https://api.dicebear.com/5.x/${seed}/svg`} />
+        <Avatar src={faker.image.avatar()} />
         <div className="chatheader-info">
-          <h3>Student 1</h3>
+          <h3>Group name</h3>
           <p>Last Seen</p>
         </div>
         <div className="chatheader-right">

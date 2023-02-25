@@ -16,7 +16,6 @@ span {
   width: 100vw;
   height: 100vh;
   background-color: #f8f8f8;
-  
 }
 
 .container {
@@ -29,22 +28,22 @@ span {
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
 }
 
-
 .auth-wrapper .form-control:focus {
   border-color: #167bff;
   box-shadow: none;
 }
-.notNav{
+.notNav {
   position: relative;
   width: 100vw;
   height: 100vh;
   display: grid;
   place-items: center;
-     background-image: url("img/background.jpg");
+  background-image: url("img/background.jpg");
   /* opacity: 0.75; */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  /* opacity: 0.5; */
 }
 
 .auth-inner {
@@ -56,9 +55,9 @@ span {
   border-radius: 15px;
   transition: all 0.3s;
 }
-.signup > .notNav >.auth-wrapper > .auth-inner{
-   width: 450px;
-   /* margin: auto 0; */
+.signup > .notNav > .auth-wrapper > .auth-inner {
+  width: 450px;
+  /* margin: auto 0; */
   margin-top: 50px;
   background: #ffffff;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
