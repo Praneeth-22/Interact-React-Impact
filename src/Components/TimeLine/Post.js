@@ -1,35 +1,58 @@
+// Description: This component is used to create a post
+// requried imports
 import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
-// import user from "../images/user.svg";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
-import NotesOutlinedIcon from "@mui/icons-material/NotesOutlined";
-import {faker} from '@faker-js/faker'
+import { faker } from "@faker-js/faker";
+import ReactPlayer from "react-player";
+import InsertLinkIcon from "@mui/icons-material/InsertLink";
+
+// Post component
 function Post(props) {
-  const { isOpen, setIsOpen } = props;
-  const [text, setText] = useState("");
-  console.log("at posts-->props :", props);
-  return (
+  const { isOpen, setIsOpen } = props; // destructuring props
+  const [shareImage, setShareImage] = useState(""); // state for image
+  const [text, setText] = useState(""); // state for text
+  const [videoLink, setVideoLink] = useState(""); // state for video link
+  const [assetArea, setAssetArea] = useState(""); // state for asset area
+  console.log("at posts-->props :", props); // console log for props
+
+  const handleChange = (e) => { // function to handle change
+    const image = e.target.files[0];
+    if (image === "" || image === undefined) {
+      alert(`not an image, the file is a ${typeof image}`);
+      return;
+    }
+    setShareImage(image);
+  };
+  const switchAssetArea = (area) => { // function to switch asset area
+    setShareImage("");
+    setVideoLink("");
+    setAssetArea(area);
+  };
+  const reset = (e) => { // function to reset
+    setText("");
+    setShareImage("");
+    setVideoLink("");
+    switchAssetArea("");
+    setIsOpen(false);
+  };
+  return ( // return statement
     <>
       {isOpen && (
         <Container>
           <Content>
             <Header>
               <h2>Create a Post</h2>
-              <button
-                onClick={(e) => {
-                  setIsOpen(false);
-                }}
-              >
+              <button onClick={reset}>
                 <CloseIcon className="close" />
               </button>
             </Header>
             <SharedContent>
               <UserInfo>
                 <img src={faker.image.avatar()} alt="" />
-                <span>Name</span>
+                <span>{faker.name.firstName()}</span>
               </UserInfo>
               <Editor>
                 <textarea
@@ -37,18 +60,57 @@ function Post(props) {
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                 ></textarea>
+                {assetArea === "image" ? (
+                  <UploadImage>
+                    <input
+                      type="file"
+                      accept="image/gif, image/jpeg, image/png"
+                      name="image"
+                      id="file"
+                      style={{ display: "none" }}
+                      onChange={handleChange}
+                    />
+                    <p>
+                      <label htmlFor="file" className="label">Select an image</label>
+                    </p>
+                    {shareImage && (
+                      <img
+                        src={URL.createObjectURL(shareImage)}
+                        alt="upload a img"
+                      />
+                    )}
+                  </UploadImage>
+                ) : (
+                  assetArea === "media" && (
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Please enter a video link"
+                        value={videoLink}
+                        onChange={(e) => setVideoLink(e.target.value)}
+                      />
+                      {videoLink && (
+                        <ReactPlayer width={"100%"} url={videoLink} />
+                      )}
+                    </div>
+                  )
+                )}
               </Editor>
             </SharedContent>
             <ShareCreation>
               <AttachAssets>
-                <AssetButton>
+                <AssetButton
+                  onClick={() => switchAssetArea(assetArea === "image" ? "" : "image")}
+                >
                   <AddPhotoAlternateOutlinedIcon />
                 </AssetButton>
-                <AssetButton>
-                  <NotesOutlinedIcon />
+                <AssetButton
+                  onClick={() => switchAssetArea(assetArea === "media" ? "" : "media")}
+                >
+                  <InsertLinkIcon />
                 </AssetButton>
               </AttachAssets>
-              <PostButton>Post</PostButton>
+              <PostButton disabled={(!text)? true : false}>Post</PostButton>
             </ShareCreation>
           </Content>
         </Container>
@@ -161,7 +223,8 @@ const PostButton = styled.button`
   padding-left: 16px;
   padding-right: 16px;
   background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#0a66c2")};
-  color: ${(props) => (props.disabled ? "rgba(1,1,1,0.2)" : "white")};
+  color: ${(props) => (props.disabled ? "white" : "white")};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   &:hover {
     background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#004182")};
     background: #004182;
@@ -182,6 +245,26 @@ const Editor = styled.div`
     height: 35px;
     font-size: 16px;
     margin-bottom: 20px;
+  }
+`;
+const UploadImage = styled.div`
+  text-align: center;
+  img {
+    width: 100%;
+  }
+  .label { 
+    cursor: pointer;
+    color: #0a66c2;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    display: inline-block;
+    &:hover {
+      text-decoration: underline; 
+    }
   }
 `;
 
