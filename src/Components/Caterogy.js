@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
-
+import { Card, Grid } from "@mui/material";
 function Caterogy({ setOpenModel }) {
   const navigate = useNavigate();
   const routeHome = (e) => {
@@ -14,27 +14,64 @@ function Caterogy({ setOpenModel }) {
       e.target.style.backgroundColor = "green";
     }
   };
+
   return (
     <CaterogyContainer>
       <Elements>
-        <div className="titleCloseBtn">
-          <button
-            onClick={() => {
-              setOpenModel(false);
-            }}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div
+            className="title"
+            style={{ fontSize: "20px", fontWeight: 600, color: "#28104e" }}
           >
-            X
-          </button>
+            Select a Category
+          </div>
+          <div className="titleCloseBtn">
+            <button
+              onClick={() => {
+                setOpenModel(false);
+              }}
+            >
+              X
+            </button>
+          </div>
         </div>
-        <div className="title">Select the category to be updated...</div>
+
         <div className="body">
           {/* <Checkbox  defaultChecked /> */}
-          <button onClick={routeHome}>Sport</button>
+          {/* <button onClick={routeHome}>Sport</button>
           <button onClick={routeHome}>Academics</button>
           <button onClick={routeHome}>Activities</button>
-          <button onClick={routeHome}>Others</button>
+          <button onClick={routeHome}>Others</button> */}
+          <Grid container spacing={2}>
+            {[1, 2, 3, 4].map((item) => {
+              return (
+                <Grid item xs={6}>
+                  <Card
+                    variant="outlined"
+                    style={{
+                      padding: "10px 16px",
+                      boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
+                    }}
+                  >
+                    <div style={{ fontSize: "16px", fontWeight: 600 }}>
+                      Hello world{" "}
+                    </div>
+                    <div style={{ fontSize: "12px" }}>
+                      secondary textbsjkfbdkjfjsdfdsnjkbvjkbjvdfjkbvkjdf
+                    </div>
+                  </Card>
+                </Grid>
+              );
+            })}
+          </Grid>
         </div>
-        <div className="footer">
+        {/* <div className="footer">
           <button
             id="cancelBtn"
             onClick={() => {
@@ -51,7 +88,7 @@ function Caterogy({ setOpenModel }) {
           >
             Save
           </button>
-        </div>
+        </div> */}
       </Elements>
     </CaterogyContainer>
   );
@@ -71,8 +108,8 @@ const CaterogyContainer = styled.div`
   background-color: rgba(0, 0, 0, 0.8);
 `;
 const Elements = styled.div`
-  width: 500px;
-  height: 500px;
+  width: 650px;
+  height: 400px;
   border-radius: 12px;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -85,13 +122,13 @@ const Elements = styled.div`
     justify-content: flex-end;
   }
   .titleCloseBtn button {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border: none;
-    background-color: #ff4f33;
+    background-color: #28104e;
     color: white;
     border-radius: 8px;
-    font-size: 20px;
+    font-size: 16px;
     cursor: pointer;
   }
   .title {
@@ -101,9 +138,10 @@ const Elements = styled.div`
     font-size: 1.5rem;
   }
   .body {
-    flex: 50%;
-    display: flex;
-    justify-content: space-around;
+    /* flex: 50%;
+    display: flex; */
+    /* justify-content: space-around; */
+    margin-top: 40px;
     flex-wrap: wrap;
     align-items: center;
     font-size: 1.7rem;
@@ -139,7 +177,7 @@ const Elements = styled.div`
     cursor: pointer;
   }
   #cancelBtn {
-    background-color: #ff3b43;
+    background-color: #28104e;
     background-image: linear-gradient(147deg, #ff3b43 0%, #ff2525 74%);
   }
   #saveBtn {

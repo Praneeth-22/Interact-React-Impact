@@ -5,13 +5,15 @@ import photo from "./img/finallogo.jpg";
 import { Link } from "react-router-dom";
 import google from "./img/google.svg";
 import ChatBot from "../ChatBot";
-
+import bg from './img/background.jpg';
+// import bg from './img/logintest2.svg';
 function Login() {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     navigate("/home");
   };
+
   return (
     <div className="loginpage">
       <nav className="navbar navbar-expand-lg navbar-light  fixed-top">
@@ -28,13 +30,25 @@ function Login() {
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <Link className="nav-link my-nav-item active" to={"/"}>
+                <Link
+                  className="nav-link my-nav-item active"
+                  to={"/"}
+                  style={{
+                    color: "white",
+                  }}
+                >
                   Login
                 </Link>
               </li>
 
               <li className="nav-item">
-                <Link className="nav-link" to={"/sign-up"}>
+                <Link
+                  className="nav-link"
+                  to={"/sign-up"}
+                  style={{
+                    color: "white",
+                  }}
+                >
                   Sign up
                 </Link>
               </li>
@@ -43,6 +57,7 @@ function Login() {
         </div>
       </nav>
       <div className="notNav">
+        <img src={bg} className="bgImg" alt="bg" />
         <div className="auth-wrapper">
           <div className="auth-inner">
             <form onSubmit={handleSubmit}>
@@ -64,7 +79,14 @@ function Login() {
                 />
               </div>
               <div className="d-grid">
-                <button type="submit" className="btn btn-primary">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{
+                    color: "white",
+                    backgroundColor: "#28104e",
+                  }}
+                >
                   Submit
                 </button>
               </div>
