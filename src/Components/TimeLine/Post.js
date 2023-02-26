@@ -18,7 +18,8 @@ function Post(props) {
   const [assetArea, setAssetArea] = useState(""); // state for asset area
   console.log("at posts-->props :", props); // console log for props
 
-  const handleChange = (e) => { // function to handle change
+  const handleChange = (e) => {
+    // function to handle change
     const image = e.target.files[0];
     if (image === "" || image === undefined) {
       alert(`not an image, the file is a ${typeof image}`);
@@ -26,19 +27,22 @@ function Post(props) {
     }
     setShareImage(image);
   };
-  const switchAssetArea = (area) => { // function to switch asset area
+  const switchAssetArea = (area) => {
+    // function to switch asset area
     setShareImage("");
     setVideoLink("");
     setAssetArea(area);
   };
-  const reset = (e) => { // function to reset
+  const reset = (e) => {
+    // function to reset
     setText("");
     setShareImage("");
     setVideoLink("");
     switchAssetArea("");
     setIsOpen(false);
   };
-  return ( // return statement
+  return (
+    // return statement
     <>
       {isOpen && (
         <Container>
@@ -71,7 +75,9 @@ function Post(props) {
                       onChange={handleChange}
                     />
                     <p>
-                      <label htmlFor="file" className="label">Select an image</label>
+                      <label htmlFor="file" className="label">
+                        Select an image
+                      </label>
                     </p>
                     {shareImage && (
                       <img
@@ -100,17 +106,25 @@ function Post(props) {
             <ShareCreation>
               <AttachAssets>
                 <AssetButton
-                  onClick={() => switchAssetArea(assetArea === "image" ? "" : "image")}
+                  onClick={() =>
+                    switchAssetArea(assetArea === "image" ? "" : "image")
+                  }
                 >
                   <AddPhotoAlternateOutlinedIcon />
                 </AssetButton>
                 <AssetButton
-                  onClick={() => switchAssetArea(assetArea === "media" ? "" : "media")}
+                  onClick={() =>
+                    switchAssetArea(assetArea === "media" ? "" : "media")
+                  }
                 >
                   <InsertLinkIcon />
                 </AssetButton>
               </AttachAssets>
-              <PostButton disabled={(!text)? true : false}>Post</PostButton>
+              <PostButton
+                disabled={shareImage || videoLink || text ? false : true}
+              >
+                Post
+              </PostButton>
             </ShareCreation>
           </Content>
         </Container>
@@ -136,7 +150,7 @@ const Content = styled.div`
   background-color: whitesmoke;
   max-height: 90%;
   overflow: initial;
-  border-radius: 5px;
+  border-radius: 15px;
   display: flex;
   position: relative;
   flex-direction: column;
@@ -150,6 +164,8 @@ const Header = styled.div`
   font-size: 16px;
   line-height: 1.5;
   color: rgba(0, 0, 0, 0.6);
+  /* background-color: #deacf5; */
+  // backgroundColor:"#deacf5",
   font-weight: normal;
   display: flex;
   justify-content: space-between;
@@ -252,7 +268,7 @@ const UploadImage = styled.div`
   img {
     width: 100%;
   }
-  .label { 
+  .label {
     cursor: pointer;
     color: #0a66c2;
     font-size: 14px;
@@ -263,7 +279,7 @@ const UploadImage = styled.div`
     text-decoration: none;
     display: inline-block;
     &:hover {
-      text-decoration: underline; 
+      text-decoration: underline;
     }
   }
 `;

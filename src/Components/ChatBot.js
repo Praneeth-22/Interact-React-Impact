@@ -52,6 +52,7 @@ const ChatbotMain = styled.div`
   margin-right: 10px;
   margin-bottom: 10px;
   background-color:transparent;
+  /* z-index: 999; */
    img {
     width: 100px;
     border-radius: 50px;
@@ -61,7 +62,8 @@ const ChatbotMain = styled.div`
     justify-content: flex-end;
   }
   .closeIcon {
-    color: white;
+    position: relative;
+    color: black;
     font-size: 30px;
     cursor: pointer;
     background-color: grey;

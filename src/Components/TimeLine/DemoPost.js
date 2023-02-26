@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import demopost from "./../../images/demoimg.jpg";
@@ -12,17 +12,42 @@ import demo2 from "./../../images/demo2.jpg";
 import { useNavigate } from "react-router-dom";
 import Post from "./Post";
 import { faker } from "@faker-js/faker";
+import Box from "@mui/material/Box";
+import SpeedDial from "@mui/material/SpeedDial";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import SpeedDialAction from "@mui/material/SpeedDialAction";
+import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
+import SaveIcon from "@mui/icons-material/Save";
+import PrintIcon from "@mui/icons-material/Print";
+import ShareIcon from "@mui/icons-material/Share";
+import { Avatar } from "@mui/material";
+
+const actions = [
+  { icon: <FileCopyIcon />, name: "Copy" },
+  { icon: <SaveIcon />, name: "Save" },
+  { icon: <PrintIcon />, name: "Print" },
+  { icon: <ShareIcon />, name: "Share" },
+];
 function DemoPost(props) {
-    const {mainimg} = props
-      const [value, setValue] = useState(3);    
+  const { mainimg } = props;
+  const [value, setValue] = useState(3);
   return (
     <div>
       <Article>
         <SharedActor>
           <a>
-            <img src={faker.image.avatar()} alt="user" />
+            <img
+              src={faker.image.avatar()}
+              alt="user"
+              style={{ borderRadius: "50%", marginRight: "10px" }}
+            />
+            {/* <Avatar src={} alt="user" /> */}
             <div>
-              <span>{faker.name.firstName()}</span>
+              <span
+                style={{ color: "#6237a0", fontSize: "14px", fontWeight: 600 }}
+              >
+                {faker.name.firstName()}
+              </span>
               <span>{faker.lorem.words(3)}</span>
               <span>timestamp</span>
             </div>
@@ -39,7 +64,6 @@ function DemoPost(props) {
             ) : (
               <img src={demopost} alt="demo" />
             )}
-           
           </a>
         </SharedImg>
         <SocialCounts>
@@ -62,6 +86,19 @@ function DemoPost(props) {
               2 <CommentIcon />{" "}
             </a>
           </li>
+          {/* <SpeedDial
+            ariaLabel="SpeedDial basic example"
+            sx={{ position: "absolute", bottom: 16, right: 16 }}
+            icon={<SpeedDialIcon />}
+          >
+            {actions.map((action) => (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+              />
+            ))}
+          </SpeedDial> */}
         </SocialCounts>
         <SocialActions>
           <button>
@@ -209,4 +246,4 @@ const SocialActions = styled.div`
     }
   }
 `;
-export default DemoPost
+export default DemoPost;

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import ChatBot from "../ChatBot";
 import google from "./img/google.svg";
 import { useNavigate } from "react-router-dom";
+import bg from "./img/background.jpg";
 function SignUp() {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
@@ -27,12 +28,24 @@ function SignUp() {
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <Link className="nav-link" to={"/"}>
+                <Link
+                  className="nav-link"
+                  to={"/"}
+                  style={{
+                    color: "white",
+                  }}
+                >
                   Login
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" to={"/sign-up"}>
+                <Link
+                  className="nav-link active"
+                  to={"/sign-up"}
+                  style={{
+                    color: "white",
+                  }}
+                >
                   Sign up
                 </Link>
               </li>
@@ -41,6 +54,7 @@ function SignUp() {
         </div>
       </nav>
       <div className="notNav">
+        <img src={bg} className="bgImg" alt="bg" />
         <div className="auth-wrapper">
           <div className="auth-inner">
             <form onSubmit={handleSubmit}>
@@ -78,7 +92,14 @@ function SignUp() {
                 />
               </div>
               <div className="d-grid">
-                <button type="submit" className="btn btn-primary">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{
+                    color: "white",
+                    backgroundColor: "#28104e",
+                  }}
+                >
                   Sign Up
                 </button>
               </div>
