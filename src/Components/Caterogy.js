@@ -49,26 +49,92 @@ function Caterogy({ setOpenModel }) {
           <button onClick={routeHome}>Activities</button>
           <button onClick={routeHome}>Others</button> */}
           <Grid container spacing={2}>
-            {[1, 2, 3, 4].map((item) => {
-              return (
-                <Grid item xs={6}>
-                  <Card
-                    variant="outlined"
-                    style={{
-                      padding: "10px 16px",
-                      boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
-                    }}
-                  >
-                    <div style={{ fontSize: "16px", fontWeight: 600 }}>
-                      Hello world{" "}
-                    </div>
-                    <div style={{ fontSize: "12px" }}>
-                      secondary textbsjkfbdkjfjsdfdsnjkbvjkbjvdfjkbvkjdf
-                    </div>
-                  </Card>
-                </Grid>
-              );
-            })}
+            <Grid
+              item
+              xs={6}
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              <Card
+                variant="outlined"
+                style={{
+                  padding: "10px 16px",
+                  boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
+                }}
+              >
+                <div style={{ fontSize: "16px", fontWeight: 600 }}>All </div>
+                <div style={{ fontSize: "12px" }}>
+                  get updated with all the latest news
+                </div>
+              </Card>
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              style={{
+
+                cursor: "pointer",
+              }}
+            >
+              <Card
+                variant="outlined"
+                style={{
+                  padding: "10px 16px",
+                  boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
+                }}
+              >
+                <div style={{ fontSize: "16px", fontWeight: 600 }}>Sports </div>
+                <div style={{ fontSize: "12px" }}>
+                  get updated with Sports news
+                </div>
+              </Card>
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              style={{
+
+                cursor: "pointer",
+              }}
+            >
+              <Card
+                variant="outlined"
+                style={{
+                  padding: "10px 16px",
+                  boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
+                }}
+              >
+                <div style={{ fontSize: "16px", fontWeight: 600 }}>
+                  Academics
+                </div>
+                <div style={{ fontSize: "12px" }}>
+                  get updated with Academics news
+                </div>
+              </Card>
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              <Card
+                variant="outlined"
+                style={{
+                  padding: "10px 16px",
+                  boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
+                }}
+              >
+                <div style={{ fontSize: "16px", fontWeight: 600 }}>
+                  Activities
+                </div>
+                <div style={{ fontSize: "12px" }}>
+                  get updated with all the latest news
+                </div>
+              </Card>
+            </Grid>
           </Grid>
         </div>
         {/* <div className="footer">

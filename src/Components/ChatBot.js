@@ -21,17 +21,18 @@ function ChatBot() {
   return (
     <ChatbotMain>
       {chat ? (
-        <>
+        <div style={{
+          display: "flex",          
+        }}>
           <section>
-            <CloseIcon onClick={onClickCloseButton} className="closeIcon"/>
+            <CloseIcon onClick={onClickCloseButton} className="closeIcon" />
           </section>
-
           <Chatbot
             config={config}
             actionProvider={ActionProvider}
             messageParser={MessageParser}
           />
-        </>
+        </div>
       ) : (
         <>
           <Chatfield>
@@ -39,6 +40,7 @@ function ChatBot() {
           </Chatfield>
         </>
       )}
+      {/* <CloseIcon onClick={onClickCloseButton} className="closeIcon" /> */}
     </ChatbotMain>
   );
 }
@@ -51,10 +53,11 @@ const ChatbotMain = styled.div`
   bottom: 0;
   margin-right: 10px;
   margin-bottom: 10px;
-  background-color:transparent;
+  background-color: transparent;
+
   /* z-index: 999; */
-   img {
-    width: 100px;
+  img {
+    width: 50px;
     border-radius: 50px;
   }
   section {
@@ -63,12 +66,14 @@ const ChatbotMain = styled.div`
   }
   .closeIcon {
     position: relative;
-    color: black;
+    color: rgba(40, 16, 78, 1);
     font-size: 30px;
     cursor: pointer;
-    background-color: grey;
+    background-color: white;
     border-radius: 15px;
     margin-bottom: 2px;
+    margin-right: 2px;
+    margin-top: 10px;
   }
 `;
 const Chatfield = styled.div``;
