@@ -47,7 +47,6 @@ function Header(props) {
     } else if (setting === "Logout") {
       window.location.href = "/";
     }
-
     setAnchorElUser(null);
   };
 
@@ -59,7 +58,7 @@ function Header(props) {
         backgroundColor: "#28104e",
 
         // backgroundColor:"#deacf5",
-        color: "white",
+        color: "white",     
       }}
     >
       <Container maxWidth="xl">
@@ -161,7 +160,7 @@ function Header(props) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={faker.image.avatar()} />
+                <Avatar alt="avatar" src={faker.image.avatar()} />
               </IconButton>
             </Tooltip>
             <Menu

@@ -99,8 +99,8 @@ function Login() {
             </form>
           </div>
         </div>
+        <ChatBot />
       </div>
-      <ChatBot />
     </div>
   );
 }

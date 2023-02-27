@@ -27,7 +27,7 @@ import DemoPost from "./DemoPost";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./Home.css";
-
+import MyEvent from './MyEvent'
 function Home(props) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -232,7 +232,7 @@ function Home(props) {
         <Post isOpen={isOpen} setIsOpen={setIsOpen} />
       </HomeContainer>
         <Rightbar>
-          <p>right</p>
+          <MyEvent/>
         </Rightbar>
 
     </div>
@@ -312,12 +312,7 @@ const ShareBox = styled(CommonCard)`
 const Rightbar = styled(CommonCard)`
   margin-top: 16px;
   margin-left: 20px;
-  height: 200px;
   min-width:30% ;
-  /* position: fixed;
-  right: 0;
-  top: 0;
-   */
   @media (max-width: 768px) {
     display: none;
   }
