@@ -6,14 +6,40 @@ import { Link } from "react-router-dom";
 import google from "./img/google.svg";
 import ChatBot from "../ChatBot";
 import bg from './img/background.jpg';
+import { useUserAuth } from "../../context/contextapi";
+import { useState } from "react";
+import { Alert } from "@mui/material";
+import GoogleButton from "react-google-button";
 // import bg from './img/logintest2.svg';
-function Login() {
-  const navigate = useNavigate();
-  const handleSubmit = (e) => {
+const Login=() => {
+  /*const navigate = useNavigate();*/
+  let navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
+  const { logIn,googleSignIn } = useUserAuth();
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    navigate("/home");
+    /*navigate("/home");*/
+    setError("");
+    /*navigate("/home");*/
+    try{
+     await logIn(email,password);
+     navigate("/home");
+    }
+    catch(err){
+       setError(err.message);
+    }
   };
-
+  const handleGoogleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      await googleSignIn();
+      navigate("/home");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="loginpage">
       <nav className="navbar navbar-expand-lg navbar-light  fixed-top">
@@ -62,12 +88,14 @@ function Login() {
           <div className="auth-inner">
             <form onSubmit={handleSubmit}>
               <h3>Login</h3>
+              {error && <Alert variant="danger">{error}</Alert>}
               <div className="mb-3">
                 <label>Email address</label>
                 <input
                   type="email"
                   className="form-control"
                   placeholder="Enter email"
+                  onChange ={(e)=>setEmail(e.target.value)}
                 />
               </div>
               <div className="mb-3">
@@ -76,6 +104,7 @@ function Login() {
                   type="password"
                   className="form-control"
                   placeholder="Enter password"
+                  onChange ={(e)=>setPassword(e.target.value)}
                 />
               </div>
               <div className="d-grid">
@@ -91,7 +120,7 @@ function Login() {
                 </button>
               </div>
               <div className="d-grid mt-2">
-                <button type="submit" className="googleBtn">
+                <button type="submit" className="googleBtn" onClick={handleGoogleSignIn}>
                   <a>Sign In via Google</a>&nbsp;&nbsp;
                   <img src={google} alt="click" />
                 </button>
@@ -103,6 +132,6 @@ function Login() {
       </div>
     </div>
   );
-}
+};
 
 export default Login;
