@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import "./loginpage.css";
 import photo from "./img/finallogo.jpg";
 import { Link } from "react-router-dom";
@@ -6,11 +7,25 @@ import ChatBot from "../ChatBot";
 import google from "./img/google.svg";
 import { useNavigate } from "react-router-dom";
 import bg from "./img/background.jpg";
-function SignUp() {
-  const navigate = useNavigate();
-  const handleSubmit = (e) => {
+import { useUserAuth } from "../../context/contextapi";
+import { Alert } from "@mui/material";
+const SignUp=() =>{
+  let navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
+  const { signUp } = useUserAuth();
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/home");
+    setError("");
+    /*navigate("/home");*/
+    try{
+     await signUp(email,password);
+     navigate("/login");
+    }
+    catch(err){
+       setError(err.message);
+    }
   };
   return (
     <div className="signup">
@@ -59,28 +74,14 @@ function SignUp() {
           <div className="auth-inner">
             <form onSubmit={handleSubmit}>
               <h3>Sign Up</h3>
-              <div className="mb-3">
-                <label>First name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="First name"
-                />
-              </div>
-              <div className="mb-3">
-                <label>Last name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Last name"
-                />
-              </div>
+              {error && <Alert variant="danger">{error}</Alert>}
               <div className="mb-3">
                 <label>Email address</label>
                 <input
                   type="email"
                   className="form-control"
                   placeholder="Enter email"
+                  onChange ={(e)=>setEmail(e.target.value)}
                 />
               </div>
               <div className="mb-3">
@@ -89,6 +90,7 @@ function SignUp() {
                   type="password"
                   className="form-control"
                   placeholder="Enter password"
+                  onChange ={(e)=>setPassword(e.target.value)}
                 />
               </div>
               <div className="d-grid">
