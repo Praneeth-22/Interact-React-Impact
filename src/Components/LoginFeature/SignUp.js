@@ -107,7 +107,7 @@ const SignUp=() =>{
               </div>
               <div className="d-grid mt-2">
                 <button type="submit" className="googleBtn">
-                  <a>Sign In via Google</a>&nbsp;&nbsp;
+                  <a>Sign Up via Google</a>&nbsp;&nbsp;
                   <img src={google} alt="click" />
                 </button>
               </div>

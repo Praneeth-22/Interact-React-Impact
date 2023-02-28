@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import { Card, Grid } from "@mui/material";
+import { margin } from "@mui/system";
 function Caterogy({ setOpenModel }) {
   const navigate = useNavigate();
   const routeHome = (e) => {
@@ -43,11 +44,6 @@ function Caterogy({ setOpenModel }) {
         </div>
 
         <div className="body">
-          {/* <Checkbox  defaultChecked /> */}
-          {/* <button onClick={routeHome}>Sport</button>
-          <button onClick={routeHome}>Academics</button>
-          <button onClick={routeHome}>Activities</button>
-          <button onClick={routeHome}>Others</button> */}
           <Grid container spacing={2}>
             <Grid
               item
@@ -73,7 +69,6 @@ function Caterogy({ setOpenModel }) {
               item
               xs={6}
               style={{
-
                 cursor: "pointer",
               }}
             >
@@ -94,7 +89,6 @@ function Caterogy({ setOpenModel }) {
               item
               xs={6}
               style={{
-
                 cursor: "pointer",
               }}
             >
@@ -106,10 +100,54 @@ function Caterogy({ setOpenModel }) {
                 }}
               >
                 <div style={{ fontSize: "16px", fontWeight: 600 }}>
-                  Academics
+                  Workshops
                 </div>
                 <div style={{ fontSize: "12px" }}>
-                  get updated with Academics news
+                  get updated with Workshops news
+                </div>
+              </Card>
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              <Card
+                variant="outlined"
+                style={{
+                  padding: "10px 16px",
+                  boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
+                }}
+              >
+                <div style={{ fontSize: "16px", fontWeight: 600 }}>
+                  Career Fair
+                </div>
+                <div style={{ fontSize: "12px" }}>
+                  get updated with Career Fair news
+                </div>
+              </Card>
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              <Card
+                variant="outlined"
+                style={{
+                  padding: "10px 16px",
+                  boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
+                }}
+              >
+                <div style={{ fontSize: "16px", fontWeight: 600 }}>
+                  E-sports
+                </div>
+                <div style={{ fontSize: "12px" }}>
+                  get updated with E-sports news
                 </div>
               </Card>
             </Grid>
@@ -135,6 +173,78 @@ function Caterogy({ setOpenModel }) {
                 </div>
               </Card>
             </Grid>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "50%",
+                margin: "20px",
+              }}
+            >
+              <Grid
+                item
+                xs={6}
+                style={{
+                  cursor: "pointer",
+                  width: "100%",
+                  marginRight: "20px",
+                }}
+              >
+                <Card
+                  variant="outlined"
+                  style={{
+                    padding: "10px 16px",
+                    boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
+                    backgroundColor: "green",
+                    borderRadius: "10px",
+                  }}
+                  onClick={() => {
+                    setOpenModel(false);
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: 600,
+                      color: "white",
+                    }}
+                  >
+                    Save
+                  </div>
+                </Card>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+                style={{
+                  cursor: "pointer",
+                }}
+              >
+                <Card
+                  variant="outlined"
+                  style={{
+                    padding: "10px 16px",
+                    boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
+                    backgroundColor: "#ff0000",
+                    borderRadius: "10px",
+                    color: "white",
+                  }}
+                  onClick={() => {
+                    setOpenModel(false);
+                  }}
+                >
+                  <div
+                    style={{ fontSize: "16px", fontWeight: 600 }}
+                    onClick={() => {
+                      setOpenModel(false);
+                    }}
+                  >
+                    Cancel
+                  </div>
+                </Card>
+              </Grid>
+            </div>
           </Grid>
         </div>
         {/* <div className="footer">

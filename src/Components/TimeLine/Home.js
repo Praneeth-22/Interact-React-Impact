@@ -28,6 +28,9 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./Home.css";
 import MyEvent from './MyEvent'
+import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
+import ConstructionOutlinedIcon from "@mui/icons-material/ConstructionOutlined";
+import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
 function Home(props) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -44,13 +47,15 @@ function Home(props) {
   };
 
   return (
-    <div style={{
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "start",
-      justifyContent: "space-around",
-      padding: "0 20px",
-    }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "start",
+        justifyContent: "space-around",
+        padding: "0 20px",
+      }}
+    >
       <HomeContainer>
         <ShareBox>
           <div>
@@ -171,8 +176,8 @@ function Home(props) {
               }}
             />
             <Tab
-              label="All"
-              icon={<CategoryOutlinedIcon />}
+              label="Workshops"
+              icon={<ConstructionOutlinedIcon/>}
               iconPosition="start"
               sx={{
                 fontWeight: 600,
@@ -180,16 +185,7 @@ function Home(props) {
                 textTransform: "capitalize",
               }}
             />
-            <Tab
-              label="All"
-              icon={<CategoryOutlinedIcon />}
-              iconPosition="start"
-              sx={{
-                fontWeight: 600,
-                letterSpacing: "1.5px",
-                textTransform: "capitalize",
-              }}
-            />
+
             <Tab
               label="Sports"
               icon={<SportsBasketballIcon />}
@@ -210,11 +206,30 @@ function Home(props) {
                 textTransform: "capitalize",
               }}
             />
-
+            <Tab
+              label="Career fair"
+              icon={<BusinessCenterOutlinedIcon />}
+              iconPosition="start"
+              sx={{
+                fontWeight: 600,
+                letterSpacing: "1.5px",
+                textTransform: "capitalize",
+              }}
+            />
             <Tab
               label="
               Activities"
               icon={<CelebrationIcon />}
+              iconPosition="start"
+              sx={{
+                fontWeight: 600,
+                letterSpacing: "1.5px",
+                textTransform: "capitalize",
+              }}
+            />
+            <Tab
+              label="E-sports"
+              icon={<SportsEsportsOutlinedIcon />}
               iconPosition="start"
               sx={{
                 fontWeight: 600,
@@ -231,10 +246,9 @@ function Home(props) {
 
         <Post isOpen={isOpen} setIsOpen={setIsOpen} />
       </HomeContainer>
-        <Rightbar>
-          <MyEvent/>
-        </Rightbar>
-
+      <Rightbar>
+        <MyEvent />
+      </Rightbar>
     </div>
   );
 }
