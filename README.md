@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Software Engineering Team -O
 NewBranch Readme file \
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
