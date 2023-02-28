@@ -6,11 +6,16 @@ import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { hover } from "@testing-library/user-event/dist/hover";
 import './TimeLineCss/MyEvent.css'
+import { useNavigate } from "react-router-dom";
 function MyEvent() {
+  const navigate = useNavigate();
   const myDetails = schedule.map((event) => {
     return (
       <Card
         className="card"
+        onClick={() => {
+          navigate("/events");
+        }}
       >
         <p
           style={{
