@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
+    "@faker-js/faker": "^7.6.0",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.8",
     "@testing-library/jest-dom": "^5.16.5",
@@ -16,6 +15,8 @@
     "react-bootstrap": "^2.7.2",
     "react-chatbot-kit": "^2.1.2",
     "react-dom": "^18.2.0",
+    "react-google-button": "^0.7.2",
+    "react-player": "^2.11.2",
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.6",

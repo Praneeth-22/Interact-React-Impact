@@ -1,17 +1,45 @@
-import React from 'react'
-import './loginpage.css'
+import React from "react";
+import "./loginpage.css";
 import { useNavigate } from "react-router-dom";
-import photo from './img/finallogo.jpg'
+import photo from "./img/finallogo.jpg";
 import { Link } from "react-router-dom";
-import google from './img/google.svg'
+import google from "./img/google.svg";
 import ChatBot from "../ChatBot";
-
-function Login() {
-  const navigate = useNavigate();
-  const handleSubmit = (e) => {
+import bg from './img/background.jpg';
+import { useUserAuth } from "../../context/contextapi";
+import { useState } from "react";
+import { Alert } from "@mui/material";
+import GoogleButton from "react-google-button";
+// import bg from './img/logintest2.svg';
+const Login=() => {
+  /*const navigate = useNavigate();*/
+  let navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
+  const { logIn,googleSignIn } = useUserAuth();
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    navigate("/home");
-  }
+    /*navigate("/home");*/
+    setError("");
+    /*navigate("/home");*/
+    try{
+     await logIn(email,password);
+     navigate("/home");
+    }
+    catch(err){
+       setError(err.message);
+    }
+  };
+  const handleGoogleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      await googleSignIn();
+      navigate("/home");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="loginpage">
       <nav className="navbar navbar-expand-lg navbar-light  fixed-top">
@@ -28,13 +56,25 @@ function Login() {
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <Link className="nav-link my-nav-item" to={"/"}>
+                <Link
+                  className="nav-link my-nav-item active"
+                  to={"/"}
+                  style={{
+                    color: "white",
+                  }}
+                >
                   Login
                 </Link>
               </li>
 
               <li className="nav-item">
-                <Link className="nav-link" to={"/sign-up"}>
+                <Link
+                  className="nav-link"
+                  to={"/sign-up"}
+                  style={{
+                    color: "white",
+                  }}
+                >
                   Sign up
                 </Link>
               </li>
@@ -42,43 +82,56 @@ function Login() {
           </div>
         </div>
       </nav>
-      <div className="auth-wrapper">
-        <div className="auth-inner">
-          <form onSubmit={handleSubmit}>
-            <h3>Sign In</h3>
-            <div className="mb-3">
-              <label>Email address</label>
-              <input
-                type="email"
-                className="form-control"
-                placeholder="Enter email"
-              />
-            </div>
-            <div className="mb-3">
-              <label>Password</label>
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Enter password"
-              />
-            </div>
-            <div className="d-grid">
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
-            </div>
-            <div className="d-grid mt-2">
-              <button type="submit" className="googleBtn">
-                <a>Sign In via Google</a>&nbsp;&nbsp;
-                <img src={google} alt="click" />
-              </button>
-            </div>
-          </form>
+      <div className="notNav">
+        <img src={bg} className="bgImg" alt="bg" />
+        <div className="auth-wrapper">
+          <div className="auth-inner">
+            <form onSubmit={handleSubmit}>
+              <h3>Login</h3>
+              {error && <Alert variant="danger">{error}</Alert>}
+              <div className="mb-3">
+                <label>Email address</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="Enter email"
+                  onChange ={(e)=>setEmail(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label>Password</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  placeholder="Enter password"
+                  onChange ={(e)=>setPassword(e.target.value)}
+                />
+              </div>
+              <div className="d-grid">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{
+                    color: "white",
+                    backgroundColor: "#28104e",
+                  }}
+                >
+                  Submit
+                </button>
+              </div>
+              <div className="d-grid mt-2">
+                <button type="submit" className="googleBtn" onClick={handleGoogleSignIn}>
+                  <a>Sign In via Google</a>&nbsp;&nbsp;
+                  <img src={google} alt="click" />
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
+        <ChatBot />
       </div>
-      <ChatBot />
     </div>
   );
-}
+};
 
-export default Login
+export default Login;
