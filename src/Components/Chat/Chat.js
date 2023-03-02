@@ -24,6 +24,7 @@ function Chatdata() {
         <div className="chatheader-info">
           <h3>Group name</h3>
           <p>Last Seen</p>
+          <p>Time</p>
         </div>
         <div className="chatheader-right">
           <IconButton>
