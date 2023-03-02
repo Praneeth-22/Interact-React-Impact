@@ -19,7 +19,8 @@ function SidebarChat({ addNewChat }) {
     <Avatar src={faker.image.business()} />
       <div className="sidebarchat__info">
         <h2>Group name</h2>
-        <p>group info</p>
+        <p>grou info</p>
+
       </div>
     </div>
   ) : (
