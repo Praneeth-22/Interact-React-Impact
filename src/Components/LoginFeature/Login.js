@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import google from "./img/google.svg";
 import ChatBot from "../ChatBot";
 import bg from './img/background.jpg';
-import { useUserAuth } from "../../context/contextapi";
+import { useUserAuth } from "../../context/UserContextApi";
 import { useState } from "react";
 import { Alert } from "@mui/material";
 import GoogleButton from "react-google-button";

@@ -6,7 +6,7 @@ import SignUp from "./Components/LoginFeature/SignUp";
 import Category from "./Components/Caterogy";
 import Chat from "./Components/Chat/Chatpage";
 import Event from "./Components/TimeLine/Event";
-import { UserAuthContextProvider } from "./context/contextapi";
+import { UserAuthContextProvider } from "./context/UserContextApi";
 function App() {
   return (
     <div className="App">

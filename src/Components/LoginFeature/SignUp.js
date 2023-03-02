@@ -7,7 +7,7 @@ import ChatBot from "../ChatBot";
 import google from "./img/google.svg";
 import { useNavigate } from "react-router-dom";
 import bg from "./img/background.jpg";
-import { useUserAuth } from "../../context/contextapi";
+import { useUserAuth } from "../../context/UserContextApi";
 import { Alert } from "@mui/material";
 const SignUp=() =>{
   let navigate = useNavigate();
