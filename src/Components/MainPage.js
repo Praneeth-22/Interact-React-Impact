@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./Header";
-import Home from "./Home";
+import Home from "./TimeLine/Home";
 import Caterogy from "./Caterogy";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
@@ -8,14 +8,26 @@ function MainPage() {
   const [openModel, setOpenModel] = useState(false);
   return (
     <Container>
-    <Caterogy setOpenModel={setOpenModel} />
+      {openModel ? (
+        <>
+          <Caterogy setOpenModel={setOpenModel} />
+        </>
+      ) : (
+        <>
+          {/* <button onClick={() => setOpenModel(true)} className="openModel">
+            click
+          </button> */}
+          <Header setOpenModel={setOpenModel} />
+          <Home />
+        </>
+      )}
     </Container>
   );
 }
 const Container = styled.div`
-  padding-top: 52px;
+ 
   max-width: 100%;
-  
+
   .openModel {
     width: 200px;
     height: 40px;
