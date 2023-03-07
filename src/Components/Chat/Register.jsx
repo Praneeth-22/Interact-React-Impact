@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import '../Chat/style.scss';
 import Add from '../Chat/img/add.png';
 import { createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
-import { auth,db,storage } from '../Chat/firebase';
+import { auth, db, storage } from "../../firebase_service";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, addDoc } from "firebase/firestore";
 import { useNavigate, Link } from "react-router-dom";

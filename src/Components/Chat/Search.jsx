@@ -10,7 +10,8 @@ import {
   serverTimestamp,
   getDoc,
 } from "firebase/firestore";
-import { db } from "../Chat/firebase";
+// import { db } from "../Chat/firebase";
+import {db} from '../../firebase_service'
 import { AuthContext } from "../Chat/AuthContext";
 const Search = () => {
   const [username, setUsername] = useState("");

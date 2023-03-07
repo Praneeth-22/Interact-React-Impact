@@ -1,6 +1,6 @@
 import React,{useState}from 'react';
 import '../Chat/style.scss';
-import { auth } from "../Chat/firebase";
+import { auth } from "../../firebase_service";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 
