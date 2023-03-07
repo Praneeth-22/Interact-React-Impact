@@ -1,12 +1,14 @@
 import "./App.css";
+import '../src/Components/Chat/style.scss';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./Components/LoginFeature/Login";
 import MainPage from "./Components/MainPage";
 import SignUp from "./Components/LoginFeature/SignUp";
 import Category from "./Components/Caterogy";
-import Chat from "./Components/Chat/Chatpage";
+// import Chat from "./Components/Chat/Chatpage";
 import Event from "./Components/TimeLine/Event";
 import { UserAuthContextProvider } from "./context/UserContextApi";
+import Register from'../src/Components/Chat/Register';
 function App() {
   return (
     <div className="App">
@@ -20,7 +22,8 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/category" element={<Category />} />
           <Route exact path="/login" element={<Login />}></Route>
-          <Route path="/chat" element={<Chat />} />
+          {/* <Route path="/chat" element={<Chat />} /> */}
+          <Route path="/register" element={<Register />}/>
         </Routes>
         
       </Router>
