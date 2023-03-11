@@ -11,6 +11,17 @@ import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import { useUserAuth } from "../../context/UserContextApi";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
+
 // Post component
 const options = [
   "Sports",
@@ -69,6 +80,14 @@ function Post(props) {
       setDisplayName(user.displayName);
     }
   }, [user]);
+
+  //
+   const [cat, setCat] = React.useState("");
+   const handleCatChange = (event) => {
+      setCat(event.target.value);
+    };
+    console.log("cat is:", cat);
+  //
   return (
     // return statement
     <>
@@ -86,7 +105,7 @@ function Post(props) {
                 <img src={photoUrl} alt="" />
                 <span>{displayName}</span>
               </UserInfo>
-              <Autocomplete
+              {/* <Autocomplete
                 value={Cvalue}
                 onChange={(event, newValue) => {
                   setCValue(newValue);
@@ -98,19 +117,65 @@ function Post(props) {
                 id="controllable-states-demo"
                 options={options}
                 sx={{
+               
+                }}
+                renderInput={(params) => <TextField {...params} sx={{ 
                   width: "50% !important",
                   height: "50px !important",
                   backgroundColor: "white !important",
                   borderRadius: "10px",
                   border: "1px solid lightgray",
                   zIndex: "99999999999900 !important",
-                  margin: "10px",
-                  outline: "none !important",
-                  padding: "0px !important",
-                }}
-                renderInput={(params) => <TextField {...params} />}
-              />
+                }} />}
+              /> */}
+              {/* <FormControl sx={{ m: 1, minWidth: 120,zIndex:99999999 }}>
+                <Select
+                  value={age}
+                  onChange={handleChange}
+                  displayEmpty
+                  inputProps={{ "aria-label": "Without label" }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+                {/* <FormHelperText>Without label</FormHelperText> */}
+              {/* </FormControl> */}
+
               <Editor>
+                <FormControl sx={{
+                }}>
+                  <FormLabel id="demo-row-radio-buttons-group-label">
+                    Tag
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    value={cat}
+                    onChange={handleCatChange}
+
+                  >
+                    <FormControlLabel
+                      value="sport"
+                      control={<Radio />}
+                      label="sport"
+                    />
+                    <FormControlLabel
+                      value="academics"
+                      control={<Radio />}
+                      label="academics"
+                    />
+                    <FormControlLabel
+                      value="Career & Jobs"
+                      control={<Radio />}
+                      label="Career & Jobs"
+                    />
+                  </RadioGroup>
+                </FormControl>
                 <textarea
                   placeholder="Hi, there..."
                   value={text}
