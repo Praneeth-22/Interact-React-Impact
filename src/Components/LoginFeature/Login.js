@@ -53,7 +53,7 @@ const Login=() => {
               alt="pic"
             />
           </Link>
-          <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <div  id="navbarTogglerDemo02">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Link
