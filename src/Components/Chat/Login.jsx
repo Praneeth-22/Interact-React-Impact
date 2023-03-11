@@ -6,7 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 
 
-const Login=()=> {
+const ChatLogin=()=> {
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
 
@@ -33,10 +33,10 @@ const Login=()=> {
                 <button>Sign In</button>
                 {err && <span>Something went wrong</span>}
                   </form>
-                 <p>You don't have  an account?  <Link to="/register">Register</Link></p>
+                 <p>You don't have  an account?  <Link to="/chat-register">Register</Link></p>
         </div>   
     </div>
   )
 }
 
-export default Login
+export default ChatLogin
