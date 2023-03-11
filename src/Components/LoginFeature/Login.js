@@ -11,13 +11,16 @@ import { useState } from "react";
 import { Alert } from "@mui/material";
 import GoogleButton from "react-google-button";
 // import bg from './img/logintest2.svg';
+
 const Login=() => {
   /*const navigate = useNavigate();*/
   let navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
-  const { logIn,googleSignIn } = useUserAuth();
+
+  const { logIn,googleSignIn } = useUserAuth(); // to get the logIn function from the context
+
   const handleSubmit = async(e) => {
     e.preventDefault();
     /*navigate("/home");*/

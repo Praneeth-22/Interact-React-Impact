@@ -31,8 +31,17 @@ import MyEvent from './MyEvent'
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
 import ConstructionOutlinedIcon from "@mui/icons-material/ConstructionOutlined";
 import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
+//
+import { useUserAuth } from "../../context/UserContextApi";
+//
 function Home(props) {
   const navigate = useNavigate();
+  //
+  const { user } = useUserAuth(); // destructuring user from context
+  const ava = faker.image.avatar();
+  const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
+  const [displayName, setDisplayName] = useState(""); // state for display name
+  //
   const [isOpen, setIsOpen] = useState(false);
   const [value1, setValue1] = React.useState(0);
   const catcolor = { color: "#6237a0" };
@@ -45,7 +54,15 @@ function Home(props) {
     console.log("clicked");
     setIsOpen(true);
   };
-
+useEffect(() => {
+  if (user.photoURL) {
+    // user != null && user.photoURL != null
+    console.log("photo   is:", user.photoURL);
+    console.log("display name is:", user.displayName);
+    setPhotoUrl(user.photoURL);
+    setDisplayName(user.displayName);
+  }
+}, [user]);
   return (
     <div
       style={{
@@ -59,8 +76,8 @@ function Home(props) {
       <HomeContainer>
         <ShareBox>
           <div>
-            <img src={faker.image.avatar()} alt="user" />
-            <button onClick={handleClick}>Start a post</button>
+            <img src={photoUrl} alt="user" />
+            <button onClick={handleClick}>{` Start a post`}</button>
           </div>
           <div>
             <button>
@@ -177,7 +194,7 @@ function Home(props) {
             />
             <Tab
               label="Workshops"
-              icon={<ConstructionOutlinedIcon/>}
+              icon={<ConstructionOutlinedIcon />}
               iconPosition="start"
               sx={{
                 fontWeight: 600,
