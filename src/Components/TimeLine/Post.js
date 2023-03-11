@@ -1,15 +1,26 @@
 // Description: This component is used to create a post
 // requried imports
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import CloseIcon from "@mui/icons-material/Close";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { faker } from "@faker-js/faker";
 import ReactPlayer from "react-player";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
-
+import { useUserAuth } from "../../context/UserContextApi";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 // Post component
+const options = [
+  "Sports",
+  "Academics",
+  "Entertainment",
+  "Politics",
+  "Technology",
+  "Others",
+];
+
 function Post(props) {
   const { isOpen, setIsOpen } = props; // destructuring props
   const [shareImage, setShareImage] = useState(""); // state for image
@@ -17,7 +28,15 @@ function Post(props) {
   const [videoLink, setVideoLink] = useState(""); // state for video link
   const [assetArea, setAssetArea] = useState(""); // state for asset area
   console.log("at posts-->props :", props); // console log for props
-
+  //
+  const { user } = useUserAuth(); // destructuring user from context
+  const ava = faker.image.avatar();
+  const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
+  const [displayName, setDisplayName] = useState(""); // state for display name
+  //
+  const [Cvalue, setCValue] = React.useState(options[0]);
+  const [inputCValue, setInputCValue] = React.useState("");
+  //
   const handleChange = (e) => {
     // function to handle change
     const image = e.target.files[0];
@@ -41,6 +60,15 @@ function Post(props) {
     switchAssetArea("");
     setIsOpen(false);
   };
+  useEffect(() => {
+    if (user.photoURL) {
+      // user != null && user.photoURL != null
+      console.log("photo   is:", user.photoURL);
+      console.log("display name is:", user.displayName);
+      setPhotoUrl(user.photoURL);
+      setDisplayName(user.displayName);
+    }
+  }, [user]);
   return (
     // return statement
     <>
@@ -55,15 +83,40 @@ function Post(props) {
             </Header>
             <SharedContent>
               <UserInfo>
-                <img src={faker.image.avatar()} alt="" />
-                <span>{faker.name.firstName()}</span>
+                <img src={photoUrl} alt="" />
+                <span>{displayName}</span>
               </UserInfo>
+              <Autocomplete
+                value={Cvalue}
+                onChange={(event, newValue) => {
+                  setCValue(newValue);
+                }}
+                inputValue={inputCValue}
+                onInputChange={(event, newInputValue) => {
+                  setInputCValue(newInputValue);
+                }}
+                id="controllable-states-demo"
+                options={options}
+                sx={{
+                  width: "50% !important",
+                  height: "50px !important",
+                  backgroundColor: "white !important",
+                  borderRadius: "10px",
+                  border: "1px solid lightgray",
+                  zIndex: "99999999999900 !important",
+                  margin: "10px",
+                  outline: "none !important",
+                  padding: "0px !important",
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
               <Editor>
                 <textarea
                   placeholder="Hi, there..."
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                 ></textarea>
+
                 {assetArea === "image" ? (
                   <UploadImage>
                     <input

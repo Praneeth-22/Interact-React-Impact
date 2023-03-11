@@ -10,7 +10,8 @@ import Event from "./Components/TimeLine/Event";
 import { UserAuthContextProvider } from "./context/UserContextApi";
 import Register from '../src/Components/Chat/Register';
 import ChatLogin from '../src/Components/Chat/Login';
-
+import Profile from '../src/Components/TimeLine/Profile';
+//
 function App() {
   return (
     <div className="App">
@@ -28,6 +29,7 @@ function App() {
           <Route path="/chat-register" element={<Register />}/>
           <Route path="*" element={<h1>404 Not Found</h1>} />
           <Route path="/chat-login" element={<ChatLogin />}/>
+          <Route path="/profile" element={<Profile />}/>
         </Routes>
         
       </Router>

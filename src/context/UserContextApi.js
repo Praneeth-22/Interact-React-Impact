@@ -47,7 +47,7 @@ export function UserAuthContextProvider({ children }) {
 
   return (
     <userAuthContext.Provider // to provide the context to the children
-      value={{ user, signUp, logIn, googleSignIn }} // to provide the context to the children
+      value={{ user, signUp, logIn, googleSignIn,logOut}} // to provide the context to the children
     >
       {children}
     </userAuthContext.Provider>
