@@ -39,3 +39,6 @@ ul {
 body {
   font-family: Arial, sans-serif;
 }
+::-webkit-scrollbar{
+  width: 0px;
+}

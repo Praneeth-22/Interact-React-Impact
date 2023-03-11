@@ -1,15 +1,37 @@
 // Description: This component is used to create a post
 // requried imports
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import CloseIcon from "@mui/icons-material/Close";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { faker } from "@faker-js/faker";
 import ReactPlayer from "react-player";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
+import { useUserAuth } from "../../context/UserContextApi";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 
 // Post component
+const options = [
+  "Sports",
+  "Academics",
+  "Entertainment",
+  "Politics",
+  "Technology",
+  "Others",
+];
+
 function Post(props) {
   const { isOpen, setIsOpen } = props; // destructuring props
   const [shareImage, setShareImage] = useState(""); // state for image
@@ -17,8 +39,17 @@ function Post(props) {
   const [videoLink, setVideoLink] = useState(""); // state for video link
   const [assetArea, setAssetArea] = useState(""); // state for asset area
   console.log("at posts-->props :", props); // console log for props
-
-  const handleChange = (e) => { // function to handle change
+  //
+  const { user } = useUserAuth(); // destructuring user from context
+  const ava = faker.image.avatar();
+  const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
+  const [displayName, setDisplayName] = useState(""); // state for display name
+  //
+  const [Cvalue, setCValue] = React.useState(options[0]);
+  const [inputCValue, setInputCValue] = React.useState("");
+  //
+  const handleChange = (e) => {
+    // function to handle change
     const image = e.target.files[0];
     if (image === "" || image === undefined) {
       alert(`not an image, the file is a ${typeof image}`);
@@ -26,19 +57,39 @@ function Post(props) {
     }
     setShareImage(image);
   };
-  const switchAssetArea = (area) => { // function to switch asset area
+  const switchAssetArea = (area) => {
+    // function to switch asset area
     setShareImage("");
     setVideoLink("");
     setAssetArea(area);
   };
-  const reset = (e) => { // function to reset
+  const reset = (e) => {
+    // function to reset
     setText("");
     setShareImage("");
     setVideoLink("");
     switchAssetArea("");
     setIsOpen(false);
   };
-  return ( // return statement
+  useEffect(() => {
+    if (user.photoURL) {
+      // user != null && user.photoURL != null
+      console.log("photo   is:", user.photoURL);
+      console.log("display name is:", user.displayName);
+      setPhotoUrl(user.photoURL);
+      setDisplayName(user.displayName);
+    }
+  }, [user]);
+
+  //
+   const [cat, setCat] = React.useState("");
+   const handleCatChange = (event) => {
+      setCat(event.target.value);
+    };
+    console.log("cat is:", cat);
+  //
+  return (
+    // return statement
     <>
       {isOpen && (
         <Container>
@@ -51,15 +102,86 @@ function Post(props) {
             </Header>
             <SharedContent>
               <UserInfo>
-                <img src={faker.image.avatar()} alt="" />
-                <span>{faker.name.firstName()}</span>
+                <img src={photoUrl} alt="" />
+                <span>{displayName}</span>
               </UserInfo>
+              {/* <Autocomplete
+                value={Cvalue}
+                onChange={(event, newValue) => {
+                  setCValue(newValue);
+                }}
+                inputValue={inputCValue}
+                onInputChange={(event, newInputValue) => {
+                  setInputCValue(newInputValue);
+                }}
+                id="controllable-states-demo"
+                options={options}
+                sx={{
+               
+                }}
+                renderInput={(params) => <TextField {...params} sx={{ 
+                  width: "50% !important",
+                  height: "50px !important",
+                  backgroundColor: "white !important",
+                  borderRadius: "10px",
+                  border: "1px solid lightgray",
+                  zIndex: "99999999999900 !important",
+                }} />}
+              /> */}
+              {/* <FormControl sx={{ m: 1, minWidth: 120,zIndex:99999999 }}>
+                <Select
+                  value={age}
+                  onChange={handleChange}
+                  displayEmpty
+                  inputProps={{ "aria-label": "Without label" }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+                {/* <FormHelperText>Without label</FormHelperText> */}
+              {/* </FormControl> */}
+
               <Editor>
+                <FormControl sx={{
+                }}>
+                  <FormLabel id="demo-row-radio-buttons-group-label">
+                    Tag
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    value={cat}
+                    onChange={handleCatChange}
+
+                  >
+                    <FormControlLabel
+                      value="sport"
+                      control={<Radio />}
+                      label="sport"
+                    />
+                    <FormControlLabel
+                      value="academics"
+                      control={<Radio />}
+                      label="academics"
+                    />
+                    <FormControlLabel
+                      value="Career & Jobs"
+                      control={<Radio />}
+                      label="Career & Jobs"
+                    />
+                  </RadioGroup>
+                </FormControl>
                 <textarea
                   placeholder="Hi, there..."
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                 ></textarea>
+
                 {assetArea === "image" ? (
                   <UploadImage>
                     <input
@@ -71,7 +193,9 @@ function Post(props) {
                       onChange={handleChange}
                     />
                     <p>
-                      <label htmlFor="file" className="label">Select an image</label>
+                      <label htmlFor="file" className="label">
+                        Select an image
+                      </label>
                     </p>
                     {shareImage && (
                       <img
@@ -100,17 +224,25 @@ function Post(props) {
             <ShareCreation>
               <AttachAssets>
                 <AssetButton
-                  onClick={() => switchAssetArea(assetArea === "image" ? "" : "image")}
+                  onClick={() =>
+                    switchAssetArea(assetArea === "image" ? "" : "image")
+                  }
                 >
                   <AddPhotoAlternateOutlinedIcon />
                 </AssetButton>
                 <AssetButton
-                  onClick={() => switchAssetArea(assetArea === "media" ? "" : "media")}
+                  onClick={() =>
+                    switchAssetArea(assetArea === "media" ? "" : "media")
+                  }
                 >
                   <InsertLinkIcon />
                 </AssetButton>
               </AttachAssets>
-              <PostButton disabled={(!text)? true : false}>Post</PostButton>
+              <PostButton
+                disabled={shareImage || videoLink || text ? false : true}
+              >
+                Post
+              </PostButton>
             </ShareCreation>
           </Content>
         </Container>
@@ -136,7 +268,7 @@ const Content = styled.div`
   background-color: whitesmoke;
   max-height: 90%;
   overflow: initial;
-  border-radius: 5px;
+  border-radius: 15px;
   display: flex;
   position: relative;
   flex-direction: column;
@@ -150,6 +282,8 @@ const Header = styled.div`
   font-size: 16px;
   line-height: 1.5;
   color: rgba(0, 0, 0, 0.6);
+  /* background-color: #deacf5; */
+  // backgroundColor:"#deacf5",
   font-weight: normal;
   display: flex;
   justify-content: space-between;
@@ -252,7 +386,7 @@ const UploadImage = styled.div`
   img {
     width: 100%;
   }
-  .label { 
+  .label {
     cursor: pointer;
     color: #0a66c2;
     font-size: 14px;
@@ -263,7 +397,7 @@ const UploadImage = styled.div`
     text-decoration: none;
     display: inline-block;
     &:hover {
-      text-decoration: underline; 
+      text-decoration: underline;
     }
   }
 `;

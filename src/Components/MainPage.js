@@ -4,6 +4,7 @@ import Home from "./TimeLine/Home";
 import Caterogy from "./Caterogy";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+
 function MainPage() {
   const [openModel, setOpenModel] = useState(false);
   return (
@@ -14,10 +15,10 @@ function MainPage() {
         </>
       ) : (
         <>
-          <button onClick={() => setOpenModel(true)} className="openModel">
+          {/* <button onClick={() => setOpenModel(true)} className="openModel">
             click
-          </button>
-          <Header />
+          </button> */}
+          <Header setOpenModel={setOpenModel} />
           <Home />
         </>
       )}
@@ -25,7 +26,7 @@ function MainPage() {
   );
 }
 const Container = styled.div`
-  padding-top: 52px;
+ 
   max-width: 100%;
 
   .openModel {
