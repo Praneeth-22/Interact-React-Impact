@@ -189,7 +189,11 @@ function Header(props) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="avatar" src={photoUrl} />
+                <Avatar
+                  alt="avatar"
+                  src={photoUrl}
+                  referrerpolicy="no-referrer"
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -246,7 +250,7 @@ function Header(props) {
                 p: 4,
               }}
             >
-              <Profile name={displayName} email={email}/>
+              <Profile name={displayName} email={email} />
             </Box>
           </Fade>
         </Modal>

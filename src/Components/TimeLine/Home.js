@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+import ReactPlayer from "react-player";
 // import user from '../Components/images/user.svg'
 import EventIcon from "@mui/icons-material/Event";
 import ArticleIcon from "@mui/icons-material/Article";
@@ -19,6 +20,9 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Container from "react-bootstrap/Container";
 import demo2 from "./../../images/demo2.jpg";
+
+import userImgUnLoad from './Images/user.png'
+import spinner from './Images/spin.svg'
 // import demo2 from "../images/demo2.jpg";
 import { useNavigate } from "react-router-dom";
 import Post from "./Post";
@@ -37,7 +41,7 @@ import { useUserAuth } from "../../context/UserContextApi";
 function Home(props) {
   const navigate = useNavigate();
   //
-  const { user } = useUserAuth(); // destructuring user from context
+  const { user, loading, getArticlesAPI ,articles} = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
   const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
   const [displayName, setDisplayName] = useState(""); // state for display name
@@ -62,7 +66,10 @@ useEffect(() => {
     setPhotoUrl(user.photoURL);
     setDisplayName(user.displayName);
   }
+ getArticlesAPI();
 }, [user]);
+
+console.log("loading: ",loading)
   return (
     <div
       style={{
@@ -73,58 +80,73 @@ useEffect(() => {
         padding: "0 20px",
       }}
     >
-      <HomeContainer>
-        <ShareBox>
-          <div>
-            <img src={photoUrl} alt="user" />
-            <button onClick={handleClick}>{` Start a post`}</button>
-          </div>
-          <div>
-            <button>
-              <AddPhotoAlternateIcon style={{ color: "#28104e" }} />
-              <span
-                style={{
-                  color: "#28104e",
-                  fontWeight: 600,
-                  alignItems: "center",
-                  marginLeft: "7px",
-                  letterSpacing: "1.5px",
-                }}
-              >
-                Photo
-              </span>
-            </button>
-            <button>
-              <EventIcon style={{ color: "#28104e" }} />
-              <span
-                style={{
-                  color: "#28104e",
-                  fontWeight: 600,
-                  alignItems: "center",
-                  marginLeft: "7px",
-                  letterSpacing: "1.5px",
-                }}
-              >
-                Event
-              </span>
-            </button>
-            <button>
-              <ArticleIcon style={{ color: "#28104e" }} />
-              <span
-                style={{
-                  color: "#28104e",
-                  fontWeight: 600,
-                  alignItems: "center",
-                  marginLeft: "7px",
-                  letterSpacing: "1.5px",
-                }}
-              >
-                Article
-              </span>
-            </button>
-          </div>
-        </ShareBox>
-        {/* <Category>
+      {articles.length === 0 ? (
+        <p></p>
+      ) : (
+        <HomeContainer>
+          <ShareBox>
+            <div>
+              {user && user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt="user"
+                  referrerpolicy="no-referrer"
+                />
+              ) : (
+                <img src={userImgUnLoad} alt="user" />
+              )}
+              <button
+                onClick={handleClick}
+                // disabled={!loading ? true : false}
+              >{` Start a post`}</button>
+            </div>
+            <div>
+              <button>
+                <AddPhotoAlternateIcon style={{ color: "#28104e" }} />
+                <span
+                  style={{
+                    color: "#28104e",
+                    fontWeight: 600,
+                    alignItems: "center",
+                    marginLeft: "7px",
+                    letterSpacing: "1.5px",
+                  }}
+                >
+                  Photo
+                </span>
+              </button>
+              <button>
+                <EventIcon style={{ color: "#28104e" }} />
+                <span
+                  style={{
+                    color: "#28104e",
+                    fontWeight: 600,
+                    alignItems: "center",
+                    marginLeft: "7px",
+                    letterSpacing: "1.5px",
+                  }}
+                >
+                  Event
+                </span>
+              </button>
+              <button>
+                <ArticleIcon style={{ color: "#28104e" }} />
+                <span
+                  style={{
+                    color: "#28104e",
+                    fontWeight: 600,
+                    alignItems: "center",
+                    marginLeft: "7px",
+                    letterSpacing: "1.5px",
+                  }}
+                >
+                  Article
+                </span>
+              </button>
+            </div>
+          </ShareBox>
+
+          {/* <Category>
           <Chip
             avatar={<CategoryOutlinedIcon />}
             label="All"
@@ -167,102 +189,211 @@ useEffect(() => {
             avatar={<ArrowRightIcon />}
           />
         </Category> */}
-        <div>
-          <Tabs
-            TabIndicatorProps={{ style: { backgroundColor: "#28104e" } }}
-            value={value1}
-            onChange={handleChange}
-            variant="scrollable"
-            scrollButtons="auto"
-            aria-label="scrollable auto tabs example"
-            style={{
-              marginBottom: "10px",
-              boxShadow: "0 0 0 1px rgb(0 0 0 / 15%), 0 0 0 rgb(0 0 0 / 20%)",
-              borderRadius: "5px",
-              backgroundColor: "#fff",
-            }}
-          >
-            <Tab
-              label="All"
-              icon={<CategoryOutlinedIcon />}
-              iconPosition="start"
-              sx={{
-                fontWeight: 600,
-                letterSpacing: "1.5px",
-                textTransform: "capitalize",
+          <div>
+            <Tabs
+              TabIndicatorProps={{ style: { backgroundColor: "#28104e" } }}
+              value={value1}
+              onChange={handleChange}
+              variant="scrollable"
+              scrollButtons="auto"
+              aria-label="scrollable auto tabs example"
+              style={{
+                marginBottom: "10px",
+                boxShadow: "0 0 0 1px rgb(0 0 0 / 15%), 0 0 0 rgb(0 0 0 / 20%)",
+                borderRadius: "5px",
+                backgroundColor: "#fff",
               }}
-            />
-            <Tab
-              label="Workshops"
-              icon={<ConstructionOutlinedIcon />}
-              iconPosition="start"
-              sx={{
-                fontWeight: 600,
-                letterSpacing: "1.5px",
-                textTransform: "capitalize",
-              }}
-            />
+            >
+              <Tab
+                label="All"
+                icon={<CategoryOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="Workshops"
+                icon={<ConstructionOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
 
-            <Tab
-              label="Sports"
-              icon={<SportsBasketballIcon />}
-              iconPosition="start"
-              sx={{
-                fontWeight: 600,
-                letterSpacing: "1.5px",
-                textTransform: "capitalize",
-              }}
-            />
-            <Tab
-              label="Academics"
-              icon={<SchoolIcon />}
-              iconPosition="start"
-              sx={{
-                fontWeight: 600,
-                letterSpacing: "1.5px",
-                textTransform: "capitalize",
-              }}
-            />
-            <Tab
-              label="Career fair"
-              icon={<BusinessCenterOutlinedIcon />}
-              iconPosition="start"
-              sx={{
-                fontWeight: 600,
-                letterSpacing: "1.5px",
-                textTransform: "capitalize",
-              }}
-            />
-            <Tab
-              label="
+              <Tab
+                label="Sports"
+                icon={<SportsBasketballIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="Academics"
+                icon={<SchoolIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="Career fair"
+                icon={<BusinessCenterOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="
               Activities"
-              icon={<CelebrationIcon />}
-              iconPosition="start"
-              sx={{
-                fontWeight: 600,
-                letterSpacing: "1.5px",
-                textTransform: "capitalize",
-              }}
-            />
-            <Tab
-              label="E-sports"
-              icon={<SportsEsportsOutlinedIcon />}
-              iconPosition="start"
-              sx={{
-                fontWeight: 600,
-                letterSpacing: "1.5px",
-                textTransform: "capitalize",
-              }}
-            />
-          </Tabs>
-        </div>
-        <div>
-          <DemoPost mainimg={demo2} />
-          <DemoPost />
-        </div>
+                icon={<CelebrationIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="E-sports"
+                icon={<SportsEsportsOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+            </Tabs>
+          </div>
+          <Content>
+            {/* {!loading && <img src={spinner} alt="loading" />} */}
+            {articles.length > 0 &&
+              articles.map((article, key) => (
+                <Article>
+                  <SharedActor>
+                    <a>
+                      <img
+                        src={article.actor.image}
+                        alt="user"
+                        style={{ borderRadius: "50%", marginRight: "10px" }}
+                      />
 
-        <Post isOpen={isOpen} setIsOpen={setIsOpen} />
-      </HomeContainer>
+                      <div>
+                        <span
+                          style={{
+                            color: "#6237a0",
+                            fontSize: "14px",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {article.actor.title}
+                        </span>
+                        <span>{article.actor.email}</span>
+
+                        <span>
+                          {new Date(
+                            article.actor.seconds * 1000
+                          ).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </a>
+                    <button>
+                      <MoreHorizIcon />
+                    </button>
+                  </SharedActor>
+                  <Description>{article.description}</Description>
+                  <SharedImg>
+                    <a>
+                      {
+                        !article.sharedImg &&
+                        article.video ? (
+                          <ReactPlayer width={"100%"} url={article.video} />
+                        ) : (
+                          article.sharedImg && (
+                            <img src={article.sharedImg} alt="shared" />
+                          )
+                        )
+                      }
+                    </a>
+                  </SharedImg>
+                  <SocialCounts>
+                    <li>
+                      <button>
+                        <Rating
+                          name="text-feedback"
+                          value={value}
+                          readOnly
+                          precision={0.5}
+                          emptyIcon={
+                            <StarIcon
+                              style={{ opacity: 0.55 }}
+                              fontSize="inherit"
+                            />
+                          }
+                        />
+                        <span>{value}</span>
+                      </button>
+                    </li>
+                    <li>
+                      <a>
+                        {article.comments}<CommentIcon />{" "}
+                      </a>
+                    </li>
+                    {/* <SpeedDial
+            ariaLabel="SpeedDial basic example"
+            sx={{ position: "absolute", bottom: 16, right: 16 }}
+            icon={<SpeedDialIcon />}
+          >
+            {actions.map((action) => (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+              />
+            ))}
+          </SpeedDial> */}
+                  </SocialCounts>
+                  <SocialActions>
+                    <button>
+                      <Rating
+                        name="half-rating"
+                        defaultValue={2.5}
+                        precision={0.5}
+                        value={value}
+                        onChange={(event, newValue) => {
+                          setValue(newValue);
+                        }}
+                      />
+                      <span>Rate</span>
+                    </button>
+                    <button>
+                      <CommentIcon />
+                      <span>Comment</span>
+                    </button>
+                    <button>
+                      <ShareOutlinedIcon />
+                      <span>Share</span>
+                    </button>
+                  </SocialActions>
+                </Article>
+              ))}
+          </Content>
+          <Post isOpen={isOpen} setIsOpen={setIsOpen} />
+        </HomeContainer>
+      )}
       <Rightbar>
         <MyEvent />
       </Rightbar>
@@ -340,6 +471,13 @@ const ShareBox = styled(CommonCard)`
     }
   }
 `;
+ const Content = styled.div`
+  text-align: center;
+  & > img {
+    width: 50px;
+  }
+`;
+
 const Rightbar = styled(CommonCard)`
   margin-top: 16px;
   margin-left: 20px;
@@ -348,5 +486,114 @@ const Rightbar = styled(CommonCard)`
     display: none;
   }
 `;
+const Article = styled(CommonCard)`
+  padding: 0;
+  margin: 0 0 8px;
+  overflow: visible;
+`;
+const SharedActor = styled.div`
+  padding-right: 40px;
+  flex-wrap: nowrap;
+  padding: 12px 16px 0;
+  margin-bottom: 8px;
+  align-items: center;
+  display: flex;
+  a {
+    margin-right: 12px;
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+    text-decoration: none;
+    img {
+      width: 48px;
+      height: 48px;
+    }
+    & > div {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      flex-basis: 0;
+      margin-left: 8px;
+      overflow: hidden;
+      span {
+        text-align: left;
+        &:first-child {
+          font-size: 14px;
+          font-weight: 700;
+          color: rgba(0, 0, 0, 1);
+        }
+        &:nth-child(n + 1) {
+          font-size: 12px;
+          color: rgba(0, 0, 0, 0.6);
+        }
+      }
+    }
+  }
+  button {
+    position: absolute;
+    right: 12px;
+    top: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+`;
+const Description = styled.div`
+  padding: 0 16px;
+  overflow: hidden;
+  color: rgba(0, 0, 0, 0.9);
+  font-size: 14px;
+  text-align: left;
+`;
+const SharedImg = styled.div`
+  margin-top: 8px;
+  width: 100%;
+  display: block;
+  position: relative;
+  background-color: #f9fafb;
+  img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
+`;
 
+const SocialCounts = styled.ul`
+  line-height: 1.3;
+  display: flex;
+  align-items: flex-start;
+  overflow: auto;
+  margin: 0 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9e5df;
+  list-style: none;
+  li {
+    margin-right: 5px;
+    font-size: 12px;
+    button {
+      display: flex;
+    }
+  }
+`;
+const SocialActions = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  min-height: 40px;
+  padding: 4px 8px;
+  button {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px;
+    color: #0a66c2;
+    background: transparent;
+    border: none;
+    @media (min-width: 768px) {
+      span {
+        margin-left: 8px;
+      }
+    }
+  }
+`;
 export default Home;
