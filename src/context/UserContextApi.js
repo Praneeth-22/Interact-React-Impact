@@ -8,12 +8,16 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth, storage, db } from "../firebase_service";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
 import {
   getDownloadURL,
   uploadBytes,
   ref,
   getMetadata,
   uploadBytesResumable,
+  Timestamp,
 } from "firebase/storage";
 import {
   addDoc,
@@ -32,7 +36,7 @@ export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState({}); // to store the user object from firebase
   const [loading, setLoading] = useState(true); // to check if the user is logged in or not
   const [articles, setArticles] = useState([]); // to store the articles from firebase
-
+  const [comments, setComments] = useState([]); // to store the comments from firebase
   function logIn(email, password) {
     // to sign in the user
     return signInWithEmailAndPassword(auth, email, password); //firebase service to sign in
@@ -55,85 +59,86 @@ export function UserAuthContextProvider({ children }) {
     // to post the article
     setLoading(true); // to start the loading
 
-     if (payload.image !== "") {
-       const storageRef = ref(storage, `images/${payload.image.name + v4()}`);
-       const upload = uploadBytesResumable(storageRef, payload.image);
-       console.log("upload img:", upload);
-       upload.on(
-         "state_changed",
-         (snapshot) => {
-           const progress =
-             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-           console.log("Upload is " + progress + "% done");
-           if (snapshot.state === "running") {
-             console.log("Upload is running");
-           }
-         },
-         (error) => {
-           console.log(error.code);
-         },
-         async () => {
-           const downloadURL = await getDownloadURL(storageRef);
-           try {
+    if (payload.image !== "") {
+      const storageRef = ref(storage, `images/${payload.image.name + v4()}`);
+      const upload = uploadBytesResumable(storageRef, payload.image);
+      console.log("upload img:", upload);
+      upload.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          if (snapshot.state === "running") {
+            console.log("Upload is running");
+          }
+        },
+        (error) => {
+          console.log(error.code);
+        },
+        async () => {
+          const downloadURL = await getDownloadURL(storageRef);
+          try {
             const metadata = await getMetadata(storageRef);
-             console.log("File available at", downloadURL);
-             const docRef = await addDoc(collection(db, "articles"), {
-               actor: {
-                 email: payload.user.email,
-                 title: payload.user.displayName,
-                 date: payload.timestamp,
-                 image: payload.user.photoURL,
-               },
-               video: payload.video,
-               sharedImg: downloadURL,
-               comments: 0,
-               description: payload.description,
-             });
-             setLoading(false); // to stop the loading
-             console.log("Document written with ID: ", docRef.id);
-           } catch (error) {
-             console.log("Error adding document: ", error);
-           }
-         }
-       );
-     }else if(payload.video !== ""){
-        // for video
-        setLoading(true); // to start the loading
-
-        try {
-          const docRef = addDoc(collection(db, "articles"), {
-            actor: {
-              email: payload.user.email,
-              title: payload.user.displayName,
-              date: payload.timestamp,
-              image: payload.user.photoURL,
-            },
-            video: payload.video,
-            sharedImg: "",
-            comments: 0,
-            description: payload.description,
-          });
-          setLoading(false); // to stop the loading
-          console.log("Document written with ID: ", docRef.id);
-        } catch (error) {
-          console.log("Error adding document: ", error);
+            console.log("File available at", downloadURL);
+            const docRef = await addDoc(collection(db, "articles"), {
+              actor: {
+                email: payload.user.email,
+                title: payload.user.displayName,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                image: payload.user.photoURL,
+              },
+              video: payload.video,
+              sharedImg: downloadURL,
+              comments: 0,
+              description: payload.description,
+            });
+            setLoading(false); // to stop the loading
+            console.log("Document written with ID: ", docRef.id);
+          } catch (error) {
+            console.log("Error adding document: ", error);
+          }
         }
-     }
-   
+      );
+    } else if (payload.video !== "") {
+      // for video
+      setLoading(true); // to start the loading
+
+      try {
+        const docRef = addDoc(collection(db, "articles"), {
+          actor: {
+            email: payload.user.email,
+            title: payload.user.displayName,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            image: payload.user.photoURL,
+          },
+          video: payload.video,
+          sharedImg: "",
+          comments: 0,
+          description: payload.description,
+        });
+        setLoading(false); // to stop the loading
+        console.log("Document written with ID: ", docRef.id);
+      } catch (error) {
+        console.log("Error adding document: ", error);
+      }
+    }
   }
   function getArticlesAPI() {
     // to get the articles
     setLoading(true); // to start the loading
-    const q = query(collection(db, "articles"), orderBy("actor.date", "desc"));
+    const q = query(collection(db, "articles"), orderBy("actor.timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const payload = querySnapshot.docs.map((doc) => doc.data());
+      const payload = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        article: doc.data(),
+      }));
       console.log("database data:", payload);
       setLoading(false); // to stop the loading
       setArticles(payload);
     });
     return unsubscribe;
   }
-
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
@@ -159,7 +164,9 @@ export function UserAuthContextProvider({ children }) {
         logOut,
         postArticleAPI,
         getArticlesAPI,
-        articles
+        articles,
+    
+        
       }} // to provide the context to the children
     >
       {children}
