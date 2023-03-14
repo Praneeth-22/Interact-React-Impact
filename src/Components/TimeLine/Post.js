@@ -8,7 +8,9 @@ import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternate
 import { faker } from "@faker-js/faker";
 import ReactPlayer from "react-player";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
+//
 import { useUserAuth } from "../../context/UserContextApi";
+//
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import InputLabel from "@mui/material/InputLabel";
@@ -21,6 +23,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
+//
 
 // Post component
 const options = [
@@ -40,7 +43,7 @@ function Post(props) {
   const [assetArea, setAssetArea] = useState(""); // state for asset area
   console.log("at posts-->props :", props); // console log for props
   //
-  const { user } = useUserAuth(); // destructuring user from context
+  const { user, postArticleAPI } = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
   const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
   const [displayName, setDisplayName] = useState(""); // state for display name
@@ -63,6 +66,24 @@ function Post(props) {
     setVideoLink("");
     setAssetArea(area);
   };
+  const postArticle = (e) => {
+    // function to post article
+    e.preventDefault();
+    if (e.target !== e.currentTarget) {
+      return;
+    }
+    const payload = {
+      image: shareImage,
+      video: videoLink,
+      user: user,
+      description: text,
+      timestamp: new Date().getTime(),
+    }
+    console.log("payload is:", payload);
+    postArticleAPI(payload);
+    reset(e);
+  };
+
   const reset = (e) => {
     // function to reset
     setText("");
@@ -102,7 +123,12 @@ function Post(props) {
             </Header>
             <SharedContent>
               <UserInfo>
-                <img src={photoUrl} alt="" />
+                {photoUrl ? (
+                  <img src={photoUrl} alt="" referrerpolicy="no-referrer" />
+                ) : (
+                  <img src={ava} alt="" referrerpolicy="no-referrer" />
+                )}
+
                 <span>{displayName}</span>
               </UserInfo>
               {/* <Autocomplete
@@ -146,8 +172,7 @@ function Post(props) {
               {/* </FormControl> */}
 
               <Editor>
-                <FormControl sx={{
-                }}>
+                <FormControl sx={{}}>
                   <FormLabel id="demo-row-radio-buttons-group-label">
                     Tag
                   </FormLabel>
@@ -157,7 +182,6 @@ function Post(props) {
                     name="row-radio-buttons-group"
                     value={cat}
                     onChange={handleCatChange}
-
                   >
                     <FormControlLabel
                       value="sport"
@@ -240,6 +264,7 @@ function Post(props) {
               </AttachAssets>
               <PostButton
                 disabled={shareImage || videoLink || text ? false : true}
+                onClick={(event) => {postArticle(event)}} //
               >
                 Post
               </PostButton>
@@ -259,6 +284,7 @@ const Container = styled.div`
   z-index: 999999;
   color: black;
   background-color: rgba(0, 0, 0, 0.8);
+  animation: fadeIn 0.3s;
 `;
 
 const Content = styled.div`
@@ -357,7 +383,7 @@ const PostButton = styled.button`
   padding-left: 16px;
   padding-right: 16px;
   background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#0a66c2")};
-  color: ${(props) => (props.disabled ? "white" : "white")};
+  color: ${(props) => (props.disabled ? "rgba(1,1,1,0.2)": "white")};
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   &:hover {
     background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#004182")};
@@ -401,5 +427,7 @@ const UploadImage = styled.div`
     }
   }
 `;
+
+
 
 export default Post;
