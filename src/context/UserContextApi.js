@@ -36,7 +36,7 @@ export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState({}); // to store the user object from firebase
   const [loading, setLoading] = useState(true); // to check if the user is logged in or not
   const [articles, setArticles] = useState([]); // to store the articles from firebase
-  const [comments, setComments] = useState([]); // to store the comments from firebase
+
   function logIn(email, password) {
     // to sign in the user
     return signInWithEmailAndPassword(auth, email, password); //firebase service to sign in
@@ -124,6 +124,7 @@ export function UserAuthContextProvider({ children }) {
       }
     }
   }
+  
   function getArticlesAPI() {
     // to get the articles
     setLoading(true); // to start the loading
@@ -139,6 +140,7 @@ export function UserAuthContextProvider({ children }) {
     });
     return unsubscribe;
   }
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {

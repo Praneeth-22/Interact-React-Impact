@@ -4,29 +4,30 @@ import Home from "./TimeLine/Home";
 import Caterogy from "./Caterogy";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+import { useUserAuth } from "../context/UserContextApi";
 
 function MainPage() {
-  const [openModel, setOpenModel] = useState(false);
+  const [openModel, setOpenModel] = useState(true);
+
   return (
     <Container>
-      {openModel ? (
+      {/* {openModel ? (
         <>
           <Caterogy setOpenModel={setOpenModel} />
         </>
-      ) : (
-        <>
-          {/* <button onClick={() => setOpenModel(true)} className="openModel">
+      ) : ( */}
+      <>
+        {/* <button onClick={() => setOpenModel(true)} className="openModel">
             click
           </button> */}
-          <Header setOpenModel={setOpenModel} />
-          <Home />
-        </>
-      )}
+        <Header setOpenModel={setOpenModel} />
+        <Home />
+      </>
+      {/* )} */}
     </Container>
   );
 }
 const Container = styled.div`
- 
   max-width: 100%;
 
   .openModel {
