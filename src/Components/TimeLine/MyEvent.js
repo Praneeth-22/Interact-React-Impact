@@ -5,7 +5,7 @@ import { Card } from "@mui/material";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { hover } from "@testing-library/user-event/dist/hover";
-import './TimeLineCss/MyEvent.css'
+import "./TimeLineCss/MyEvent.css";
 import { useNavigate } from "react-router-dom";
 function MyEvent() {
   const navigate = useNavigate();
@@ -79,9 +79,11 @@ function MyEvent() {
     );
   });
   return (
-    <div style={{
-      padding: "10px 20px",
-    }}>
+    <div
+      style={{
+        padding: "10px 20px",
+      }}
+    >
       <h3
         style={{
           color: "#28104e",

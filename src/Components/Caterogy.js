@@ -51,6 +51,9 @@ function Caterogy({ setOpenModel }) {
               style={{
                 cursor: "pointer",
               }}
+              onClick={(e) => {
+                setOpenModel(false);
+              }}
             >
               <Card
                 variant="outlined"

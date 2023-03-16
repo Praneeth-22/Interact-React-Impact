@@ -14,14 +14,40 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { faker } from "@faker-js/faker";
 import logo from "../images/logo/logo2.jpg";
-
+import { useUserAuth } from ".././context/UserContextApi";
+import { useState ,useEffect} from "react";
+import Backdrop from "@mui/material/Backdrop";
+import Modal from "@mui/material/Modal";
+import Fade from "@mui/material/Fade";
+import Profile from "./TimeLine/Profile";
+//
 const pages = ["Home", "Category", "Chat"];
 const settings = ["Profile", "Logout"];
 function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { setOpenModel } = props;
+  const { user,logOut } = useUserAuth();
+  const ava = faker.image.avatar();
+  const [photoUrl, setPhotoUrl] = useState(ava);
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [modelOpen, setModelOpen] = useState(false);
+  const handleOpenModel = () => setModelOpen(true);
+  const handleCloseModel = () => setModelOpen(false);
 
+  useEffect(
+    () => {
+      if (user.photoURL) { // user != null && user.photoURL != null
+        console.log("photo   is:", user.photoURL);
+        console.log("display name is:", user.displayName);
+        setPhotoUrl(user.photoURL);
+        setDisplayName(user.displayName);
+        setEmail(user.email);
+      }
+    },[user]
+  );
+  console.log("user is:", user);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -35,7 +61,7 @@ function Header(props) {
     } else if (option === "Category") {
       setOpenModel(true);
     } else if (option === "Chat") {
-      window.location.href = "/chat";
+      window.location.href = "/chat-register";
     }
     console.log("option", option);
     setAnchorElNav(null);
@@ -43,12 +69,15 @@ function Header(props) {
 
   const handleCloseUserMenu = (setting) => {
     if (setting === "Profile") {
-      window.location.href = "/profile";
+      handleOpenModel();
+      // window.location.href = "/profile";
     } else if (setting === "Logout") {
+      logOut(); // to logout the user
       window.location.href = "/";
     }
     setAnchorElUser(null);
   };
+
 
   return (
     <AppBar
@@ -58,7 +87,7 @@ function Header(props) {
         backgroundColor: "#28104e",
 
         // backgroundColor:"#deacf5",
-        color: "white",     
+        color: "white",
       }}
     >
       <Container maxWidth="xl">
@@ -160,7 +189,11 @@ function Header(props) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="avatar" src={faker.image.avatar()} />
+                <Avatar
+                  alt="avatar"
+                  src={photoUrl}
+                  referrerpolicy="no-referrer"
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -190,6 +223,37 @@ function Header(props) {
             </Menu>
           </Box>
         </Toolbar>
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          open={modelOpen}
+          onClose={handleCloseModel}
+          closeAfterTransition
+          slots={{ backdrop: Backdrop }}
+          slotProps={{
+            backdrop: {
+              timeout: 500,
+            },
+          }}
+        >
+          <Fade in={modelOpen}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "50vw",
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <Profile name={displayName} email={email} />
+            </Box>
+          </Fade>
+        </Modal>
       </Container>
     </AppBar>
   );
