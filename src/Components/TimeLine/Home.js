@@ -37,7 +37,7 @@ import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined
 //
 import { useUserAuth } from "../../context/UserContextApi";
 import { db } from "../../firebase_service";
-import { doc, collection, addDoc, getDocs } from "firebase/firestore";
+import { doc, collection, addDoc, getDocs,updateDoc } from "firebase/firestore";
 import {
   getFirestore,
   query,
@@ -62,7 +62,7 @@ function Home(props) {
     setValue1(newValue);
   };
   const [articleId, setArticleId] = useState("");
-  const [likevalue, setLikeValue] = useState(3);
+  const [likevalue, setLikeValue] = useState(0);
   const handleClick = (e) => {
     e.preventDefault();
     setIsOpen(true);
@@ -145,6 +145,16 @@ function Home(props) {
     }
     getArticlesAPI();
   }, [user.displayName, user.photoURL]);
+
+  const handleLikes = (e, articleId) => {
+    e.preventDefault();
+    // setLikeValue(likevalue + 1);
+     const articleRef = doc(db, "articles", articleId);
+     updateDoc(articleRef, {
+       likes: firebase.firestore.FieldValue.increment(1),
+     });
+  };
+
   return (
     <div
       style={{
@@ -407,72 +417,7 @@ function Home(props) {
                           )}
                         </a>
                       </SharedImg>
-                      {/* <SocialCounts>
-                        <li>
-                          <button
-                            style={{
-                              border: "none",
-                              outline: "none",
-                              backgroundColor: "transparent",
-                              padding: "0",
-                            }}
-                          >
-                            <span>{likevalue}</span> likes
-                          </button>
-                        </li>
-                        <div className="ui labeled button" tabindex="0">
-                          <div className="ui red button">
-                            <i className="heart icon"></i> Like
-                          </div>
-                          <a className="ui basic red left pointing label">
-                            {likevalue}
-                          </a>
-                        </div>
-                        <li>
-                          <a>
-                            {comments[id]?.length ? comments[id]?.length : 0}{" "}
-                            comments
-                            {/* <CommentIcon />{" "} */}
-                      {/* </a>
-                        </li>
-                      </SocialCounts> */}{" "}
-                      {/* <SocialActions>
-                        <button>
-                          <ThumbUpOutlinedIcon
-                            onClick={(event) => {
-                              setLikeValue(likevalue + 1);
-                            }}
-                            style={{ color: "#28104e" }}
-                          />
-                          <span>Like</span>
-                        </button>
-                        <button>
-                          <CommentIcon />
-                          <span>Comment</span>
-                        </button>
-                        <button>
-                          <ShareOutlinedIcon />
-                          <span>Share</span>
-                        </button>
-                      </SocialActions> */}
-                      {/* <form className="post_commentbox">
-                        <input
-                          type="text"
-                          placeholder="Post comment...."
-                          value={newComment}
-                          className="post_input"
-                          onChange={(e) => setNewComment(e.target.value)}
-                        />
-                        <Button
-                          variant="contained"
-                          className="post_button"
-                          onClick={(e) => postComment(e, id)}
-                          type="submit"
-                          disabled={!newComment}
-                        >
-                          POST
-                        </Button>
-                      </form> */}
+                      
                       <div
                         className="ui card"
                         style={{ background: "#fff", width: "100%" }}
@@ -492,9 +437,9 @@ function Home(props) {
                             <span style={{ margin: "0px 5px" }}>comments</span>
                           </span>
                           <span className="left floated">
-                            <i className="heart filled red like icon"></i>
+                            <i className="heart filled transparent like icon" onClick={(event)=>{handleLikes(event,id)}}></i>
                             <span style={{ margin: "0px 5px" }}>
-                              {likevalue}likes
+                              {article.likes? article.likes : 0} likes
                             </span>
                           </span>
                         </div>

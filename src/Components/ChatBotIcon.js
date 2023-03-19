@@ -1,4 +1,5 @@
 import React from "react";
+// import ChatBot from "react-simple-chatbot";
 import Chatbot from "react-chatbot-kit";
 import "react-chatbot-kit/build/main.css";
 import styled from "styled-components";
@@ -6,11 +7,15 @@ import config from "./chatbotUtilities/config";
 import ActionProvider from "./chatbotUtilities/ActionProvider";
 import MessageParser from "./chatbotUtilities/MessageParser";
 import { useState } from "react";
+import { ThemeProvider } from "styled-components";
 import CloseIcon from "@mui/icons-material/Close";
+import  theme  from "./chatbotUtilities/ChatQuery";
+import steps from "./chatbotUtilities/ChatQuery";
 // import chatbotmain from '..images/chatbotmain.svg'
 import chatbot from "../images/chatbot.jpg";
-function ChatBot() {
+function ChatBotIcon() {
   const [chat, setChat] = useState(false);
+  console.log(theme)
   const clickChat = () => {
     console.log("clicked");
     setChat(!chat);
@@ -21,12 +26,23 @@ function ChatBot() {
   return (
     <ChatbotMain>
       {chat ? (
-        <div style={{
-          display: "flex",          
-        }}>
+        <div
+          style={{
+            display: "flex",
+          }}
+        >
           <section>
             <CloseIcon onClick={onClickCloseButton} className="closeIcon" />
           </section>
+          {/* <ThemeProvider theme={theme}>
+            <ChatBot
+              // This appears as the header
+              // text for the chat bot
+              headerTitle="chatbot"
+              steps={steps}
+              {...config}
+            />
+          </ThemeProvider> */}
           <Chatbot
             config={config}
             actionProvider={ActionProvider}
@@ -42,6 +58,19 @@ function ChatBot() {
       )}
       {/* <CloseIcon onClick={onClickCloseButton} className="closeIcon" /> */}
     </ChatbotMain>
+    // <>
+    //   <div>
+    //     <ThemeProvider theme={theme}>
+    //       <ChatBot
+    //         // This appears as the header
+    //         // text for the chat bot
+    //         headerTitle="chatbot"
+    //         steps={steps}
+    //         {...config}
+    //       />
+    //     </ThemeProvider>
+    //   </div>
+    // </>
   );
 }
 const ChatbotMain = styled.div`
@@ -54,6 +83,7 @@ const ChatbotMain = styled.div`
   margin-right: 10px;
   margin-bottom: 10px;
   background-color: transparent;
+  z-index: 999099999999999;
 
   /* z-index: 999; */
   img {
@@ -78,4 +108,4 @@ const ChatbotMain = styled.div`
 `;
 const Chatfield = styled.div``;
 
-export default ChatBot;
+export default ChatBotIcon;
