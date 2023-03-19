@@ -36,7 +36,7 @@ export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState({}); // to store the user object from firebase
   const [loading, setLoading] = useState(true); // to check if the user is logged in or not
   const [articles, setArticles] = useState([]); // to store the articles from firebase
-
+  const [postLiked, setPostLiked] = useState([]); // to store the liked posts
   function logIn(email, password) {
     // to sign in the user
     return signInWithEmailAndPassword(auth, email, password); //firebase service to sign in
@@ -92,6 +92,7 @@ export function UserAuthContextProvider({ children }) {
               sharedImg: downloadURL,
               comments: 0,
               description: payload.description,
+              likes:0,
             });
             setLoading(false); // to stop the loading
             console.log("Document written with ID: ", docRef.id);
@@ -116,12 +117,14 @@ export function UserAuthContextProvider({ children }) {
           sharedImg: "",
           comments: 0,
           description: payload.description,
+          likes:0,
         });
         setLoading(false); // to stop the loading
         console.log("Document written with ID: ", docRef.id);
       } catch (error) {
         console.log("Error adding document: ", error);
       }
+    }else{
     }
   }
   
