@@ -6,12 +6,11 @@ import ReactPlayer from "react-player";
 import EventIcon from "@mui/icons-material/Event";
 import ArticleIcon from "@mui/icons-material/Article";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import demopost from "./../../images/demoimg.jpg";
 import Rating from "@mui/material/Rating";
 import CommentIcon from "@mui/icons-material/Comment";
 import StarIcon from "@mui/icons-material/Star";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-import Chip from "@mui/material/Chip";
+import Button from "@mui/material/Button";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
 import SchoolIcon from "@mui/icons-material/School";
@@ -20,9 +19,9 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Container from "react-bootstrap/Container";
 import demo2 from "./../../images/demo2.jpg";
-
-import userImgUnLoad from './Images/user.png'
-import spinner from './Images/spin.svg'
+import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
+import userImgUnLoad from "./Images/user.png";
+import spinner from "./Images/spin.svg";
 // import demo2 from "../images/demo2.jpg";
 import { useNavigate } from "react-router-dom";
 import Post from "./Post";
@@ -31,17 +30,27 @@ import DemoPost from "./DemoPost";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./Home.css";
-import MyEvent from './MyEvent'
+import MyEvent from "./MyEvent";
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
 import ConstructionOutlinedIcon from "@mui/icons-material/ConstructionOutlined";
 import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
 //
 import { useUserAuth } from "../../context/UserContextApi";
+import { db } from "../../firebase_service";
+import { doc, collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  getFirestore,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
+import firebase from "firebase/compat/app";
 //
 function Home(props) {
   const navigate = useNavigate();
   //
-  const { user, loading, getArticlesAPI ,articles} = useUserAuth(); // destructuring user from context
+  const { user, loading, getArticlesAPI, articles } = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
   const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
   const [displayName, setDisplayName] = useState(""); // state for display name
@@ -52,24 +61,90 @@ function Home(props) {
   const handleChange = (event, newValue) => {
     setValue1(newValue);
   };
-  const [value, setValue] = useState(3);
+  const [articleId, setArticleId] = useState("");
+  const [likevalue, setLikeValue] = useState(3);
   const handleClick = (e) => {
     e.preventDefault();
-    console.log("clicked");
     setIsOpen(true);
   };
-useEffect(() => {
-  if (user.photoURL) {
-    // user != null && user.photoURL != null
-    console.log("photo   is:", user.photoURL);
-    console.log("display name is:", user.displayName);
-    setPhotoUrl(user.photoURL);
-    setDisplayName(user.displayName);
-  }
- getArticlesAPI();
-}, [user]);
+  const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState([]); // to store the comments from
 
-console.log("loading: ",loading)
+  //comment
+
+  const prepareComments = (data) => {
+    const comments = data.reduce((acc, item) => {
+      if (acc[item.articleId]) {
+        acc[item.articleId].push(item.comments);
+      } else {
+        acc[item.articleId] = [item.comments];
+      }
+      return acc;
+    }, []);
+    return comments;
+  };
+
+  const postComment = async (event, articleId) => {
+    event.preventDefault();
+    setArticleId(articleId);
+    try {
+      await addDoc(collection(db, `articles/${articleId}/comments`), {
+        text: newComment,
+        username: user.displayName,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+        .then(() => {
+          getArticlesAPI();
+          setNewComment("");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // console.log("Comment written with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding comment: ", error);
+    }
+    setNewComment("");
+  };
+  //
+
+  // console.log("articles: ", articles);
+  useEffect(() => {
+    let allComments = [];
+    const q = query(
+      collection(db, "articles"),
+      orderBy("actor.timestamp", "desc")
+    );
+    onSnapshot(q, async (querySnapshot) => {
+      const payload = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        article: doc.data(),
+      }));
+
+      for (let i = 0; i < payload.length; i++) {
+        const { id } = payload[i];
+        if (id.length > 0) {
+          const querySnapshot = await getDocs(
+            collection(doc(db, "articles", id), "comments")
+          );
+          querySnapshot.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            allComments.push({ articleId: id, comments: doc.data() });
+          });
+        }
+
+        setComments(prepareComments(allComments));
+      }
+    });
+  }, [newComment]);
+
+  useEffect(() => {
+    if (user.photoURL) {
+      setPhotoUrl(user.photoURL);
+      setDisplayName(user.displayName);
+    }
+    getArticlesAPI();
+  }, [user.displayName, user.photoURL]);
   return (
     <div
       style={{
@@ -281,115 +356,218 @@ console.log("loading: ",loading)
           <Content>
             {/* {!loading && <img src={spinner} alt="loading" />} */}
             {articles.length > 0 &&
-              articles.map((article, key) => (
-                <Article>
-                  <SharedActor>
-                    <a>
-                      <img
-                        src={article.actor.image}
-                        alt="user"
-                        style={{ borderRadius: "50%", marginRight: "10px" }}
-                      />
+              articles?.map(({ id, article }) => {
+                return (
+                  <>
+                    <Article key={id}>
+                      {/* {setArticleId(id)} */}
+                      <SharedActor>
+                        <a>
+                          <img
+                            src={article.actor.image}
+                            alt="user"
+                            style={{ borderRadius: "50%", marginRight: "10px" }}
+                          />
 
-                      <div>
-                        <span
+                          <div>
+                            <span
+                              style={{
+                                color: "#6237a0",
+                                fontSize: "14px",
+                                fontWeight: 600,
+                              }}
+                            >
+                              {article.actor.title}
+                            </span>
+                            <span>{article.actor.email}</span>
+                            {/* {console.log(article.actor.date.toDate())} */}
+                            {/* <span>{article.actor.date}</span> */}
+                            <span>
+                              {}
+                              {article.actor.timestamp &&
+                                article.actor.timestamp
+                                  .toDate()
+                                  .toLocaleDateString()}
+                            </span>
+                          </div>
+                        </a>
+                        <button>
+                          <MoreHorizIcon />
+                        </button>
+                      </SharedActor>
+                      <Description>{article.description}</Description>
+                      <SharedImg>
+                        <a>
+                          {!article.sharedImg && article.video ? (
+                            <ReactPlayer width={"100%"} url={article.video} />
+                          ) : (
+                            article.sharedImg && (
+                              <img src={article.sharedImg} alt="shared" />
+                            )
+                          )}
+                        </a>
+                      </SharedImg>
+                      {/* <SocialCounts>
+                        <li>
+                          <button
+                            style={{
+                              border: "none",
+                              outline: "none",
+                              backgroundColor: "transparent",
+                              padding: "0",
+                            }}
+                          >
+                            <span>{likevalue}</span> likes
+                          </button>
+                        </li>
+                        <div className="ui labeled button" tabindex="0">
+                          <div className="ui red button">
+                            <i className="heart icon"></i> Like
+                          </div>
+                          <a className="ui basic red left pointing label">
+                            {likevalue}
+                          </a>
+                        </div>
+                        <li>
+                          <a>
+                            {comments[id]?.length ? comments[id]?.length : 0}{" "}
+                            comments
+                            {/* <CommentIcon />{" "} */}
+                      {/* </a>
+                        </li>
+                      </SocialCounts> */}{" "}
+                      {/* <SocialActions>
+                        <button>
+                          <ThumbUpOutlinedIcon
+                            onClick={(event) => {
+                              setLikeValue(likevalue + 1);
+                            }}
+                            style={{ color: "#28104e" }}
+                          />
+                          <span>Like</span>
+                        </button>
+                        <button>
+                          <CommentIcon />
+                          <span>Comment</span>
+                        </button>
+                        <button>
+                          <ShareOutlinedIcon />
+                          <span>Share</span>
+                        </button>
+                      </SocialActions> */}
+                      {/* <form className="post_commentbox">
+                        <input
+                          type="text"
+                          placeholder="Post comment...."
+                          value={newComment}
+                          className="post_input"
+                          onChange={(e) => setNewComment(e.target.value)}
+                        />
+                        <Button
+                          variant="contained"
+                          className="post_button"
+                          onClick={(e) => postComment(e, id)}
+                          type="submit"
+                          disabled={!newComment}
+                        >
+                          POST
+                        </Button>
+                      </form> */}
+                      <div
+                        className="ui card"
+                        style={{ background: "#fff", width: "100%" }}
+                      >
+                        <div
+                          className="content"
                           style={{
-                            color: "#6237a0",
-                            fontSize: "14px",
-                            fontWeight: 600,
+                            width: "100%",
+                            padding: "10px 20px",
+                            background: "#fff",
+                            margin: "10px 0px",
                           }}
                         >
-                          {article.actor.title}
-                        </span>
-                        <span>{article.actor.email}</span>
-
-                        <span>
-                          {new Date(
-                            article.actor.seconds * 1000
-                          ).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </a>
-                    <button>
-                      <MoreHorizIcon />
-                    </button>
-                  </SharedActor>
-                  <Description>{article.description}</Description>
-                  <SharedImg>
-                    <a>
-                      {
-                        !article.sharedImg &&
-                        article.video ? (
-                          <ReactPlayer width={"100%"} url={article.video} />
-                        ) : (
-                          article.sharedImg && (
-                            <img src={article.sharedImg} alt="shared" />
-                          )
-                        )
-                      }
-                    </a>
-                  </SharedImg>
-                  <SocialCounts>
-                    <li>
-                      <button>
-                        <Rating
-                          name="text-feedback"
-                          value={value}
-                          readOnly
-                          precision={0.5}
-                          emptyIcon={
-                            <StarIcon
-                              style={{ opacity: 0.55 }}
-                              fontSize="inherit"
+                          <span className="right floated">
+                            <i className="comment icon"></i>
+                            {comments[id]?.length ? comments[id]?.length : 0}
+                            <span style={{ margin: "0px 5px" }}>comments</span>
+                          </span>
+                          <span className="left floated">
+                            <i className="heart filled red like icon"></i>
+                            <span style={{ margin: "0px 5px" }}>
+                              {likevalue}likes
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          className="extra content"
+                          style={{ background: "#fff", width: "100%" }}
+                        >
+                          <form
+                            className="post_commentbox"
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <img
+                              class="ui avatar image"
+                              src={article.actor.image}
                             />
-                          }
-                        />
-                        <span>{value}</span>
-                      </button>
-                    </li>
-                    <li>
-                      <a>
-                        {article.comments}<CommentIcon />{" "}
-                      </a>
-                    </li>
-                    {/* <SpeedDial
-            ariaLabel="SpeedDial basic example"
-            sx={{ position: "absolute", bottom: 16, right: 16 }}
-            icon={<SpeedDialIcon />}
-          >
-            {actions.map((action) => (
-              <SpeedDialAction
-                key={action.name}
-                icon={action.icon}
-                tooltipTitle={action.name}
-              />
-            ))}
-          </SpeedDial> */}
-                  </SocialCounts>
-                  <SocialActions>
-                    <button>
-                      <Rating
-                        name="half-rating"
-                        defaultValue={2.5}
-                        precision={0.5}
-                        value={value}
-                        onChange={(event, newValue) => {
-                          setValue(newValue);
-                        }}
-                      />
-                      <span>Rate</span>
-                    </button>
-                    <button>
-                      <CommentIcon />
-                      <span>Comment</span>
-                    </button>
-                    <button>
-                      <ShareOutlinedIcon />
-                      <span>Share</span>
-                    </button>
-                  </SocialActions>
-                </Article>
-              ))}
+                            <div
+                              className="ui large action left icon input rounded-circle"
+                              style={{ width: "100%" }}
+                            >
+                              <i className="comment outline icon"></i>
+                              <input
+                                type="text"
+                                placeholder="Add Comment..."
+                                onChange={(e) => setNewComment(e.target.value)}
+                                value={newComment}
+                              />
+                              <button
+                                className="ui button"
+                                onClick={(e) => {
+                                  postComment(e, id);
+                                }}
+                                type="submit"
+                                disabled={!newComment}
+                              >
+                                comment
+                              </button>
+                            </div>
+                          </form>
+                          <div class="ui divider"></div>
+                          {comments[id]?.slice(0, 3).map((comment) => (
+                            <>
+                              <div
+                                className="ui relaxed divided list"
+                                style={{ display: "flex", margin: "0px 30px" }}
+                              >
+                                <div className="item">
+                                  <i className="large github middle aligned icon"></i>
+                                  <div className="content left float ">
+                                    <a className="header left float">
+                                      {comment.username}
+                                    </a>
+                                    <div className="description">
+                                      {comment.text} 10 mins ago
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                class="ui divider"
+                                style={{ margin: "10px 30px" }}
+                              ></div>
+                            </>
+                          ))}
+                        </div>
+                      </div>
+                    </Article>
+                  </>
+                );
+              })}
           </Content>
           <Post isOpen={isOpen} setIsOpen={setIsOpen} />
         </HomeContainer>
@@ -471,7 +649,7 @@ const ShareBox = styled(CommonCard)`
     }
   }
 `;
- const Content = styled.div`
+const Content = styled.div`
   text-align: center;
   & > img {
     width: 50px;
@@ -481,7 +659,7 @@ const ShareBox = styled(CommonCard)`
 const Rightbar = styled(CommonCard)`
   margin-top: 16px;
   margin-left: 20px;
-  min-width:30% ;
+  min-width: 30%;
   @media (max-width: 768px) {
     display: none;
   }
@@ -553,8 +731,10 @@ const SharedImg = styled.div`
   background-color: #f9fafb;
   img {
     object-fit: contain;
-    width: 100%;
+    width: 96%;
     height: 100%;
+    border-radius: 5px;
+    max-height: 500px;
   }
 `;
 
@@ -568,7 +748,7 @@ const SocialCounts = styled.ul`
   border-bottom: 1px solid #e9e5df;
   list-style: none;
   li {
-    margin-right: 5px;
+    margin-right: 15px;
     font-size: 12px;
     button {
       display: flex;
