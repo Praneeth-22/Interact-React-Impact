@@ -11,6 +11,7 @@ import { UserAuthContextProvider } from "./context/UserContextApi";
 import Register from '../src/Components/Chat/Register';
 import ChatLogin from '../src/Components/Chat/Login';
 import Profile from '../src/Components/TimeLine/Profile';
+import ProtectedRoute from '../src/Components/LoginFeature/ProtectedRoute';
 //
 function App() {
   return (
@@ -20,16 +21,16 @@ function App() {
        
         <Routes>
           <Route exact path="/" element={<Login />} />
-          <Route path="/home" element={<MainPage />} />
-          <Route path="/events" element={<Event />} />
+          <Route path="/home" element={<ProtectedRoute><MainPage /></ProtectedRoute>} />
+          <Route path="/events" element={<ProtectedRoute><Event /></ProtectedRoute>} />
           <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/category" element={<Category />} />
+          <Route path="/category" element={<ProtectedRoute><Category /></ProtectedRoute>} />
           <Route exact path="/login" element={<Login />}></Route>
           {/* <Route path="/chat" element={<Chat />} /> */}
           <Route path="/chat-register" element={<Register />}/>
           <Route path="*" element={<h1>404 Not Found</h1>} />
           <Route path="/chat-login" element={<ChatLogin />}/>
-          <Route path="/profile" element={<Profile />}/>
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>}/>
         </Routes>
         
       </Router>
