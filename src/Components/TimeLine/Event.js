@@ -18,7 +18,7 @@ function Event() {
           <h2>Event Name Event Name Event Name</h2>
 
           <p>Date and Time</p>
-          <p>Locatio</p>
+          <p>Location</p>
         </div>
       
       </div>
