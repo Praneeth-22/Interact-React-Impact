@@ -28,7 +28,7 @@ const Login=() => {
     /*navigate("/home");*/
     try{
      await logIn(email,password);
-     navigate("/home");
+     navigate("/category");
     }
     catch(err){
        setError(err.message);
@@ -38,7 +38,7 @@ const Login=() => {
     e.preventDefault();
     try {
       await googleSignIn();
-      navigate("/home");
+      navigate("/category");
     } catch (error) {
       console.log(error.message);
     }

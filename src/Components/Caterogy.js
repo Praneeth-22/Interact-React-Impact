@@ -5,8 +5,23 @@ import { useState } from "react";
 import { Button } from "react-bootstrap";
 import { Card, Grid } from "@mui/material";
 import { margin } from "@mui/system";
-function Caterogy({ setOpenModel }) {
+function Caterogy() {
   const navigate = useNavigate();
+  const [openModel, setOpenModel] = useState(true);
+ const [selectedCategories,setSelected]=useState([])
+
+const chooseOption=async(category)=>{
+  let temp= selectedCategories;
+  if(!selectedCategories.includes(category)){
+    temp.push(category);
+  }
+  else{
+    temp=temp.filter(cat=>cat!==category)
+  }
+  console.log(temp);
+  setSelected(temp);
+}
+
   const routeHome = (e) => {
     e.preventDefault();
     if (e.target.style.backgroundColor === "green") {
@@ -36,6 +51,7 @@ function Caterogy({ setOpenModel }) {
             <button
               onClick={() => {
                 setOpenModel(false);
+                navigate("/home")
               }}
             >
               X
@@ -55,14 +71,14 @@ function Caterogy({ setOpenModel }) {
                 setOpenModel(false);
               }}
             >
-              <Card
+              <Card onClick={()=>{chooseOption("All")}}
                 variant="outlined"
                 style={{
                   padding: "10px 16px",
                   boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
                 }}
               >
-                <div style={{ fontSize: "16px", fontWeight: 600 }}>All </div>
+                <div  style={{ fontSize: "16px", fontWeight: 600 }}>All </div>
                 <div style={{ fontSize: "12px" }}>
                   get updated with all the latest news
                 </div>
@@ -75,14 +91,14 @@ function Caterogy({ setOpenModel }) {
                 cursor: "pointer",
               }}
             >
-              <Card
+              <Card onClick={()=>{chooseOption("Sports")}}
                 variant="outlined"
                 style={{
                   padding: "10px 16px",
                   boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
                 }}
               >
-                <div style={{ fontSize: "16px", fontWeight: 600 }}>Sports </div>
+                <div  style={{ fontSize: "16px", fontWeight: 600 }}>Sports </div>
                 <div style={{ fontSize: "12px" }}>
                   get updated with Sports news
                 </div>
@@ -95,14 +111,14 @@ function Caterogy({ setOpenModel }) {
                 cursor: "pointer",
               }}
             >
-              <Card
+              <Card onClick={()=>{chooseOption("Workshops")}}
                 variant="outlined"
                 style={{
                   padding: "10px 16px",
                   boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
                 }}
               >
-                <div style={{ fontSize: "16px", fontWeight: 600 }}>
+                <div  style={{ fontSize: "16px", fontWeight: 600 }}>
                   Workshops
                 </div>
                 <div style={{ fontSize: "12px" }}>
@@ -117,14 +133,14 @@ function Caterogy({ setOpenModel }) {
                 cursor: "pointer",
               }}
             >
-              <Card
+              <Card onClick={()=>{chooseOption("Career Fair")}}
                 variant="outlined"
                 style={{
                   padding: "10px 16px",
                   boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
                 }}
               >
-                <div style={{ fontSize: "16px", fontWeight: 600 }}>
+                <div  style={{ fontSize: "16px", fontWeight: 600 }}>
                   Career Fair
                 </div>
                 <div style={{ fontSize: "12px" }}>
@@ -139,14 +155,14 @@ function Caterogy({ setOpenModel }) {
                 cursor: "pointer",
               }}
             >
-              <Card
+              <Card onClick={()=>{chooseOption("E Sports")}}
                 variant="outlined"
                 style={{
                   padding: "10px 16px",
                   boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
                 }}
               >
-                <div style={{ fontSize: "16px", fontWeight: 600 }}>
+                <div  style={{ fontSize: "16px", fontWeight: 600 }}>
                   E-sports
                 </div>
                 <div style={{ fontSize: "12px" }}>
@@ -161,14 +177,14 @@ function Caterogy({ setOpenModel }) {
                 cursor: "pointer",
               }}
             >
-              <Card
+              <Card onClick={()=>{chooseOption("Activities")}}
                 variant="outlined"
                 style={{
                   padding: "10px 16px",
                   boxShadow: "5px 8px 10px rgba(40, 16, 78, 0.4)",
                 }}
               >
-                <div style={{ fontSize: "16px", fontWeight: 600 }}>
+                <div  style={{ fontSize: "16px", fontWeight: 600 }}>
                   Activities
                 </div>
                 <div style={{ fontSize: "12px" }}>
@@ -204,6 +220,7 @@ function Caterogy({ setOpenModel }) {
                   }}
                   onClick={() => {
                     setOpenModel(false);
+                    navigate("/home");
                   }}
                 >
                   <div
@@ -241,6 +258,7 @@ function Caterogy({ setOpenModel }) {
                     style={{ fontSize: "16px", fontWeight: 600 }}
                     onClick={() => {
                       setOpenModel(false);
+                      navigate("/home")
                     }}
                   >
                     Cancel

@@ -15,6 +15,7 @@ function MyEvent() {
         className="card"
         onClick={() => {
           navigate("/events");
+          //pass event id here ("/events/:id")
         }}
       >
         <p
