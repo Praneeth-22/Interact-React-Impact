@@ -91,6 +91,7 @@ function Home(props) {
       await addDoc(collection(db, `articles/${articleId}/comments`), {
         text: newComment,
         username: user.displayName,
+        userImg: user.photoURL,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
         .then(() => {
@@ -457,7 +458,7 @@ function Home(props) {
                           >
                             <img
                               class="ui avatar image"
-                              src={article.actor.image}
+                              src={user?.photoURL }
                             />
                             <div
                               className="ui large action left icon input rounded-circle"
@@ -490,7 +491,13 @@ function Home(props) {
                                 style={{ display: "flex", margin: "0px 30px" }}
                               >
                                 <div className="item">
-                                  <i className="large github middle aligned icon"></i>
+                                  <i className="large middle aligned icon" style={{
+                                  }}><img src={comment.userImg } alt="user" style={{
+                                    borderRadius: "50%",
+                                    width: "40px",
+                                    height: "40px",
+
+                                  }}/></i>
                                   <div className="content left float ">
                                     <a className="header left float">
                                       {comment.username}

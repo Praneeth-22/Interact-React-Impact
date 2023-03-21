@@ -1,4 +1,4 @@
-import Home from "./Home";
+import Home from "./ChatHome";
 import Login from "./Login";
 import Register from "./Register";
 import "./style.scss";
@@ -11,7 +11,7 @@ function Routing() {
 
   const ProtectedRoute = ({ children }) => {
     if (!currentUser) {
-      return <Navigate to="/login" />;
+      return <Navigate to="/chat-register" />;
     }
 
     return children
@@ -20,17 +20,17 @@ function Routing() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/">
-          <Route
+        <Route path="/chat-login">
+          {/* <Route
             index
             element={
               <ProtectedRoute>
                 <Home />
               </ProtectedRoute>
             }
-          />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
+          /> */}
+          <Route path="/chat-login" element={<Login />} />
+          <Route path="/chat-register" element={<Register />} />
         </Route>
       </Routes>
     </BrowserRouter>

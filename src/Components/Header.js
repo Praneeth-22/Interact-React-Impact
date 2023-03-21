@@ -61,7 +61,7 @@ function Header(props) {
     } else if (option === "Category") {
       setOpenModel(true);
     } else if (option === "Chat") {
-      window.location.href = "/chat-register";
+      window.location.href = "/chat-home";
     }
     console.log("option", option);
     setAnchorElNav(null);
