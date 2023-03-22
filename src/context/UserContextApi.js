@@ -37,6 +37,7 @@ export function UserAuthContextProvider({ children }) {
   const [loading, setLoading] = useState(true); // to check if the user is logged in or not
   const [articles, setArticles] = useState([]); // to store the articles from firebase
   const [postLiked, setPostLiked] = useState([]); // to store the liked posts
+
   function logIn(email, password) {
     // to sign in the user
     return signInWithEmailAndPassword(auth, email, password); //firebase service to sign in
@@ -53,6 +54,19 @@ export function UserAuthContextProvider({ children }) {
     // to sign in the user using google
     const googleAuthProvider = new GoogleAuthProvider();
     return signInWithPopup(auth, googleAuthProvider);
+  }
+// user collection
+  function creatingUserCoollection(user) {
+    // to create the user collection
+    const userRef = collection(db, "users");
+    const userDoc = {
+      uid: user.uid,
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    addDoc(userRef, userDoc);
   }
 
   function postArticleAPI(payload) {

@@ -11,6 +11,7 @@ import { UserAuthContextProvider } from "./context/UserContextApi";
 import Register from '../src/Components/Chat/Register';
 import ChatLogin from '../src/Components/Chat/Login';
 import Profile from '../src/Components/TimeLine/Profile';
+import ChatHome from '../src/Components/Chat/ChatHome';
 import ProtectedRoute from '../src/Components/LoginFeature/ProtectedRoute';
 //
 function App() {
@@ -30,6 +31,8 @@ function App() {
           <Route path="/chat-register" element={<Register />}/>
           <Route path="*" element={<h1>404 Not Found</h1>} />
           <Route path="/chat-login" element={<ChatLogin />}/>
+          <Route path="/profile" element={<Profile />}/>
+          <Route path="/chat-home" element={<ChatHome />}/>
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>}/>
         </Routes>
         

@@ -1,18 +1,20 @@
 import { signOut } from 'firebase/auth';
 import React,{useContext} from 'react'
 import '../Chat/style.scss';
-import { auth } from './firebase';
-import { AuthContext } from './AuthContext';
+import {auth} from '../../firebase_service'
 
+import firebase from "firebase/compat/app";
+// import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import {useUserAuth} from '../../context/UserContextApi'
 const Navbar = () => {
-  const {currentUser} = useContext(AuthContext)
+  const { user,logOut } = useUserAuth();
   return (
     <div className='navbar'>
         <span className="logo">Student Chat</span>
         <div className="user">
-        <img src="{currentUser.photoURL}" alt="" />
-        <span>{currentUser.displayName}</span>
-        <button onClick={()=>signOut(auth)}>Logout</button>
+        <img src={user.photoURL} alt="" />
+        <span>{user.displayName}</span>
+        <button onClick={()=>logOut(auth)}>Logout</button>
         </div>
       
     </div>
