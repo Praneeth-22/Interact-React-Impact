@@ -34,6 +34,12 @@ function Profile(props) {
             variant="outlined"
             defaultValue={email}
           />
+          <TextField
+            id="outlined-multiline-static"
+            label="Password"
+            variant="outlined"
+            // defaultValue={email}
+          />
         </div>
         <div>
           <Button variant="contained" color="success">
