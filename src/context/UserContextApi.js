@@ -59,6 +59,7 @@ export function UserAuthContextProvider({ children }) {
           displayName: currentUser[0].displayName,
           email: currentUser[0].email,
           photoURL: currentUser[0].avatarUrl,
+          password: currentUser[0].password,
           uid: currentUser[0].uid,
         });
       });
@@ -66,7 +67,7 @@ export function UserAuthContextProvider({ children }) {
   }
   function signUp(email, password) {
     // to sign up the user
-    return createUserWithEmailAndPassword(auth, email, password); //firebase service to create user
+    return createUserWithEmailAndPassword(auth, email, password)
   }
   function logOut() {
     // to sign out the user
@@ -75,7 +76,30 @@ export function UserAuthContextProvider({ children }) {
   function googleSignIn() {
     // to sign in the user using google
     const googleAuthProvider = new GoogleAuthProvider();
-    return signInWithPopup(auth, googleAuthProvider);
+    return signInWithPopup(auth, googleAuthProvider).then((user) => {
+      console.log("user in usercontext:", user);
+      // setUser(user);
+      //get the current user email from user collection and set it to the user object
+      const userRef = collection(db, "users");
+      const q = query(userRef, orderBy("email", "asc"));
+      onSnapshot(q, (querySnapshot) => {
+        const users = [];
+        querySnapshot.forEach((doc) => {
+          users.push({ ...doc.data(), id: doc.id });
+        });
+        const currentUser = users.filter((u) => u.email === user.user.email);
+        console.log("currentUser:", currentUser);
+        //console log current user mail id
+        console.log("currentUser[0]:", currentUser[0]);
+        setUser({
+          displayName: currentUser[0].displayName,
+          email: currentUser[0].email,
+          photoURL: currentUser[0].avatarUrl,
+          password: currentUser[0].password,
+          uid: currentUser[0].uid,
+        });
+      });
+    });
   }
   
   function postArticleAPI(payload) {

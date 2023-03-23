@@ -27,7 +27,7 @@ function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { setOpenModel } = props;
-  const { user, logOut, getUserAPI } = useUserAuth();
+  const { user, logOut } = useUserAuth();
   const ava = faker.image.avatar();
   const [photoUrl, setPhotoUrl] = useState(ava);
   const [displayName, setDisplayName] = useState("");
@@ -35,7 +35,7 @@ function Header(props) {
   const [modelOpen, setModelOpen] = useState(false);
   const handleOpenModel = () => setModelOpen(true);
   const handleCloseModel = () => setModelOpen(false);
-
+  
   useEffect(
     () => {
       if (user.photoURL) { // user != null && user.photoURL != null
