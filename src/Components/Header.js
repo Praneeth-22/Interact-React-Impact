@@ -21,7 +21,7 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Profile from "./TimeLine/Profile";
 //
-const pages = ["Home", "Category", "Chat"]; // change the caterogy
+const pages = ["Home","Chat"]; // change the caterogy
 const settings = ["Profile", "Logout"];
 function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -190,7 +190,7 @@ function Header(props) {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   alt="avatar"
-                  src={photoUrl}
+                  src={user.photoURL}
                   referrerpolicy="no-referrer"
                 />
               </IconButton>
