@@ -41,7 +41,7 @@ function Post(props) {
   const [text, setText] = useState(""); // state for text
   const [videoLink, setVideoLink] = useState(""); // state for video link
   const [assetArea, setAssetArea] = useState(""); // state for asset area
-  console.log("at posts-->props :", props); // console log for props
+  // console.log("at posts-->props :", props); // console log for props
   //
   const { user, postArticleAPI } = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
@@ -95,8 +95,8 @@ function Post(props) {
   useEffect(() => {
     if (user.photoURL) {
       // user != null && user.photoURL != null
-      console.log("photo   is:", user.photoURL);
-      console.log("display name is:", user.displayName);
+      console.log("post photo   is:", user.photoURL);
+      console.log("post display name is:", user.displayName);
       setPhotoUrl(user.photoURL);
       setDisplayName(user.displayName);
     }
@@ -107,7 +107,7 @@ function Post(props) {
    const handleCatChange = (event) => {
       setCat(event.target.value);
     };
-    console.log("cat is:", cat);
+    // console.log("cat is:", cat);
   //
   return (
     // return statement
