@@ -8,8 +8,8 @@ const Home = () => {
     <div className="home"> 
     <div className="container">
         <Sidebar/>
-        {/* <Chat /> */}
-        
+        <Chat />
+
     </div>
       
     </div>

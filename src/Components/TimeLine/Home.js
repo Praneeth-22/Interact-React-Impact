@@ -26,7 +26,7 @@ import spinner from "./Images/spin.svg";
 import { useNavigate } from "react-router-dom";
 import Post from "./Post";
 import { faker } from "@faker-js/faker";
-import DemoPost from "./DemoPost";
+
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./Home.css";
@@ -56,6 +56,7 @@ function Home(props) {
   const [displayName, setDisplayName] = useState(""); // state for display name
   //
   const [isOpen, setIsOpen] = useState(false);
+  
   const [value1, setValue1] = React.useState(0);
   const catcolor = { color: "#6237a0" };
   const handleChange = (event, newValue) => {
@@ -168,7 +169,159 @@ function Home(props) {
       }}
     >
       {articles.length === 0 ? (
-        <p></p>
+        <HomeContainer>
+          <ShareBox>
+            <div>
+              {user && user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt="user"
+                  referrerpolicy="no-referrer"
+                />
+              ) : (
+                <img src={userImgUnLoad} alt="user" />
+              )}
+              <button
+                onClick={handleClick}
+                // disabled={!loading ? true : false}
+              >{` Start a post`}</button>
+            </div>
+            <div>
+              <button>
+                <AddPhotoAlternateIcon style={{ color: "#28104e" }} />
+                <span
+                  style={{
+                    color: "#28104e",
+                    fontWeight: 600,
+                    alignItems: "center",
+                    marginLeft: "7px",
+                    letterSpacing: "1.5px",
+                  }}
+                >
+                  Photo
+                </span>
+              </button>
+              <button>
+                <EventIcon style={{ color: "#28104e" }} />
+                <span
+                  style={{
+                    color: "#28104e",
+                    fontWeight: 600,
+                    alignItems: "center",
+                    marginLeft: "7px",
+                    letterSpacing: "1.5px",
+                  }}
+                >
+                  Event
+                </span>
+              </button>
+              <button>
+                <ArticleIcon style={{ color: "#28104e" }} />
+                <span
+                  style={{
+                    color: "#28104e",
+                    fontWeight: 600,
+                    alignItems: "center",
+                    marginLeft: "7px",
+                    letterSpacing: "1.5px",
+                  }}
+                >
+                  Article
+                </span>
+              </button>
+            </div>
+          </ShareBox>
+          <div>
+            <Tabs
+              TabIndicatorProps={{ style: { backgroundColor: "#28104e" } }}
+              value={value1}
+              onChange={handleChange}
+              variant="scrollable"
+              scrollButtons="auto"
+              aria-label="scrollable auto tabs example"
+              style={{
+                marginBottom: "10px",
+                boxShadow: "0 0 0 1px rgb(0 0 0 / 15%), 0 0 0 rgb(0 0 0 / 20%)",
+                borderRadius: "5px",
+                backgroundColor: "#fff",
+              }}
+            >
+              <Tab
+                label="All"
+                icon={<CategoryOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="Workshops"
+                icon={<ConstructionOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+
+              <Tab
+                label="Sports"
+                icon={<SportsBasketballIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="Academics"
+                icon={<SchoolIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="Career fair"
+                icon={<BusinessCenterOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="
+              Activities"
+                icon={<CelebrationIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="E-sports"
+                icon={<SportsEsportsOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+            </Tabs>
+          </div>
+          <Post isOpen={isOpen} setIsOpen={setIsOpen} />
+        </HomeContainer>
       ) : (
         <HomeContainer>
           <ShareBox>
@@ -233,49 +386,6 @@ function Home(props) {
             </div>
           </ShareBox>
 
-          {/* <Category>
-          <Chip
-            avatar={<CategoryOutlinedIcon />}
-            label="All"
-            component="a"
-            href="#basic-chip"
-            clickable
-            variant="outlined"
-            onClick={() => navigate("/home")}
-          />
-          <Chip
-            avatar={<SportsBasketballIcon />}
-            label="Sport"
-            component="a"
-            href="#basic-chip"
-            clickable
-            variant="outlined"
-          />
-          <Chip
-            avatar={<SchoolIcon />}
-            label="Academics"
-            component="a"
-            href="#basic-chip"
-            clickable
-            variant="outlined"
-          />
-          <Chip
-            avatar={<CelebrationIcon />}
-            label="Activities"
-            component="a"
-            href="#basic-chip"
-            clickable
-            variant="outlined"
-          />
-          <Chip
-            label="More"
-            component="a"
-            href="#basic-chip"
-            clickable
-            variant="outlined"
-            avatar={<ArrowRightIcon />}
-          />
-        </Category> */}
           <div>
             <Tabs
               TabIndicatorProps={{ style: { backgroundColor: "#28104e" } }}
@@ -419,7 +529,7 @@ function Home(props) {
                           )}
                         </a>
                       </SharedImg>
-                      
+
                       <div
                         className="ui card"
                         style={{ background: "#fff", width: "100%" }}
@@ -439,11 +549,14 @@ function Home(props) {
                             <span style={{ margin: "0px 5px" }}>comments</span>
                           </span>
                           <span className="left floated">
-                            <i className="heart filled transparent like icon" onClick={(event)=>{handleLikes(event,id)}}></i>
+                            <i
+                              className="heart filled transparent like icon"
+                              onClick={(event) => {
+                                handleLikes(event, id);
+                              }}
+                            ></i>
                             <span style={{ margin: "0px 5px" }}>
-                              {
-                                article.likes? article.likes.length : 0
-                              } likes
+                              {article.likes ? article.likes.length : 0} likes
                             </span>
                           </span>
                         </div>
@@ -459,10 +572,7 @@ function Home(props) {
                               alignItems: "center",
                             }}
                           >
-                            <img
-                              class="ui avatar image"
-                              src={user?.photoURL }
-                            />
+                            <img class="ui avatar image" src={user?.photoURL} />
                             <div
                               className="ui large action left icon input rounded-circle"
                               style={{ width: "100%" }}
@@ -494,13 +604,20 @@ function Home(props) {
                                 style={{ display: "flex", margin: "0px 30px" }}
                               >
                                 <div className="item">
-                                  <i className="large middle aligned icon" style={{
-                                  }}><img src={comment.userImg } alt="user" style={{
-                                    borderRadius: "50%",
-                                    width: "40px",
-                                    height: "40px",
-
-                                  }}/></i>
+                                  <i
+                                    className="large middle aligned icon"
+                                    style={{}}
+                                  >
+                                    <img
+                                      src={comment.userImg}
+                                      alt="user"
+                                      style={{
+                                        borderRadius: "50%",
+                                        width: "40px",
+                                        height: "40px",
+                                      }}
+                                    />
+                                  </i>
                                   <div className="content left float ">
                                     <a className="header left float">
                                       {comment.username}
