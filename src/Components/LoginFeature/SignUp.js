@@ -3,13 +3,18 @@ import { useState } from "react";
 import "./loginpage.css";
 import photo from "./img/finallogo.jpg";
 import { Link } from "react-router-dom";
-import ChatBot from "../ChatBot";
+import ChatBotIcon from "../ChatBotIcon";
 import google from "./img/google.svg";
 import { useNavigate } from "react-router-dom";
 import bg from "./img/background.jpg";
-import { useUserAuth } from "../../context/contextapi";
+import { useUserAuth } from "../../context/UserContextApi";
 import { Alert } from "@mui/material";
-const SignUp=() =>{
+import Add from "./img/add.png";
+import { auth, db, storage } from "../../firebase_service";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+const SignUp = () => {
   let navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -17,14 +22,51 @@ const SignUp=() =>{
   const { signUp } = useUserAuth();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     /*navigate("/home");*/
-    try{
-     await signUp(email,password);
-     navigate("/login");
+    const displayName = e.target[0].value;
+    const useremail = e.target[1].value;
+    const userpassword = e.target[2].value;
+    const userAvator = e.target[3].files[0];
+    if (!displayName || !useremail || !userpassword || !userAvator) {
+      setInterval(() => {
+        setError("");
+      }, 5000);
+      setError("Please fill all the fields");
+      return;
     }
-    catch(err){
-       setError(err.message);
+    if (userpassword.length < 6) {
+      setInterval(() => {
+        setError("");
+      }, 5000);
+      setError("Password should be atleast 6 characters long");
+      return;
+    }
+    try {
+      //  await signUp(email, password);
+      //Create user
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        useremail,
+        userpassword
+      );
+      //Create a unique image name
+      const avatarName = `${user.uid}-${new Date().getTime()}-${
+        userAvator.name
+      }`;
+      const storageRef = ref(storage, avatarName);
+      const snapshot = await uploadBytes(storageRef, userAvator);
+      const avatarUrl = await getDownloadURL(snapshot.ref);
+      const userDocRef = await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        displayName: displayName,
+        email: useremail,
+        avatarUrl: avatarUrl,
+        password: userpassword,
+      });
+      console.log("User added with ID: ", userDocRef.id);
+      navigate("/login");
+    } catch (err) {
+      setError(err.message);
     }
   };
   return (
@@ -40,7 +82,7 @@ const SignUp=() =>{
               alt="pic"
             />
           </Link>
-          <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <div id="navbarTogglerDemo02">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Link
@@ -75,13 +117,22 @@ const SignUp=() =>{
             <form onSubmit={handleSubmit}>
               <h3>Sign Up</h3>
               {error && <Alert variant="danger">{error}</Alert>}
+              <div className="mb-3  ">
+                <label>Username</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter username"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
               <div className="mb-3">
                 <label>Email address</label>
                 <input
                   type="email"
                   className="form-control"
                   placeholder="Enter email"
-                  onChange ={(e)=>setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="mb-3">
@@ -90,8 +141,20 @@ const SignUp=() =>{
                   type="password"
                   className="form-control"
                   placeholder="Enter password"
-                  onChange ={(e)=>setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
+              </div>
+              <div className="mb-3">
+                <input style={{ display: "none" }} type="file" id="file" />
+                <label
+                  htmlFor="file"
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
+                  <img src={Add} alt=" " />
+                  <span>Add an avatar</span>
+                </label>
               </div>
               <div className="d-grid">
                 <button
@@ -119,9 +182,9 @@ const SignUp=() =>{
         </div>
       </div>
 
-      <ChatBot />
+      <ChatBotIcon />
     </div>
   );
-}
+};
 
 export default SignUp;

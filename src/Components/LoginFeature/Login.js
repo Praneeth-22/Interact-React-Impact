@@ -4,31 +4,33 @@ import { useNavigate } from "react-router-dom";
 import photo from "./img/finallogo.jpg";
 import { Link } from "react-router-dom";
 import google from "./img/google.svg";
-import ChatBot from "../ChatBot";
-import bg from './img/background.jpg';
-import { useUserAuth } from "../../context/contextapi";
+import ChatBotIcon from "../ChatBotIcon";
+import bg from "./img/background.jpg";
+import { useUserAuth } from "../../context/UserContextApi";
 import { useState } from "react";
-import { Alert } from "@mui/material";
+import { Alert, stepClasses } from "@mui/material";
 import GoogleButton from "react-google-button";
 // import bg from './img/logintest2.svg';
-const Login=() => {
+
+const Login = () => {
   /*const navigate = useNavigate();*/
   let navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
-  const { logIn,googleSignIn } = useUserAuth();
-  const handleSubmit = async(e) => {
+
+  const { logIn, googleSignIn } = useUserAuth(); // to get the logIn function from the context
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     /*navigate("/home");*/
     setError("");
     /*navigate("/home");*/
-    try{
-     await logIn(email,password);
-     navigate("/home");
-    }
-    catch(err){
-       setError(err.message);
+    try {
+      await logIn(email, password);
+      navigate("/home");
+    } catch (err) {
+      setError(err.message);
     }
   };
   const handleGoogleSignIn = async (e) => {
@@ -53,7 +55,7 @@ const Login=() => {
               alt="pic"
             />
           </Link>
-          <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <div id="navbarTogglerDemo02">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Link
@@ -95,7 +97,7 @@ const Login=() => {
                   type="email"
                   className="form-control"
                   placeholder="Enter email"
-                  onChange ={(e)=>setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="mb-3">
@@ -104,7 +106,7 @@ const Login=() => {
                   type="password"
                   className="form-control"
                   placeholder="Enter password"
-                  onChange ={(e)=>setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <div className="d-grid">
@@ -120,7 +122,11 @@ const Login=() => {
                 </button>
               </div>
               <div className="d-grid mt-2">
-                <button type="submit" className="googleBtn" onClick={handleGoogleSignIn}>
+                <button
+                  type="submit"
+                  className="googleBtn"
+                  onClick={handleGoogleSignIn}
+                >
                   <a>Sign In via Google</a>&nbsp;&nbsp;
                   <img src={google} alt="click" />
                 </button>
@@ -128,7 +134,7 @@ const Login=() => {
             </form>
           </div>
         </div>
-        <ChatBot />
+        <ChatBotIcon />
       </div>
     </div>
   );
