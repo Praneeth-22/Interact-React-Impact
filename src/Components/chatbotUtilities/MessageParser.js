@@ -1,20 +1,25 @@
-import React from "react";
+import React from 'react';
 
-const MessageParser = ({ children, actions }) => {
-  const parse = (message) => {
+
+class MessageParser {
+  constructor(actionProvider) {
+    this.actionProvider = actionProvider;
+  }
+
+  parse(message) {
     console.log(message);
-  };
+    const lowercase = message.toLowerCase();
 
-  return (
-    <div>
-      {React.Children.map(children, (child) => {
-        return React.cloneElement(child, {
-          parse: parse,
-          actions: {},
-        });
-      })}
-    </div>
-  );
-};
+    if (lowercase.includes("hello") ) {
+      this.actionProvider.greet();
+    }
+
+    if (lowercase.includes("javascript") || lowercase.includes("js")) {
+      this.actionProvider.handleJavascriptQuiz();
+    }
+  }
+}
+
+
 
 export default MessageParser;
