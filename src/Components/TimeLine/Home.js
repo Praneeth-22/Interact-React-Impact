@@ -129,7 +129,7 @@ function Home(props) {
             collection(doc(db, "articles", id), "comments")
           );
           querySnapshot.forEach((doc) => {
-            console.log(doc.id, " => ", doc.data());
+            // console.log(doc.id, " => ", doc.data());
             allComments.push({ articleId: id, comments: doc.data() });
           });
         }
@@ -152,7 +152,8 @@ function Home(props) {
     // setLikeValue(likevalue + 1);
      const articleRef = doc(db, "articles", articleId);
      updateDoc(articleRef, {
-       likes: firebase.firestore.FieldValue.increment(1),
+        //update likes with uid
+        likes: firebase.firestore.FieldValue.arrayUnion(user.uid),
      });
   };
 
@@ -440,7 +441,9 @@ function Home(props) {
                           <span className="left floated">
                             <i className="heart filled transparent like icon" onClick={(event)=>{handleLikes(event,id)}}></i>
                             <span style={{ margin: "0px 5px" }}>
-                              {article.likes? article.likes : 0} likes
+                              {
+                                article.likes? article.likes.length : 0
+                              } likes
                             </span>
                           </span>
                         </div>

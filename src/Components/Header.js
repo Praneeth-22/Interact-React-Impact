@@ -27,7 +27,7 @@ function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { setOpenModel } = props;
-  const { user,logOut } = useUserAuth();
+  const { user, logOut, getUserAPI } = useUserAuth();
   const ava = faker.image.avatar();
   const [photoUrl, setPhotoUrl] = useState(ava);
   const [displayName, setDisplayName] = useState("");
@@ -39,12 +39,11 @@ function Header(props) {
   useEffect(
     () => {
       if (user.photoURL) { // user != null && user.photoURL != null
-        console.log("photo   is:", user.photoURL);
-        console.log("display name is:", user.displayName);
         setPhotoUrl(user.photoURL);
         setDisplayName(user.displayName);
         setEmail(user.email);
       }
+      
     },[user]
   );
   console.log("user is:", user);

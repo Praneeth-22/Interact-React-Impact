@@ -61,6 +61,7 @@ const SignUp = () => {
         displayName: displayName,
         email: useremail,
         avatarUrl: avatarUrl,
+        password: userpassword,
       });
       console.log("User added with ID: ", userDocRef.id);
       navigate("/login");

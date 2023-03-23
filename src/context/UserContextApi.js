@@ -40,7 +40,29 @@ export function UserAuthContextProvider({ children }) {
 
   function logIn(email, password) {
     // to sign in the user
-    return signInWithEmailAndPassword(auth, email, password); //firebase service to sign in
+    return signInWithEmailAndPassword(auth, email, password).then((user) => {
+      console.log("user in usercontext:", user);
+      // setUser(user);
+      //get the current user email from user collection and set it to the user object
+      const userRef = collection(db, "users");
+      const q = query(userRef, orderBy("email", "asc"));
+      onSnapshot(q, (querySnapshot) => {
+        const users = [];
+        querySnapshot.forEach((doc) => {
+          users.push({ ...doc.data(), id: doc.id });
+        });
+        const currentUser = users.filter((u) => u.email === user.user.email);
+        console.log("currentUser:", currentUser);
+        //console log current user mail id
+        console.log("currentUser[0]:", currentUser[0]);
+        setUser({
+          displayName: currentUser[0].displayName,
+          email: currentUser[0].email,
+          photoURL: currentUser[0].avatarUrl,
+          uid: currentUser[0].uid,
+        });
+      });
+    });
   }
   function signUp(email, password) {
     // to sign up the user
@@ -55,20 +77,7 @@ export function UserAuthContextProvider({ children }) {
     const googleAuthProvider = new GoogleAuthProvider();
     return signInWithPopup(auth, googleAuthProvider);
   }
-// user collection
-  function creatingUserCoollection(user) {
-    // to create the user collection
-    const userRef = collection(db, "users");
-    const userDoc = {
-      uid: user.uid,
-      displayName: user.displayName,
-      email: user.email,
-      photoURL: user.photoURL,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    };
-    addDoc(userRef, userDoc);
-  }
-
+  
   function postArticleAPI(payload) {
     // to post the article
     setLoading(true); // to start the loading
@@ -106,7 +115,7 @@ export function UserAuthContextProvider({ children }) {
               sharedImg: downloadURL,
               comments: 0,
               description: payload.description,
-              likes:0,
+              likes: [],
             });
             setLoading(false); // to stop the loading
             console.log("Document written with ID: ", docRef.id);
@@ -131,21 +140,24 @@ export function UserAuthContextProvider({ children }) {
           sharedImg: "",
           comments: 0,
           description: payload.description,
-          likes:0,
+          likes: 0,
         });
         setLoading(false); // to stop the loading
         console.log("Document written with ID: ", docRef.id);
       } catch (error) {
         console.log("Error adding document: ", error);
       }
-    }else{
+    } else {
     }
   }
-  
+
   function getArticlesAPI() {
     // to get the articles
     setLoading(true); // to start the loading
-    const q = query(collection(db, "articles"), orderBy("actor.timestamp", "desc"));
+    const q = query(
+      collection(db, "articles"),
+      orderBy("actor.timestamp", "desc")
+    );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const payload = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -157,7 +169,6 @@ export function UserAuthContextProvider({ children }) {
     });
     return unsubscribe;
   }
-
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
@@ -184,8 +195,6 @@ export function UserAuthContextProvider({ children }) {
         postArticleAPI,
         getArticlesAPI,
         articles,
-    
-        
       }} // to provide the context to the children
     >
       {children}
