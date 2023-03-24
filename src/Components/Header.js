@@ -21,7 +21,7 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Profile from "./TimeLine/Profile";
 //
-const pages = ["Home","Chat"]; // change the caterogy
+const pages = ["Home","Event","Chat"]; // change the caterogy
 const settings = ["Profile", "Logout"];
 function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
