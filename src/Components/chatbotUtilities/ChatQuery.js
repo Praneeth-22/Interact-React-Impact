@@ -1,3 +1,4 @@
+import ChatBotImg from '../../images/chatbot.jpg';
 const steps = [
     {
         id: '0',
@@ -52,6 +53,14 @@ const theme = {
     userBubbleColor: '#FF5733',
     userFontColor: 'white',
 };
+const config = {
+  botAvatar: ChatBotImg,
+  floating: true,
+};
+const myData = [config, steps, theme];
+export default myData;
+
+
 
 
  
