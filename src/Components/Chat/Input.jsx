@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import Img from "../Chat/img/img.png";
 import Attach from "../Chat/img/attach.png";
 import { AuthContext } from "../Chat/AuthContext";
+ import { useUserAuth } from "../../context/UserContextApi";
 import { ChatContext } from "../Chat/ChatContext";
 import {
   arrayUnion,
@@ -17,11 +18,12 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
-
-  const { currentUser } = useContext(AuthContext);
+  const { user } = useUserAuth();
+  const currentUser = user;
   const { data } = useContext(ChatContext);
 
   const handleSend = async () => {
+    console.log("imig",img);
     if (img) {
       const storageRef = ref(storage, uuid());
 
@@ -46,6 +48,8 @@ const Input = () => {
         }
       );
     } else {
+      console.log("else")
+      console.log("data:",data,text);
       await updateDoc(doc(db, "chats", data.chatId), {
         messages: arrayUnion({
           id: uuid(),

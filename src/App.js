@@ -13,11 +13,13 @@ import ChatLogin from '../src/Components/Chat/Login';
 import Profile from '../src/Components/TimeLine/Profile';
 import ChatHome from '../src/Components/Chat/ChatHome';
 import ProtectedRoute from '../src/Components/LoginFeature/ProtectedRoute';
+import { ChatContextProvider } from '../src/Components/Chat/ChatContext';
 //
 function App() {
   return (
     <div className="App">
       <UserAuthContextProvider>
+       <ChatContextProvider>
       <Router>
        
         <Routes>
@@ -37,6 +39,7 @@ function App() {
         </Routes>
         
       </Router>
+      </ChatContextProvider>
       </UserAuthContextProvider>
     </div>
   );
