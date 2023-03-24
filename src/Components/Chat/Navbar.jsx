@@ -8,13 +8,17 @@ import firebase from "firebase/compat/app";
 import {useUserAuth} from '../../context/UserContextApi'
 const Navbar = () => {
   const { user,logOut } = useUserAuth();
+  const loggingOut = () => {
+    logOut()
+    window.location.href = "/";
+  }
   return (
     <div className='navbar'>
         <span className="logo">Student Chat</span>
         <div className="user">
         <img src={user.photoURL} alt="" />
         <span>{user.displayName}</span>
-        <button onClick={()=>logOut(auth)}>Logout</button>
+        <button onClick={loggingOut}>Logout</button>
         </div>
       
     </div>

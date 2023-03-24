@@ -32,7 +32,7 @@ import {
     };
   
     const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE);
-  
+    console.log(state,dispatch);
     return (
       <ChatContext.Provider value={{ data:state, dispatch }}>
         {children}
