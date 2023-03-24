@@ -1,21 +1,71 @@
 import React from "react";
-// import ChatBot from "react-simple-chatbot";
-import Chatbot from "react-chatbot-kit";
-import "react-chatbot-kit/build/main.css";
 import styled from "styled-components";
-import config from "./chatbotUtilities/config";
-import ActionProvider from "./chatbotUtilities/ActionProvider";
-import MessageParser from "./chatbotUtilities/MessageParser";
 import { useState } from "react";
 import { ThemeProvider } from "styled-components";
 import CloseIcon from "@mui/icons-material/Close";
-import  theme  from "./chatbotUtilities/ChatQuery";
-import steps from "./chatbotUtilities/ChatQuery";
-// import chatbotmain from '..images/chatbotmain.svg'
-import chatbot from "../images/chatbot.jpg";
+// import myData from "./chatbotUtilities/ChatQuery";
+import ChatBot from "react-simple-chatbot";
+import chatbotImg from '../images/chatbot.jpg'
+const steps = [
+  {
+    id: "0",
+    message: "Hey Geek!",
+
+    // This calls the next id
+    // i.e. id 1 in this case
+    trigger: "1",
+  },
+  {
+    id: "1",
+    // This message appears in
+    // the bot chat bubble
+    message: "Please write your username",
+    trigger: "2",
+  },
+  {
+    id: "2",
+
+    // Here we want the user
+    // to enter input
+    user: true,
+    trigger: "3",
+  },
+  {
+    id: "3",
+    message: " hi {previousValue}, how can I help you?",
+    trigger: 4,
+  },
+  {
+    id: "4",
+    options: [
+      // When we need to show a number of
+      // options to choose we create alist
+      // like this
+      { value: 1, label: "View Courses" },
+      { value: 2, label: "Read Articles" },
+    ],
+    end: true,
+  },
+];
+
+const theme = {
+  background: "white",
+  headerBgColor: "#28104e",
+  headerFontSize: "20px",
+  botBubbleColor: "#0F3789",
+  headerFontColor: "white",
+  botFontColor: "white",
+  userBubbleColor: "#FF5733",
+  userFontColor: "white",
+};
+const config = {
+  botAvatar: chatbotImg,
+  floating: true,
+};
+const myData = [config, steps, theme];
 function ChatBotIcon() {
   const [chat, setChat] = useState(false);
-  console.log(theme)
+  console.log(myData.theme)
   const clickChat = () => {
     console.log("clicked");
     setChat(!chat);
@@ -25,52 +75,17 @@ function ChatBotIcon() {
   };
   return (
     <ChatbotMain>
-      {chat ? (
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          <section>
-            <CloseIcon onClick={onClickCloseButton} className="closeIcon" />
-          </section>
-          {/* <ThemeProvider theme={theme}>
-            <ChatBot
-              // This appears as the header
-              // text for the chat bot
-              headerTitle="chatbot"
-              steps={steps}
-              {...config}
-            />
-          </ThemeProvider> */}
-          <Chatbot
-            config={config}
-            actionProvider={ActionProvider}
-            messageParser={MessageParser}
+   <ThemeProvider theme={theme}>
+          <ChatBot
+            // This appears as the header
+            // text for the chat bot
+            headerTitle="chatbot"
+            steps={steps}
+            {...config}
           />
-        </div>
-      ) : (
-        <>
-          <Chatfield>
-            <img src={chatbot} alt="chatbot" onClick={clickChat} />
-          </Chatfield>
-        </>
-      )}
-      {/* <CloseIcon onClick={onClickCloseButton} className="closeIcon" /> */}
+        </ThemeProvider> 
     </ChatbotMain>
-    // <>
-    //   <div>
-    //     <ThemeProvider theme={theme}>
-    //       <ChatBot
-    //         // This appears as the header
-    //         // text for the chat bot
-    //         headerTitle="chatbot"
-    //         steps={steps}
-    //         {...config}
-    //       />
-    //     </ThemeProvider>
-    //   </div>
-    // </>
+ 
   );
 }
 const ChatbotMain = styled.div`
