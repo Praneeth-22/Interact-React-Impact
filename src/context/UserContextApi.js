@@ -212,6 +212,28 @@ export function UserAuthContextProvider({ children }) {
       console.log("in userContext event:", event);
      return unsubscribe;
   }
+
+  //get current user data
+  function currUserInfoAPI() {
+  }
+  //get users
+  function getUsersAPI() {
+    const q = query(
+      collection(db, "users"),
+    );
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const payload = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        user: doc.data(),
+      }));
+      console.log("user data:", payload);
+      setLoading(false); // to stop the loading
+      setUser(payload);
+    }
+    );
+    console.log("in userContext event:", event);
+   return unsubscribe;
+}
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
       // to check if the user is logged in or not
@@ -239,6 +261,7 @@ export function UserAuthContextProvider({ children }) {
         articles,
         event,
         getEventsAPI,
+        getUsersAPI,
       }} // to provide the context to the children
     >
       {children}
