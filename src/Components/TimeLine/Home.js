@@ -81,7 +81,7 @@ function Home(props) {
     uploadBy: "",
     userimage: "",
     eventId: "",
-    timestamp:"",
+    timestamp:null,
   });
   //comment
 
@@ -175,18 +175,18 @@ function Home(props) {
     const userName = user.displayName;
     const userImg= user.photoURL;
     const EventId = Math.floor(Math.random() * 1000000000);
-    setEventInfo({
+    const preparedData = {
       ...eventInfo,
       uploadBy: userName,
       userimage: userImg,
       eventId: EventId,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    }
     console.log("event", event)
     console.log("eventInfo: ", eventInfo);
     try {
       // add event info into a new document in the events collection
-      const docRef = await addDoc(collection(db, "events"), eventInfo);
+      const docRef = await addDoc(collection(db, "events"), preparedData);
       console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       console.error("Error adding event: ", error);

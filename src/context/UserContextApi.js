@@ -194,11 +194,23 @@ export function UserAuthContextProvider({ children }) {
     return unsubscribe;
   }
   function getEventsAPI() {
+      //get data from events collection
+      setLoading(true); // to start the loading
       const q = query(
         collection(db, "events"),
-      
       );
-     
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const payload = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          event: doc.data(),
+        }));
+        console.log("event data:", payload);
+        setLoading(false); // to stop the loading
+        setEvent(payload);
+      }
+      );
+      console.log("in userContext event:", event);
+     return unsubscribe;
   }
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
@@ -226,6 +238,7 @@ export function UserAuthContextProvider({ children }) {
         getArticlesAPI,
         articles,
         event,
+        getEventsAPI,
       }} // to provide the context to the children
     >
       {children}
