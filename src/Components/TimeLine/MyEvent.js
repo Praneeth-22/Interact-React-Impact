@@ -7,10 +7,15 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { hover } from "@testing-library/user-event/dist/hover";
 import "./TimeLineCss/MyEvent.css";
 import { useNavigate } from "react-router-dom";
+import { useUserAuth } from "../../context/UserContextApi";
+import { useState, useEffect } from "react";
 function MyEvent() {
   const navigate = useNavigate();
-  const myDetails = schedule.map((event) => {
+  const { user,event,getEventsAPI } = useUserAuth();
+  console.log(".................",event,"................."); 
+  const myDetails = event.map((item) => {
     return (
+
       <Card
         className="card"
         onClick={() => {
@@ -24,7 +29,7 @@ function MyEvent() {
             letterSpacing: "1.5px",
           }}
         >
-          {event.event_name}
+          {item.title}
         </p>
         <div
           style={{

@@ -3,11 +3,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Chat/AuthContext";
 import { ChatContext } from "../Chat/ChatContext";
 import { db } from "../../firebase_service";
+import { useUserAuth } from "../../context/UserContextApi";
 
 const Chats = () => {
   const [chats, setChats] = useState([]);
-
-  const { currentUser } = useContext(AuthContext);
+  const { user } = useUserAuth();
+  const currentUser = user;
   const { dispatch } = useContext(ChatContext);
 
   useEffect(() => {

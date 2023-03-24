@@ -37,7 +37,7 @@ export function UserAuthContextProvider({ children }) {
   const [loading, setLoading] = useState(true); // to check if the user is logged in or not
   const [articles, setArticles] = useState([]); // to store the articles from firebase
   const [postLiked, setPostLiked] = useState([]); // to store the liked posts
-
+  const [event, setEvent] = useState([]); // to store the events from firebase
   function logIn(email, password) {
     // to sign in the user
     return signInWithEmailAndPassword(auth, email, password).then((user) => {
@@ -193,7 +193,13 @@ export function UserAuthContextProvider({ children }) {
     });
     return unsubscribe;
   }
-
+  function getEventsAPI() {
+      const q = query(
+        collection(db, "events"),
+      
+      );
+     
+  }
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
       // to check if the user is logged in or not
@@ -219,6 +225,7 @@ export function UserAuthContextProvider({ children }) {
         postArticleAPI,
         getArticlesAPI,
         articles,
+        event,
       }} // to provide the context to the children
     >
       {children}

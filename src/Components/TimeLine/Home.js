@@ -17,6 +17,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import Box from "@mui/material/Box";
 import Container from "react-bootstrap/Container";
 import demo2 from "./../../images/demo2.jpg";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
@@ -26,7 +27,7 @@ import spinner from "./Images/spin.svg";
 import { useNavigate } from "react-router-dom";
 import Post from "./Post";
 import { faker } from "@faker-js/faker";
-
+import Modal from "react-bootstrap/Modal";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./Home.css";
@@ -34,7 +35,7 @@ import MyEvent from "./MyEvent";
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
 import ConstructionOutlinedIcon from "@mui/icons-material/ConstructionOutlined";
 import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
-//
+import TextField from "@mui/material/TextField";
 import { useUserAuth } from "../../context/UserContextApi";
 import { db } from "../../firebase_service";
 import { doc, collection, addDoc, getDocs,updateDoc } from "firebase/firestore";
@@ -56,7 +57,7 @@ function Home(props) {
   const [displayName, setDisplayName] = useState(""); // state for display name
   //
   const [isOpen, setIsOpen] = useState(false);
-  
+  const [openEvent, setOpenEvent] = useState(false);
   const [value1, setValue1] = React.useState(0);
   const catcolor = { color: "#6237a0" };
   const handleChange = (event, newValue) => {
@@ -70,7 +71,18 @@ function Home(props) {
   };
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]); // to store the comments from
-
+  const [eventInfo, setEventInfo] = useState({
+    title: "",
+    description: "",
+    category: "",
+    date: "",
+    time: "",
+    location: "",
+    uploadBy: "",
+    userimage: "",
+    eventId: "",
+    timestamp:"",
+  });
   //comment
 
   const prepareComments = (data) => {
@@ -157,6 +169,39 @@ function Home(props) {
         likes: firebase.firestore.FieldValue.arrayUnion(user.uid),
      });
   };
+  //add event into event collection
+  const addEvent = async (event) => {
+    event.preventDefault();
+    const userName = user.displayName;
+    const userImg= user.photoURL;
+    const EventId = Math.floor(Math.random() * 1000000000);
+    setEventInfo({
+      ...eventInfo,
+      uploadBy: userName,
+      userimage: userImg,
+      eventId: EventId,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    console.log("event", event)
+    console.log("eventInfo: ", eventInfo);
+    try {
+      // add event info into a new document in the events collection
+      const docRef = await addDoc(collection(db, "events"), eventInfo);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding event: ", error);
+    }
+    setEventInfo({
+      title: "",
+      description: "",
+      category: "",
+      date: "",
+      time: "",
+      location: "",
+      uploadBy: "",
+      userimage: "",
+    });
+  };
 
   return (
     <div
@@ -211,6 +256,7 @@ function Home(props) {
                     marginLeft: "7px",
                     letterSpacing: "1.5px",
                   }}
+                  onClick={() => setOpenEvent(true)}
                 >
                   Event
                 </span>
@@ -365,6 +411,7 @@ function Home(props) {
                     marginLeft: "7px",
                     letterSpacing: "1.5px",
                   }}
+                  onClick={() => setOpenEvent(true)}
                 >
                   Event
                 </span>
@@ -647,6 +694,130 @@ function Home(props) {
       <Rightbar>
         <MyEvent />
       </Rightbar>
+      <Modal show={openEvent} onHide={() => setOpenEvent(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Event</Modal.Title>
+        </Modal.Header>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setOpenEvent(false);
+            addEvent(e);
+          }}
+        >
+          <Modal.Body>
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "25ch" },
+              }}
+              noValidate
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
+                }}
+              >
+                <TextField
+                  id="outlined-basic"
+                  label="Event Title"
+                  variant="outlined"
+                  onChange={(e) =>
+                    setEventInfo({
+                      ...eventInfo,
+                      title: e.target.value,
+                    })
+                  }
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="University"
+                  variant="outlined"
+                  onChange={(e) =>
+                    setEventInfo({
+                      ...eventInfo,
+                      university: e.target.value,
+                    })
+                  }
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="location"
+                  variant="outlined"
+                  onChange={(e) =>
+                    setEventInfo({
+                      ...eventInfo,
+                      location: e.target.value,
+                    })
+                  }
+                />
+                <Box>
+                  <TextField
+                    id="outlined-basic"
+                    label="Time"
+                    variant="outlined"
+                    onChange={(e) =>
+                      setEventInfo({
+                        ...eventInfo,
+                        time: e.target.value,
+                      })
+                    }
+                  />
+                  <TextField
+                    id="outlined-basic"
+                    label="Date"
+                    variant="outlined"
+                    onChange={(e) =>
+                      setEventInfo({
+                        ...eventInfo,
+                        date: e.target.value,
+                      })
+                    }
+                  />
+                </Box>
+              </div>
+            </Box>
+            <Box
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "90%" },
+              }}
+            >
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Description"
+                variant="outlined"
+                multiline
+                maxRows={4}
+                onChange={(e) =>
+                  setEventInfo({
+                    ...eventInfo,
+                    description: e.target.value,
+                  })
+                }
+              />
+              <TextField
+                id="outlined-flexible"
+                label="Link"
+                variant="outlined"
+                onChange={(e) =>
+                  setEventInfo({
+                    ...eventInfo,
+                    link: e.target.value,
+                  })
+                }
+              />
+            </Box>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" type="submit">
+              Upload
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
     </div>
   );
 }
