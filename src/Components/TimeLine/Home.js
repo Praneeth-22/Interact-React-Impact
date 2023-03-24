@@ -16,6 +16,7 @@ import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
 import SchoolIcon from "@mui/icons-material/School";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
 import Container from "react-bootstrap/Container";
@@ -47,6 +48,9 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import firebase from "firebase/compat/app";
+// import Select from "@material-ui/core/Select";
+// import MenuItem from "@material-ui/core/MenuItem";
+import MenuItem from "@mui/material/MenuItem";
 //
 function Home(props) {
   const navigate = useNavigate();
@@ -59,6 +63,7 @@ function Home(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [openEvent, setOpenEvent] = useState(false);
   const [value1, setValue1] = React.useState(0);
+  const defaultDate = new Date();
   const catcolor = { color: "#6237a0" };
   const handleChange = (event, newValue) => {
     setValue1(newValue);
@@ -75,13 +80,13 @@ function Home(props) {
     title: "",
     description: "",
     category: "",
-    date: "",
+    date: defaultDate.toISOString().substr(0, 10),
     time: "",
     location: "",
     uploadBy: "",
     userimage: "",
     eventId: "",
-    timestamp:null,
+    timestamp: null,
   });
   //comment
 
@@ -202,6 +207,26 @@ function Home(props) {
       userimage: "",
     });
   };
+  //location
+   const locations = [
+     {
+       value: "new-york",
+       label: "New York",
+     },
+     {
+       value: "los-angeles",
+       label: "Los Angeles",
+     },
+     {
+       value: "chicago",
+       label: "Chicago",
+     },
+     {
+       value: "houston",
+       label: "Houston",
+     },
+   ];
+
 
   return (
     <div
@@ -372,7 +397,7 @@ function Home(props) {
         <HomeContainer>
           <ShareBox>
             <div>
-              {user && user.photoURL ? (
+              {user && user.avatarUrl ? (
                 <img
                   src={user.photoURL}
                   alt="user"
@@ -747,29 +772,54 @@ function Home(props) {
                   id="outlined-basic"
                   label="location"
                   variant="outlined"
+                  select
+                  value={eventInfo.location}
+                  InputProps={{
+                    startAdornment: <LocationOnIcon />,
+                  }}
                   onChange={(e) =>
                     setEventInfo({
                       ...eventInfo,
                       location: e.target.value,
                     })
                   }
-                />
+                >
+                  {locations.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
                 <Box>
                   <TextField
                     id="outlined-basic"
                     label="Time"
+                    type={"time"}
                     variant="outlined"
+                    value={eventInfo.time}
                     onChange={(e) =>
                       setEventInfo({
                         ...eventInfo,
                         time: e.target.value,
                       })
                     }
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      step: 300, // 5 min
+                    }}
                   />
                   <TextField
                     id="outlined-basic"
                     label="Date"
                     variant="outlined"
+                    type="date"
+                    value={eventInfo.date}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                     onChange={(e) =>
                       setEventInfo({
                         ...eventInfo,
@@ -801,6 +851,8 @@ function Home(props) {
               <TextField
                 id="outlined-flexible"
                 label="Link"
+                type={"url"}
+                value={eventInfo.link}
                 variant="outlined"
                 onChange={(e) =>
                   setEventInfo({
@@ -808,11 +860,22 @@ function Home(props) {
                     link: e.target.value,
                   })
                 }
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Box>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit"
+              sx={{
+                backgroundColor: "#0a66c2",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#004182",
+                },
+              }}
+            >
               Upload
             </Button>
           </Modal.Footer>

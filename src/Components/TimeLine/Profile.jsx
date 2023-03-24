@@ -40,7 +40,7 @@ function Profile(props) {
   const { name, email, picture } = props;
   const [profilePicture, setProfilePicture] = useState(picture);
   const fileInputRef = useRef(null);
-  const { user } = useUserAuth();
+  const { user, getUsersAPI } = useUserAuth();
   console.log("user in profile page is:", user);
   const handleProfilePictureChange = (event) => {
     const file = event.target.files[0];
@@ -62,8 +62,12 @@ function Profile(props) {
     
   };
 useEffect(() => {
-    //
+    if(user){
+      console.log("user in useeffect profile page is:", user);
+    }
+
 },[])
+console.log("users in profile page is:", user);
 //changing the profile values
 const [newPassword, setNewPassword] = useState("");
 const [newName, setNewName] = useState("");
