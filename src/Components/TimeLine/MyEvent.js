@@ -12,24 +12,30 @@ import { useState, useEffect } from "react";
 function MyEvent() {
   const navigate = useNavigate();
   const { user,event,getEventsAPI } = useUserAuth();
+  useEffect(() => {
+    const unsubscribe = getEventsAPI();
+    return () => {
+      unsubscribe();
+    };
+  }, []);
   console.log(".................",event,"................."); 
   const myDetails = event.map((item) => {
     return (
 
       <Card
         className="card"
-        onClick={() => {
-          navigate("/events");
-        }}
+      
       >
         <p
           style={{
             color: "#28104e",
             fontWeight: 600,
             letterSpacing: "1.5px",
+            cursor: "pointer",
           }}
+          onClick={() => navigate("/events")}
         >
-          {item.title}
+          {item.event.title}
         </p>
         <div
           style={{
@@ -57,7 +63,7 @@ function MyEvent() {
                 }}
               />
             </span>
-            {event.date},{event.time}
+            {item.event.date}
           </p>
           <p
             style={{
@@ -77,7 +83,7 @@ function MyEvent() {
                 }}
               />
             </span>
-            {event.location}
+            {item.event.location}
           </p>
         </div>
       </Card>
