@@ -46,7 +46,7 @@ function Header(props) {
       
     },[user]
   );
-  console.log("user is:", user);
+  console.log("user in header is:", user);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -249,7 +249,7 @@ function Header(props) {
                 p: 4,
               }}
             >
-              <Profile name={displayName} email={email} />
+              <Profile  />
             </Box>
           </Fade>
         </Modal>

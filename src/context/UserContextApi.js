@@ -172,6 +172,28 @@ export function UserAuthContextProvider({ children }) {
         console.log("Error adding document: ", error);
       }
     } else {
+      // for text only
+      setLoading(true); // to start the loading
+
+      try {
+        const docRef = addDoc(collection(db, "articles"), {
+          actor: {
+            email: payload.user.email,
+            title: payload.user.displayName,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            image: payload.user.photoURL,
+          },
+          video: "",
+          sharedImg: "",
+          comments: 0,
+          description: payload.description,
+          likes: 0,
+        });
+        setLoading(false); // to stop the loading
+        console.log("Document written with ID: ", docRef.id);
+      } catch (error) {
+        console.log("Error adding document: ", error);
+      }
     }
   }
 
