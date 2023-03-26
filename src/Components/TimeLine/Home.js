@@ -80,6 +80,7 @@ function Home(props) {
     title: "",
     description: "",
     category: "",
+    university: "",
     date: defaultDate.toISOString().substr(0, 10),
     time: "",
     location: "",
@@ -163,6 +164,7 @@ function Home(props) {
       setDisplayName(user.displayName);
     }
     getArticlesAPI();
+    console.log("home page user: ", user);
   }, [user.displayName, user.photoURL]);
 
   const handleLikes = (e, articleId) => {
@@ -408,12 +410,14 @@ console.log("user:pic", user.photoURL)
                   }}
                 />
               ) : (
-                <img src={userImgUnLoad} alt="user" style={{
-                  width: "50px",
-                  height: "50px",
-
-                }}
-                  />
+                <img
+                  src={userImgUnLoad}
+                  alt="user"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                  }}
+                />
               )}
               <button
                 onClick={handleClick}
@@ -765,10 +769,11 @@ console.log("user:pic", user.photoURL)
                       title: e.target.value,
                     })
                   }
+                  
                 />
                 <TextField
                   id="outlined-basic"
-                  label="University"
+                  label="Event University"
                   variant="outlined"
                   onChange={(e) =>
                     setEventInfo({
@@ -777,6 +782,7 @@ console.log("user:pic", user.photoURL)
                     })
                   }
                 />
+               
                 <TextField
                   id="outlined-basic"
                   label="location"
@@ -876,7 +882,9 @@ console.log("user:pic", user.photoURL)
             </Box>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" type="submit"
+            <Button
+              variant="primary"
+              type="submit"
               sx={{
                 backgroundColor: "#0a66c2",
                 color: "#fff",

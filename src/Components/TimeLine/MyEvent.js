@@ -21,21 +21,28 @@ function MyEvent() {
   console.log(".................",event,"................."); 
   const myDetails = event.map((item) => {
     return (
-
-      <Card
-        className="card"
-      
-      >
-        <p
-          style={{
-            color: "#28104e",
-            fontWeight: 600,
-            letterSpacing: "1.5px",
-            cursor: "pointer",
-          }}
-          onClick={() => navigate("/events")}
-        >
-          {item.event.title}
+      <Card className="card">
+        <p onClick={() => navigate("/events")}>
+          <span
+            style={{
+              color: "#28104e",
+              fontWeight: 600,
+              letterSpacing: "1.5px",
+              cursor: "pointer",
+            }}
+          >
+            {item.event.university} -{" "}
+          </span>
+          <span
+            style={{
+              color: "#28104e",
+              fontWeight: 600,
+              letterSpacing: "1.5px",
+              cursor: "pointer",
+            }}
+          >
+            {item.event.title}
+          </span>
         </p>
         <div
           style={{
