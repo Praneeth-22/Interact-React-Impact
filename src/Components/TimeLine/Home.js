@@ -226,7 +226,7 @@ function Home(props) {
        label: "Houston",
      },
    ];
-
+console.log("user:pic", user.photoURL)
 
   return (
     <div
@@ -397,14 +397,23 @@ function Home(props) {
         <HomeContainer>
           <ShareBox>
             <div>
-              {user && user.avatarUrl ? (
+              {user && user.photoURL ? (
                 <img
                   src={user.photoURL}
                   alt="user"
                   referrerpolicy="no-referrer"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                  }}
                 />
               ) : (
-                <img src={userImgUnLoad} alt="user" />
+                <img src={userImgUnLoad} alt="user" style={{
+                  width: "50px",
+                  height: "50px",
+
+                }}
+                  />
               )}
               <button
                 onClick={handleClick}

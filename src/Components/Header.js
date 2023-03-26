@@ -22,7 +22,7 @@ import Fade from "@mui/material/Fade";
 import Profile from "./TimeLine/Profile";
 //
 const pages = ["Home","Event","Chat"]; // change the caterogy
-const settings = ["Profile", "Logout"];
+const settings = ["Profile","Edit Profile", "Logout"];
 function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
