@@ -141,13 +141,13 @@ function Profile() {
       <Box
         sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
       >
-        <input
+        {/* <input
           type="file"
           accept="image/*"
           ref={fileInputRef}
           style={{ display: "none" }}
           onChange={handleProfilePictureChange}
-        />
+        /> */}
         <label htmlFor="icon-button-file">
           <IconButton
             color="primary"
@@ -163,7 +163,7 @@ function Profile() {
                 sx={{ width: 90, height: 90 }}
               />
               <div style={{ position: "absolute", bottom: 0, right: 0 }}>
-                <PhotoCamera
+                {/* <PhotoCamera
                   fontSize="large"
                   sx={{
                     color: "white",
@@ -171,7 +171,7 @@ function Profile() {
                     borderRadius: "50%",
                     p: 1,
                   }}
-                />
+                /> */}
               </div>
             </div>
           </IconButton>
@@ -191,8 +191,8 @@ function Profile() {
             id="outlined-multiline-static"
             label="Name"
             variant="outlined"
-            defaultValue={displayName}
-            onChange={(e) => setNewName(e.target.value)}
+            defaultValue={user?.displayName}
+            // onChange={(e) => setNewName(e.target.value)}
           />
           <TextField
             id="outlined-multiline-static"
@@ -201,14 +201,14 @@ function Profile() {
             variant="outlined"
             defaultValue={user.email}
           />
-          <TextField
+          {/* <TextField
             id="outlined-multiline-static"
             label="Old Password"
             variant="outlined"
             disabled
             defaultValue={user.password}
-          />
-          <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+          /> */}
+          {/* <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
             <InputLabel htmlFor="outlined-adornment-password">
               New Password
             </InputLabel>
@@ -230,7 +230,8 @@ function Profile() {
               }
               label="Password"
             />
-          </FormControl>
+          </FormControl> */}
+          
         </div>
         <Box sx={{ mt: 2 }}>
           <Button
