@@ -227,6 +227,14 @@ function Home(props) {
        value: "houston",
        label: "Houston",
      },
+     {
+        value: "philadelphia",
+        label: "Philadelphia",
+     },
+      {
+        value:"Massachusetts",
+        label:"Massachusetts"
+      },
    ];
 console.log("user:pic", user.photoURL)
 
