@@ -1,10 +1,10 @@
-import Home from "./ChatHome";
+import chatHome from "./ChatHome";
 import Login from "./Login";
 import Register from "./Register";
 import "./style.scss";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useContext } from "react";
-import { AuthContext } from "../Chat/AuthContext";
+import { AuthContext } from "./AuthContext";
 
 function Routing() {
   const { currentUser } = useContext(AuthContext);

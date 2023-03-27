@@ -10,16 +10,14 @@ import {
   serverTimestamp,
   getDoc,
 } from "firebase/firestore";
-// import { db } from "../Chat/firebase";
-import {db} from '../../firebase_service'
-// import { AuthContext } from "../Chat/AuthContext";
-import { useUserAuth } from "../../context/UserContextApi";
+import { db } from "./firebase";
+import { AuthContext } from "./AuthContext";
 const Search = () => {
   const [username, setUsername] = useState("");
-  const [cuser, setUser] = useState(null);
+  const [user, setUser] = useState(null);
   const [err, setErr] = useState(false);
-  const { user } = useUserAuth();
-  const currentUser = user;
+
+  const { currentUser } = useContext(AuthContext);
 
   const handleSearch = async () => {
     const q = query(
@@ -44,9 +42,9 @@ const Search = () => {
   const handleSelect = async () => {
     //check whether the group(chats in firestore) exists, if not create
     const combinedId =
-      currentUser.uid > cuser.uid
-        ? currentUser.uid + cuser.uid
-        : cuser.uid + currentUser.uid;
+      currentUser.uid > user.uid
+        ? currentUser.uid + user.uid
+        : user.uid + currentUser.uid;
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
 
@@ -57,14 +55,14 @@ const Search = () => {
         //create user chats
         await updateDoc(doc(db, "userChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {
-            uid: cuser.uid,
-            displayName: cuser.displayName,
-            photoURL: cuser.photoURL,
+            uid: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
 
-        await updateDoc(doc(db, "userChats", cuser.uid), {
+        await updateDoc(doc(db, "userChats", user.uid), {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
             displayName: currentUser.displayName,
@@ -76,7 +74,7 @@ const Search = () => {
     } catch (err) {}
 
     setUser(null);
-    setUsername("")
+    setUsername("");
   };
   return (
     <div className="search">
@@ -90,11 +88,11 @@ const Search = () => {
         />
       </div>
       {err && <span>User not found!</span>}
-      {cuser && (
+      {user && (
         <div className="userChat" onClick={handleSelect}>
-          <img src={cuser.avatarUrl} alt="" />
+          <img src={user.photoURL} alt="" />
           <div className="userChatInfo">
-            <span>{cuser.displayName}</span>
+            <span>{user.displayName}</span>
           </div>
         </div>
       )}

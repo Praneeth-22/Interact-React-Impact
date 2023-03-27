@@ -1,9 +1,8 @@
 import React, { useContext, useState } from "react";
-import Img from "../Chat/img/img.png";
-import Attach from "../Chat/img/attach.png";
-import { AuthContext } from "../Chat/AuthContext";
- import { useUserAuth } from "../../context/UserContextApi";
-import { ChatContext } from "../Chat/ChatContext";
+import Img from "./img/img.png";
+import Attach from "./img/attach.png";
+import { AuthContext } from "./AuthContext";
+import { ChatContext } from "./ChatContext";
 import {
   arrayUnion,
   doc,
@@ -11,19 +10,18 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
-import { db, storage } from "../../firebase_service";
+import { db, storage } from "./firebase";
 import { v4 as uuid } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
-  const { user } = useUserAuth();
-  const currentUser = user;
+
+  const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
 
   const handleSend = async () => {
-    console.log("imig",img);
     if (img) {
       const storageRef = ref(storage, uuid());
 
@@ -48,8 +46,6 @@ const Input = () => {
         }
       );
     } else {
-      console.log("else")
-      console.log("data:",data,text);
       await updateDoc(doc(db, "chats", data.chatId), {
         messages: arrayUnion({
           id: uuid(),

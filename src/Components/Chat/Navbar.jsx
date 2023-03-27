@@ -1,28 +1,21 @@
-import { signOut } from 'firebase/auth';
-import React,{useContext} from 'react'
-import '../Chat/style.scss';
-import {auth} from '../../firebase_service'
+import React, { useContext } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "./firebase";
+import { AuthContext } from "./AuthContext";
 
-import firebase from "firebase/compat/app";
-// import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import {useUserAuth} from '../../context/UserContextApi'
 const Navbar = () => {
-  const { user,logOut } = useUserAuth();
-  const loggingOut = () => {
-    logOut()
-    window.location.href = "/";
-  }
-  return (
-    <div className='navbar'>
-        <span className="logo">Student Chat</span>
-        <div className="user">
-        <img src={user.photoURL} alt="" />
-        <span>{user.displayName}</span>
-        <button onClick={loggingOut}>Logout</button>
-        </div>
-      
-    </div>
-  )
-}
+  const { currentUser } = useContext(AuthContext);
 
-export default Navbar
+  return (
+    <div className="navbar">
+      <span className="logo">Lama Chat</span>
+      <div className="user">
+        <img src={currentUser.photoURL} alt="" />
+        <span>{currentUser.displayName}</span>
+        <button onClick={() => signOut(auth)}>logout</button>
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;
