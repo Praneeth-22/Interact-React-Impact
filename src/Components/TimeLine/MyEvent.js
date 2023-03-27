@@ -9,20 +9,52 @@ import "./TimeLineCss/MyEvent.css";
 import { useNavigate } from "react-router-dom";
 import { useUserAuth } from "../../context/UserContextApi";
 import { useState, useEffect } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 function MyEvent() {
   const navigate = useNavigate();
-  const { user,event,getEventsAPI } = useUserAuth();
+  const { user, event, getEventsAPI } = useUserAuth();
   useEffect(() => {
     const unsubscribe = getEventsAPI();
     return () => {
       unsubscribe();
     };
   }, []);
-  console.log(".................",event,"................."); 
+  //model
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [eventId, setEventId] = useState("");
+  //storeing current event data in a state variable
+  const [currentEvent, setCurrentEvent] = useState({});
+
+  const settingCurrentEVent = (id) => {
+    console.log("clicked", id);
+    event.map((item) => {
+      if (item.id === id) {
+        setCurrentEvent(item);
+      }
+    });
+  };
+  console.log("selected event", currentEvent);
+  const handleCurrentEVent = (e, id) => {
+    e.preventDefault();
+    console.log("clicked", id);
+    handleShow();
+    setEventId(id);
+    settingCurrentEVent(id);
+  };
+
+  console.log(".................", event, ".................");
   const myDetails = event.map((item) => {
     return (
       <Card className="card">
-        <p onClick={() => navigate("/events")}>
+        <p
+          onClick={(e) => {
+            console.log("clicked");
+            handleCurrentEVent(e, item.id);
+          }}
+        >
           <span
             style={{
               color: "#28104e",
@@ -113,6 +145,70 @@ function MyEvent() {
         Events
       </h3>
       {myDetails}
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {currentEvent.event?.title} {"-"} {currentEvent.event?.university}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "start",
+              justifyContent: "start",
+              width: "100%",
+            }}
+          >
+            <p>{currentEvent.event?.date}</p>
+            <p>{currentEvent.event?.location}</p>
+            <p>{currentEvent.event?.description}</p>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "end",
+              justifyContent: "end",
+              width: "100%",
+            }}
+          >
+            <p></p>
+            <p>
+              Uploaded By:
+              <img
+                src={currentEvent.event?.userimage}
+                alt="img"
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  borderRadius: "50%",
+                  marginLeft: "10px",
+                }}
+              />{" "}
+              {currentEvent.event?.uploadBy}
+            </p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            <a
+              href={currentEvent.event?.link ? currentEvent.event?.link : "/home"}
+              target="_blank"
+              style={{
+                color: "white",
+                textDecoration: "none",
+              }}
+            >
+              view
+            </a>
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
