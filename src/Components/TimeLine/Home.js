@@ -716,7 +716,7 @@ console.log("user:pic", user.photoURL)
                                       {comment.username}
                                     </a>
                                     <div className="description">
-                                      {comment.text} 10 mins ago
+                                      {comment.text} 
                                     </div>
                                   </div>
                                 </div>

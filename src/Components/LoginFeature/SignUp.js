@@ -173,12 +173,12 @@ const SignUp = () => {
                   Sign Up
                 </button>
               </div>
-              <div className="d-grid mt-2">
+              {/* <div className="d-grid mt-2">
                 <button type="submit" className="googleBtn">
                   <a>Sign Up via Google</a>&nbsp;&nbsp;
                   <img src={google} alt="click" />
                 </button>
-              </div>
+              </div> */}
               <p className="forgot-password text-right">
                 Already registered <a href="/">sign in?</a>
               </p>
