@@ -124,7 +124,12 @@ function Post(props) {
             <SharedContent>
               <UserInfo>
                 {photoUrl ? (
-                  <img src={photoUrl} alt="" referrerpolicy="no-referrer" />
+                  <img src={photoUrl} alt="" referrerpolicy="no-referrer"  style={{
+                    width: "50px",
+                    height: "50px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}/>
                 ) : (
                   <img src={ava} alt="" referrerpolicy="no-referrer" />
                 )}
@@ -172,7 +177,7 @@ function Post(props) {
               {/* </FormControl> */}
 
               <Editor>
-                <FormControl sx={{}}>
+                {/* <FormControl sx={{}}>
                   <FormLabel id="demo-row-radio-buttons-group-label">
                     Tag
                   </FormLabel>
@@ -199,11 +204,14 @@ function Post(props) {
                       label="Career & Jobs"
                     />
                   </RadioGroup>
-                </FormControl>
+                </FormControl> */}
                 <textarea
                   placeholder="Hi, there..."
                   value={text}
                   onChange={(e) => setText(e.target.value)}
+                  style= {{
+                    borderRadius: "10px",
+                  }}
                 ></textarea>
 
                 {assetArea === "image" ? (

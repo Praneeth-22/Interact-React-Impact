@@ -21,8 +21,8 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Profile from "./TimeLine/Profile";
 //
-const pages = ["Home","Event","Chat"]; // change the caterogy
-const settings = ["Profile","Edit Profile", "Logout"];
+const pages = ["Home","Chat"]; // change the caterogy
+const settings = ["Profile","Logout"];
 function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -73,6 +73,8 @@ function Header(props) {
     } else if (setting === "Logout") {
       logOut(); // to logout the user
       window.location.href = "/";
+    }else if(setting === "Edit Profile"){
+     
     }
     setAnchorElUser(null);
   };

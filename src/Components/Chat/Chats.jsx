@@ -41,7 +41,7 @@ const Chats = () => {
 
   return (
     <div className="chats">
-      {Object.entries(chats || obj)
+      {/* {Object.entries(chats || obj)
         ?.sort((a, b) => b[1].date - a[1].date)
         .map((chat) => (
           <div
@@ -58,7 +58,109 @@ const Chats = () => {
               <p>{chat[1].lastMessage?.text}</p>
             </div>
           </div>
-        ))}
+        ))} */}
+      <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 1rem",
+            borderBottom: "1px solid #ccc",
+          }}
+        >
+          <img
+            src={currentUser?.photoURL}
+            alt=""
+            style={{
+              width: "50px",
+              height: "50px",
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
+          />
+          <div>
+            <span
+              style={{
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+              }}
+            >
+              {currentUser?.displayName}
+            </span>
+            <p
+              style={{
+                fontSize: "1rem",
+                fontWeight: "bold",
+              }}
+            >
+              {data?.lastMessage?.text}
+            </p>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 1rem",
+            borderBottom: "1px solid #ccc",
+          }}
+        >
+          <img
+            src={currentUser?.photoURL}
+            alt=""
+            style={{
+              width: "50px",
+              height: "50px",
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
+          />
+          <div>
+            <span
+              style={{
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+              }}
+            >
+              {currentUser?.displayName}
+            </span>
+            <p>{data?.lastMessage?.text}</p>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 1rem",
+            borderBottom: "1px solid #ccc",
+          }}
+        >
+          <img
+            src={currentUser?.photoURL}
+            alt=""
+            style={{
+              width: "50px",
+              height: "50px",
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
+          />
+          <div>
+            <span
+              style={{
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+              }}
+            >
+              {currentUser?.displayName}
+            </span>
+            <p>{data?.lastMessage?.text}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

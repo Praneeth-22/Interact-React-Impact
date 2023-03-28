@@ -136,7 +136,7 @@ function Profile() {
         component="h2"
         style={{ fontWeight: "bold" }}
       >
-        Edit Profile : {user.displayName}
+        Profile : {user.displayName}
       </Typography>
       <Box
         sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
@@ -234,20 +234,20 @@ function Profile() {
           
         </div>
         <Box sx={{ mt: 2 }}>
-          <Button
+          {/* <Button
             variant="contained"
             color="success"
             onClick={handleNewProfileChanges}
           >
             Save
-          </Button>
+          </Button> */}
           <Button
             variant="outlined"
             color="error"
             sx={{ ml: 2 }}
             onClick={() => (window.location.href = "/home")}
           >
-            Cancel
+            Close
           </Button>
         </Box>
       </Box>

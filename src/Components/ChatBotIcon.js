@@ -5,46 +5,32 @@ import { ThemeProvider } from "styled-components";
 import CloseIcon from "@mui/icons-material/Close";
 // import myData from "./chatbotUtilities/ChatQuery";
 import ChatBot from "react-simple-chatbot";
-import chatbotImg from '../images/chatbot.jpg'
+import chatbotImg from "../images/chatbot.jpg";
+
 const steps = [
   {
-    id: "0",
-    message: "Hey Geek!",
-
-    // This calls the next id
-    // i.e. id 1 in this case
-    trigger: "1",
-  },
-  {
     id: "1",
-    // This message appears in
-    // the bot chat bubble
-    message: "Please write your username",
+    message: "Hi, I'm a chatbot. What's your name?",
     trigger: "2",
   },
   {
     id: "2",
-
-    // Here we want the user
-    // to enter input
     user: true,
     trigger: "3",
   },
   {
     id: "3",
-    message: " hi {previousValue}, how can I help you?",
-    trigger: 4,
+    message: "Hi {previousValue}, nice to meet you!",
+    trigger: "4",
   },
   {
     id: "4",
-    options: [
-      // When we need to show a number of
-      // options to choose we create alist
-      // like this
-      { value: 1, label: "View Courses" },
-      { value: 2, label: "Read Articles" },
-    ],
-    end: true,
+    message: "How can I help you?",
+    trigger: "5",
+  },
+  {
+    id: "5",
+    options: [],
   },
 ];
 
@@ -65,7 +51,7 @@ const config = {
 const myData = [config, steps, theme];
 function ChatBotIcon() {
   const [chat, setChat] = useState(false);
-  console.log(myData.theme)
+  console.log(myData.theme);
   const clickChat = () => {
     console.log("clicked");
     setChat(!chat);
@@ -75,17 +61,41 @@ function ChatBotIcon() {
   };
   return (
     <ChatbotMain>
-   <ThemeProvider theme={theme}>
-          <ChatBot
-            // This appears as the header
-            // text for the chat bot
-            headerTitle="chatbot"
-            steps={steps}
-            {...config}
-          />
-        </ThemeProvider> 
+      <ThemeProvider theme={theme}>
+        <ChatBot
+          // This appears as the header
+          // text for the chat bot
+          headerTitle="chatbot"
+          steps={[
+            {
+              id: "1",
+              message: "Hi, I'm a chatbot. What's your name?",
+              trigger: "2",
+            },
+            {
+              id: "2",
+              user: true,
+              trigger: "3",
+            },
+            {
+              id: "3",
+              message: "Hi {previousValue}, nice to meet you!",
+              trigger: "4",
+            },
+            {
+              id: "4",
+              message: "How can I help you?",
+              trigger: "5",
+            },
+            {
+              id: "5",
+              options: [],
+            },
+          ]}
+          {...config}
+        />
+      </ThemeProvider>
     </ChatbotMain>
- 
   );
 }
 const ChatbotMain = styled.div`

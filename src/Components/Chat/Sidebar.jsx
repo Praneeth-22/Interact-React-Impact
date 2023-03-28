@@ -5,10 +5,12 @@ import Search from './Search'
 
 const Sidebar = () => {
   return (
-    <div className='sidebar'>
-        <Navbar />
+    <div className='sidebar' style={{
+    }}>
+        <Navbar
+          />
         <Search />
-        {/* <Chats/> */}
+        <Chats/>
       
     </div>
   )

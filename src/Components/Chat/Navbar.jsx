@@ -13,7 +13,14 @@ const Navbar = () => {
     window.location.href = "/";
   }
   return (
-    <div className='navbar'>
+    <div className='navbar' style={{
+      display:'flex',
+      justifyContent:'space-between',
+      alignItems:'center',
+      padding:'0 20px',
+      borderBottom:'1px solid #ccc',
+     
+    }}>
         <span className="logo">Student Chat</span>
         <div className="user">
         <img src={user.photoURL} alt="" />
