@@ -29,10 +29,18 @@ const Message = ({ message }) => {
         <span>just now</span>
       </div>
       <div className="messageContent">
-        <p>{message.text}</p>
+        {/* <p>{message.text}</p>
+         */}
+        <p>hello</p>
+        <p>hello</p>
         {message.img && <img src={message.img} alt="" />}
       </div>
     </div>
+    // <div>
+    //   <p>hello</p>
+    //   <p>hello</p>
+    //   <p>hello</p>
+    // </div>
   );
 };
 

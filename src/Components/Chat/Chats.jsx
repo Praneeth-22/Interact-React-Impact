@@ -6,7 +6,7 @@ import { db } from "../../firebase_service";
 import { useUserAuth } from "../../context/UserContextApi";
 
 const Chats = () => {
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState();
   const { user } = useUserAuth();
   const currentUser = user;
   const { data, dispatch } = useContext(ChatContext);
@@ -28,20 +28,20 @@ const Chats = () => {
   const handleSelect = (u) => {
     dispatch({ type: "CHANGE_USER", payload: u });
   };
-  const obj = {
-    chatId: "vDKJOXtzVpsYNH0WHJpm",
-    userInfo: {
-      photoURL: user.photoURL,
-      displayName: user.displayName,
-    },
-    lastMessage: {
-      text: "hello",
-    },
-  };
+  // const obj = {
+  //   chatId: "vDKJOXtzVpsYNH0WHJpm",
+  //   userInfo: {
+  //     photoURL: user.photoURL,
+  //     displayName: user.displayName,
+  //   },
+  //   lastMessage: {
+  //     text: "hello",
+  //   },
+  // };
 
   return (
     <div className="chats">
-      {/* {Object.entries(chats || obj)
+      {/* {Object.entries(chats || {})
         ?.sort((a, b) => b[1].date - a[1].date)
         .map((chat) => (
           <div

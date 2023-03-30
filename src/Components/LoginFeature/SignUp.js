@@ -11,8 +11,14 @@ import { useUserAuth } from "../../context/UserContextApi";
 import { Alert } from "@mui/material";
 import Add from "./img/add.png";
 import { auth, db, storage } from "../../firebase_service";
-import { getAuth, createUserWithEmailAndPassword,  } from "firebase/auth";
-import { getFirestore, collection, addDoc, setDoc,doc } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+} from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 const SignUp = () => {
   let navigate = useNavigate();
@@ -42,35 +48,44 @@ const SignUp = () => {
       return;
     }
     try {
-          //  await signUp(email, password);
-          //Create user
-          const { user } = await createUserWithEmailAndPassword(
-            auth,
-            useremail,
-            userpassword
-          );
-          //Create a unique image name
-          const avatarName = `${user.uid}-${new Date().getTime()}-${
-            userAvator.name
-          }`;
-          const storageRef = ref(storage, avatarName);
-          const snapshot = await uploadBytes(storageRef, userAvator);
-          const avatarUrl = await getDownloadURL(snapshot.ref);
-          const userDocRef = await addDoc(collection(db, "users"), {
-            uid: user.uid,
-            displayName: displayName,
-            email: useremail,
-            avatarUrl: avatarUrl,
-            password: userpassword,
-          });
-          console.log("User added with ID: ", userDocRef.id);
-          //create empty user chats on firestore
-          await setDoc(doc(db, "userChats", userDocRef.id), {});
-          
+      //  await signUp(email, password);
+      //Create user
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        useremail,
+        userpassword
+      );
+      //Create a unique image name
+      const avatarName = `${user.uid}-${new Date().getTime()}-${
+        userAvator.name
+      }`;
+      const storageRef = ref(storage, avatarName);
+      const snapshot = await uploadBytes(storageRef, userAvator);
+      const avatarUrl = await getDownloadURL(snapshot.ref);
+      //create user on firestore
 
-          //  await setDoc(doc(db, "userChats", userDocRef.id), {});
-          navigate("/login");
-        } catch (err) {
+      // await setDoc(doc(db, "users", user.user.uid), {
+      //   uid: user.user.uid,
+      //   displayName: displayName,
+      //   email: useremail,
+      //   avatarUrl: avatarUrl,
+      //   password: userpassword,
+      // });
+
+      const userDocRef = await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        displayName: displayName,
+        email: useremail,
+        avatarUrl: avatarUrl,
+        password: userpassword,
+      });
+      console.log("User added with ID: ", userDocRef.id);
+      //create empty user chats on firestore
+      await setDoc(doc(db, "userChats", userDocRef.id), {});
+
+      //  await setDoc(doc(db, "userChats", userDocRef.id), {});
+      navigate("/login");
+    } catch (err) {
       setError(err.message);
     }
   };
