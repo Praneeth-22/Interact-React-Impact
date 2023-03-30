@@ -2,14 +2,31 @@ import React from 'react'
 import Messages from './Messages'
 import Input from './Input'
 import { ChatContext } from '../ChatContext';
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 function Chat() {
   const {data} = React.useContext(ChatContext)
+  const backHome = () => {
+    window.location.href = "/home"
+  }
   return (
     <div className="chat">
       <div className="chatInfo">
-        <span>{data.user?.displayName}</span>
-        <div className="chatIcons">
+        <span style={{
+          fontSize: "1.5rem",
+          fontWeight: "bold",
+          color: "white",
           
+        }}>{data.user?.displayName}</span>
+        <div className="chatIcons" style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "end",
+          width: "100px",
+          color: "white",
+          fontSize: "1.5rem",
+          cursor: "pointer",
+        }}>
+          <HomeOutlinedIcon onClick={backHome}/>
         </div>
       </div>
       <Messages />

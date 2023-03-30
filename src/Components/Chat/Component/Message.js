@@ -38,7 +38,11 @@ export default function Message({ message }) {
           }
           alt=""
         />
-        <span>just now</span>
+        <span>{
+          //compute time
+        
+
+        }</span>
       </div>
         <div className="messageContent">
         <p>{message.text}</p>

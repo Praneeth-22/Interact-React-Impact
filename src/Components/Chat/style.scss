@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
+  
   .container {
     border: 1px solid white;
     border-radius: 10px;
@@ -131,7 +131,7 @@
     .chat {
       flex: 2;
       height: 100%;
-      width: auto;
+    
       .chatInfo {
         height: 50px;
         background-color: #5d5b8d;
