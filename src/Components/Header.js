@@ -29,7 +29,7 @@ function Header(props) {
   const { setOpenModel } = props;
   const {logOut } = useUserAuth();
   const ava = faker.image.avatar();
-  const [photoUrl, setPhotoUrl] = useState("ava");
+  const [photoUrl, setPhotoUrl] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [modelOpen, setModelOpen] = useState(false);

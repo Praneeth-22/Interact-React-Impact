@@ -167,6 +167,7 @@ export function UserAuthContextProvider({ children }) {
      // to sign in the user using google
      const googleAuthProvider = new GoogleAuthProvider();
      return signInWithPopup(auth, googleAuthProvider).then(async (user) => {
+
        const userRef = collection(db, "users");
        const q = query(userRef, where("email", "==", user.user.email));
        const querySnapshot = await getDocs(q);
@@ -181,14 +182,22 @@ export function UserAuthContextProvider({ children }) {
          const storageRef = ref(storage, `googleSignimages/${avatarName}`);
          const snapshot = await uploadBytes(storageRef, userAvator);
          const avatarUrl = await getDownloadURL(snapshot.ref);
-         const userDocRef = await addDoc(collection(db, "users"), {
-           uid: user.user.uid,
-           displayName: displayName,
-           email: useremail,
-           avatarUrl: avatarUrl,
-         });
-         console.log("User added with ID: ", userDocRef.id);
-         await setDoc(doc(db, "userChats", userDocRef.id), {});
+        //  const userDocRef = await addDoc(collection(db, "users"), {
+        //    uid: user.user.uid,
+        //    displayName: displayName,
+        //    email: useremail,
+        //    avatarUrl: avatarUrl,
+        //  });
+        //  console.log("User added with ID: ", userDocRef.id);
+        //  await setDoc(doc(db, "userChats", userDocRef.uid), {});
+          await setDoc(doc(db, "users", user.user.uid), {
+            uid: user.user.uid,
+            displayName: displayName,
+            email: useremail,
+            avatarUrl: avatarUrl,
+          });
+          await setDoc(doc(db, "userChats", user.user.uid), {});
+
          const preparedUser = {
            displayName,
            email: useremail,

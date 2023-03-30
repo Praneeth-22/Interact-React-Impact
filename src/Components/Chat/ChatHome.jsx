@@ -1,15 +1,13 @@
 import React from 'react'
-import Sidebar from './Sidebar'
-import Chat from './Chat'
 import '../Chat/style.scss';
-
+import Slidebar from './Component/Slidebar';
+import Chat from './Component/Chat';
 const Home = () => {
   return (
     <div className="home"> 
     <div className="container">
-        <Sidebar/>
-        <Chat />
-
+      <Slidebar />
+      <Chat />
     </div>
       
     </div>

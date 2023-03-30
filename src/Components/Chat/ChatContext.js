@@ -2,14 +2,31 @@ import {
     createContext,
     useContext,
     useReducer,
+    useEffect,
+    useState,
   } from "react";
-  import { AuthContext } from "./AuthContext";
-  import { useUserAuth } from "../../context/UserContextApi";
+
   export const ChatContext = createContext();
   
   export const ChatContextProvider = ({ children }) => {
-    const { user } = useUserAuth();
-    const currentUser = user;
+    //
+     const currentUser = JSON.parse(localStorage.getItem("user"));
+     const [photoUrl, setPhotoUrl] = useState("");
+     const [displayName, setDisplayName] = useState("");
+     const [email, setEmail] = useState("");
+     useEffect(() => {
+       console.log("user in chat context :", currentUser);
+       const prepareData = {
+         displayName: currentUser?.displayName,
+         email: currentUser?.email,
+         photoURL: currentUser?.photoURL,
+       };
+       setPhotoUrl(prepareData?.photoURL);
+       setDisplayName(prepareData?.displayName);
+       setEmail(prepareData?.email);
+     }, [currentUser]);
+     
+    //
     const INITIAL_STATE = {
       chatId: "null",
       user: {},

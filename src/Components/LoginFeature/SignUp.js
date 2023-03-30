@@ -72,16 +72,27 @@ const SignUp = () => {
       //   password: userpassword,
       // });
 
-      const userDocRef = await addDoc(collection(db, "users"), {
+      // const userDocRef = await addDoc(collection(db, "users"), {
+      //   uid: user.uid,
+      //   displayName: displayName,
+      //   email: useremail,
+      //   avatarUrl: avatarUrl,
+      //   password: userpassword,
+      // });
+      // console.log("User added with ID: ", userDocRef.id);
+      //  await setDoc(doc(db, "userChats", userDocRef.uid), {});
+      //create empty user chats on firestore
+      //get uid present in userDocRef
+      console.log(" ---user id for creating ----",user.id)
+      await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         displayName: displayName,
         email: useremail,
         avatarUrl: avatarUrl,
         password: userpassword,
       });
-      console.log("User added with ID: ", userDocRef.id);
-      //create empty user chats on firestore
-      await setDoc(doc(db, "userChats", userDocRef.id), {});
+
+      await setDoc(doc(db, "userChats", user.uid), {});
 
       //  await setDoc(doc(db, "userChats", userDocRef.id), {});
       navigate("/login");
