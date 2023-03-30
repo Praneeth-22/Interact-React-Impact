@@ -43,10 +43,12 @@ function Post(props) {
   const [assetArea, setAssetArea] = useState(""); // state for asset area
   // console.log("at posts-->props :", props); // console log for props
   //
-  const { user, postArticleAPI } = useUserAuth(); // destructuring user from context
+  const {  postArticleAPI } = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
+  const user = JSON.parse(localStorage.getItem("user"));
   const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
   const [displayName, setDisplayName] = useState(""); // state for display name
+  const [email, setEmail] = useState("");
   //
   const [Cvalue, setCValue] = React.useState(options[0]);
   const [inputCValue, setInputCValue] = React.useState("");
@@ -92,15 +94,17 @@ function Post(props) {
     switchAssetArea("");
     setIsOpen(false);
   };
-  useEffect(() => {
-    if (user.photoURL) {
-      // user != null && user.photoURL != null
-      console.log("post photo   is:", user.photoURL);
-      console.log("post display name is:", user.displayName);
-      setPhotoUrl(user.photoURL);
-      setDisplayName(user.displayName);
-    }
-  }, [user]);
+useEffect(() => {
+  console.log("user in post:", user);
+  const prepareData = {
+    displayName: user?.displayName,
+    email: user?.email,
+    photoURL: user?.photoURL,
+  };
+  setPhotoUrl(prepareData?.photoURL);
+  setDisplayName(prepareData?.displayName);
+  setEmail(prepareData?.email);
+}, []);
 
   //
    const [cat, setCat] = React.useState("");

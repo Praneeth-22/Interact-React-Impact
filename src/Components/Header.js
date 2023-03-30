@@ -15,38 +15,40 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { faker } from "@faker-js/faker";
 import logo from "../images/logo/logo2.jpg";
 import { useUserAuth } from ".././context/UserContextApi";
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Profile from "./TimeLine/Profile";
 //
-const pages = ["Home","Chat"]; // change the caterogy
-const settings = ["Profile","Logout"];
+const pages = ["Home", "Chat"]; // change the caterogy
+const settings = ["Profile", "Logout"];
 function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { setOpenModel } = props;
-  const { user, logOut } = useUserAuth();
+  const {logOut } = useUserAuth();
   const ava = faker.image.avatar();
-  const [photoUrl, setPhotoUrl] = useState(ava);
+  const [photoUrl, setPhotoUrl] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [modelOpen, setModelOpen] = useState(false);
   const handleOpenModel = () => setModelOpen(true);
   const handleCloseModel = () => setModelOpen(false);
-  
-  useEffect(
-    () => {
-      if (user.photoURL) { // user != null && user.photoURL != null
-        setPhotoUrl(user.photoURL);
-        setDisplayName(user.displayName);
-        setEmail(user.email);
-      }
-      
-    },[user]
-  );
-  console.log("user in header is:", user);
+  // const [user, setUser] = useState()
+  const user = JSON.parse(localStorage.getItem("user"));
+  useEffect(() => {
+    console.log("user in header:", user);
+    const prepareData = {
+      displayName: user?.displayName,
+      email: user?.email,
+      photoURL: user?.photoURL,
+    };
+
+    setPhotoUrl(prepareData?.photoURL);
+    setDisplayName(prepareData?.displayName);
+    setEmail(prepareData?.email);
+  }, [user]);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -73,12 +75,10 @@ function Header(props) {
     } else if (setting === "Logout") {
       logOut(); // to logout the user
       window.location.href = "/";
-    }else if(setting === "Edit Profile"){
-     
+    } else if (setting === "Edit Profile") {
     }
     setAnchorElUser(null);
   };
-
 
   return (
     <AppBar
@@ -192,7 +192,7 @@ function Header(props) {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   alt="avatar"
-                  src={user.photoURL}
+                  src={photoUrl}
                   referrerpolicy="no-referrer"
                 />
               </IconButton>
@@ -251,7 +251,7 @@ function Header(props) {
                 p: 4,
               }}
             >
-              <Profile  />
+              <Profile />
             </Box>
           </Fade>
         </Modal>

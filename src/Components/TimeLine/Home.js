@@ -55,10 +55,12 @@ import MenuItem from "@mui/material/MenuItem";
 function Home(props) {
   const navigate = useNavigate();
   //
-  const { user, loading, getArticlesAPI, articles } = useUserAuth(); // destructuring user from context
+  const {loading, getArticlesAPI, articles } = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
+  const user = JSON.parse(localStorage.getItem("user"));
   const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
   const [displayName, setDisplayName] = useState(""); // state for display name
+  const [email, setEmail] = useState("");
   //
   const [isOpen, setIsOpen] = useState(false);
   const [openEvent, setOpenEvent] = useState(false);
@@ -159,13 +161,18 @@ function Home(props) {
   }, [newComment]);
 
   useEffect(() => {
-    if (user.photoURL) {
-      setPhotoUrl(user.photoURL);
-      setDisplayName(user.displayName);
-    }
+     const prepareData = {
+       displayName: user?.displayName,
+       email: user?.email,
+       photoURL: user?.photoURL,
+     };
+     setPhotoUrl(prepareData?.photoURL);
+     setDisplayName(prepareData?.displayName);
+     setEmail(prepareData?.email);
+   
     getArticlesAPI();
     console.log("home page user: ", user);
-  }, [user.displayName, user.photoURL]);
+  }, []);
 
   const handleLikes = (e, articleId) => {
     e.preventDefault();
@@ -236,7 +243,7 @@ function Home(props) {
         label:"Massachusetts"
       },
    ];
-console.log("user:pic", user.photoURL)
+// console.log("user:pic", user.photoURL)
 
   return (
     <div
