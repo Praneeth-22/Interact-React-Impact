@@ -57,6 +57,7 @@ export default function Input() {
         }
       );
     } else {
+      console.log("no img");
       await updateDoc(doc(db, "chats", data.chatId), {
         messages: arrayUnion({
           id: uuid(),
@@ -80,16 +81,19 @@ export default function Input() {
       },
       [data.chatId + ".date"]: serverTimestamp(),
     });
-
-    setText("");
-    setImg(null);
+    console.log("send");
+ setText("");
+ setImg(null);
   };
+  
+   
   return (
     <div className="input">
       <input
         type="text"
         placeholder="Type a message"
         onChange={(e) => setText(e.target.value)}
+        value={text}
       />
       <div className="send">
         <img src={Attach} alt="send" />
@@ -102,6 +106,7 @@ export default function Input() {
           onChange={(e) => {
             setImg(e.target.files[0]);
           }}
+          value={img}
         />
         <label htmlFor="file">
           <img src={Img} alt="file" />
