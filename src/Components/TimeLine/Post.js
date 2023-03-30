@@ -43,8 +43,9 @@ function Post(props) {
   const [assetArea, setAssetArea] = useState(""); // state for asset area
   // console.log("at posts-->props :", props); // console log for props
   //
-  const { user, postArticleAPI } = useUserAuth(); // destructuring user from context
+  const {  postArticleAPI } = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
+  const user = JSON.parse(localStorage.getItem("user"));
   const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
   const [displayName, setDisplayName] = useState(""); // state for display name
   //

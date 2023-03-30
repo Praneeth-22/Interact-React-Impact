@@ -2,13 +2,11 @@ import { signOut } from 'firebase/auth';
 import React,{useContext,useState,useEffect} from 'react'
 import '../Chat/style.scss';
 import {auth} from '../../firebase_service'
-
 import firebase from "firebase/compat/app";
 // import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import {useUserAuth} from '../../context/UserContextApi'
 const Navbar = () => {
-  const { user,logOut } = useUserAuth();
-  // console.log("user in navbar:", user)
+  const { logOut } = useUserAuth();
   const loggingOut = () => {
     logOut()
     window.location.href = "/";
@@ -18,7 +16,7 @@ const Navbar = () => {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    // const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user"));
     console.log("user in navbar:", user)
     const prepareData = {
       displayName: user?.displayName,

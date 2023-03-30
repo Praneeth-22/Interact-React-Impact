@@ -38,7 +38,8 @@ import { doc, updateDoc } from "firebase/firestore";
 function Profile() {
 
   const fileInputRef = useRef(null);
-  const { user, getUsersAPI } = useUserAuth();
+  const {  getUsersAPI } = useUserAuth();
+  const user = JSON.parse(localStorage.getItem("user"));
   const [photoUrl, setPhotoUrl] = useState("");
   const [displayName, setDisplayName] = useState("");
   console.log("user in profile page is:", user);

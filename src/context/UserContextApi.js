@@ -41,37 +41,66 @@ export function UserAuthContextProvider({ children }) {
   const [postLiked, setPostLiked] = useState([]); // to store the liked posts
   const [event, setEvent] = useState([]); // to store the events from firebase
 
-  function logIn(email, password) {
-    // to sign in the user
-    return signInWithEmailAndPassword(auth, email, password).then((user) => {
-      console.log("user in usercontext:", user);
-      // setUser(user);
-      //get the current user email from user collection and set it to the user object
+  // function logIn(email, password) {
+  //   // to sign in the user
+  //   return signInWithEmailAndPassword(auth, email, password).then((user) => {
+  //     console.log("user in usercontext:", user);
+  //     // setUser(user);
+  //     //get the current user email from user collection and set it to the user object
+  //     const userRef = collection(db, "users");
+  //     const q = query(userRef, orderBy("email", "asc"));
+  //     onSnapshot(q, (querySnapshot) => {
+  //       const users = [];
+  //       querySnapshot.forEach((doc) => {
+  //         users.push({ ...doc.data(), id: doc.id });
+  //       });
+  //       const currentUser = users.filter((u) => u.email === user.user.email);
+  //       console.log("currentUser:", currentUser);
+  //       //console log current user mail id
+  //       console.log("currentUser[0]:", currentUser[0]);
+  //       const preparedUser = {
+  //         displayName: currentUser[0].displayName,
+  //         email: currentUser[0].email,
+  //         photoURL: currentUser[0].avatarUrl,
+  //         password: currentUser[0].password,
+  //         uid: currentUser[0].uid,
+  //       };
+  //       setUser(preparedUser);
+  //       localStorage.setItem("user", JSON.stringify(preparedUser));
+  //       console.log("user in localStorage:", user);
+  //     });
+  //     //storing user in local storage
+  //   });
+  // }
+   function logIn(email, password) {
+     // to sign in the user
+     return signInWithEmailAndPassword(auth, email, password).then((user) => {
+       console.log("user in usercontext:", user);
+       // setUser(user);
+       //get the current user email from user collection and set it to the user object
       const userRef = collection(db, "users");
-      const q = query(userRef, orderBy("email", "asc"));
-      onSnapshot(q, (querySnapshot) => {
-        const users = [];
-        querySnapshot.forEach((doc) => {
-          users.push({ ...doc.data(), id: doc.id });
+      const q = query(userRef, where("email", "==", user.user.email));
+      getDocs(q)
+        .then((querySnapshot) => {
+          const currentUser = querySnapshot.docs[0].data();
+          console.log("currentUser:", currentUser);
+          const preparedUser = {
+            displayName: currentUser.displayName,
+            email: currentUser.email,
+            photoURL: currentUser.avatarUrl,
+            password: currentUser.password,
+            uid: currentUser.uid,
+          };
+          setUser(preparedUser);
+          console.log("user in userContext after setUser:", user);
+          localStorage.setItem("user", JSON.stringify(preparedUser));
+        })
+        .catch((error) => {
+          console.log("Error getting user information: ", error);
         });
-        const currentUser = users.filter((u) => u.email === user.user.email);
-        console.log("currentUser:", currentUser);
-        //console log current user mail id
-        console.log("currentUser[0]:", currentUser[0]);
-        const preparedUser = {
-          displayName: currentUser[0].displayName,
-          email: currentUser[0].email,
-          photoURL: currentUser[0].avatarUrl,
-          password: currentUser[0].password,
-          uid: currentUser[0].uid,
-        };
-        setUser(preparedUser);
-        // localStorage.setItem("user", JSON.stringify(preparedUser));
-        console.log("user in localStorage:", user);
-      });
-      //storing user in local storage
-    });
-  }
+       //storing user in local storage
+     });
+   }
   function signUp(email, password) {
     // to sign up the user
     return createUserWithEmailAndPassword(auth, email, password);
@@ -177,6 +206,7 @@ export function UserAuthContextProvider({ children }) {
          };
          setUser(preparedUser);
          // localStorage.setItem("user", JSON.stringify(preparedUser));
+          localStorage.setItem("user", JSON.stringify(preparedUser));
        }
      });
    }
@@ -328,6 +358,12 @@ export function UserAuthContextProvider({ children }) {
     console.log("in userContext event:", event);
     return unsubscribe;
   }
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
       // to check if the user is logged in or not

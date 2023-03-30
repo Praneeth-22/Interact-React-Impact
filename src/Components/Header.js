@@ -27,7 +27,7 @@ function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { setOpenModel } = props;
-  const {user, logOut } = useUserAuth();
+  const {logOut } = useUserAuth();
   const ava = faker.image.avatar();
   const [photoUrl, setPhotoUrl] = useState("ava");
   const [displayName, setDisplayName] = useState("");
@@ -36,7 +36,7 @@ function Header(props) {
   const handleOpenModel = () => setModelOpen(true);
   const handleCloseModel = () => setModelOpen(false);
   // const [user, setUser] = useState()
-  // const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     console.log("user in header:", user);
     const prepareData = {

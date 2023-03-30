@@ -55,8 +55,9 @@ import MenuItem from "@mui/material/MenuItem";
 function Home(props) {
   const navigate = useNavigate();
   //
-  const { user, loading, getArticlesAPI, articles } = useUserAuth(); // destructuring user from context
+  const {loading, getArticlesAPI, articles } = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
+  const user = JSON.parse(localStorage.getItem("user"));
   const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
   const [displayName, setDisplayName] = useState(""); // state for display name
   //
