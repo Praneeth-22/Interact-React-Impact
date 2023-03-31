@@ -43,11 +43,13 @@ function Profile() {
   const fileInputRef = useRef(null);
   const {  getUsersAPI } = useUserAuth();
   const user = JSON.parse(localStorage.getItem("user"));
-  const [photoUrl, setPhotoUrl] = useState("");
-  const [displayName, setDisplayName] = useState("");
+  const [photoUrl, setPhotoUrl] = useState(user?.photoURL);
+  const [displayName, setDisplayName] = useState(user?.displayName);
   console.log("user in profile page is:", user);
   //
   const handleProfilePictureChange = (event) => {
+    console.log("event.target.files[0]:", event.target.files[0]);
+    event.preventDefault();
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -56,12 +58,12 @@ function Profile() {
       console.log("Selected file:", file);
       console.log("File data URL:", dataUrl);
       setChangeImg(dataUrl);
+      console.log("changeImg-------------------------------------:", changeImg);
       setPhotoUrl(dataUrl); 
       console.log("------changed photoUrl:-------", photoUrl);
     };
   };
-  // Send reader to server using fetch or axios
-  // Save the dataUrl in your database
+  
 
   const handleEditPictureClick = () => {
     fileInputRef.current.click();
@@ -78,7 +80,7 @@ function Profile() {
   const [newPassword, setNewPassword] = useState(user?.password);
   const [newName, setNewName] = useState(displayName);
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [changeImg, setChangeImg] = useState(photoUrl);
+  const [changeImg, setChangeImg] = useState("");
   const [userDocId, setUserDocId] = useState("");
   const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
   const handleMouseDownPassword = (event) => {

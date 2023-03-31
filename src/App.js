@@ -12,6 +12,7 @@ import Profile from '../src/Components/TimeLine/Profile';
 import ChatHome from '../src/Components/Chat/ChatHome';
 import ProtectedRoute from '../src/Components/LoginFeature/ProtectedRoute';
 import { ChatContextProvider } from '../src/Components/Chat/ChatContext';
+import ForgotPass from "./Components/LoginFeature/ForgotPass";
 //
 function App() {
   return (
@@ -63,6 +64,14 @@ function App() {
                   <ProtectedRoute>
                     <ChatHome />
                   </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/forgot-password"
+                element={
+                
+                    <ForgotPass />
+            
                 }
               />
             </Routes>
