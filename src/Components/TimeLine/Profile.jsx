@@ -241,6 +241,25 @@ function Profile() {
             disabled
             defaultValue={user.password}
           />
+          <TextField
+            id="outlined-multiline-static"
+            label="location"
+            variant="outlined"
+            defaultValue={user.location}
+          />
+          <TextField
+            id="outlined-multiline-static"
+            label="Phone Number"
+            variant="outlined"
+            defaultValue={user.phoneNumber}
+          />
+          <TextField
+            id="outlined-multiline-static"
+            label="University"
+            variant="outlined"
+            defaultValue={user.university}
+          />
+        
           {/* <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
             <InputLabel htmlFor="outlined-adornment-password">
               New Password
@@ -264,6 +283,8 @@ function Profile() {
               label="Password"
             />
           </FormControl>
+
+
            */}
         </div>
         <Box sx={{ mt: 2 }}>

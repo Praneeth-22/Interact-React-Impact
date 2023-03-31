@@ -317,6 +317,21 @@ export function UserAuthContextProvider({ children }) {
         console.log("Error adding document: ", error);
       }
     }
+    // sending email notification
+  const notificationPayload = {
+    notification: {
+      title: "New post uploaded!",
+      body: `${payload.user.displayName} has uploaded a new post`,
+    },
+    data: {
+      click_action: "FLUTTER_NOTIFICATION_CLICK",
+      sound: "default",
+      status: "done",
+      screen: "article",
+    },
+    topic: "all_users",
+  };
+
   }
 
   function getArticlesAPI() {
