@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import "./loginpage.css";
 import { useNavigate } from "react-router-dom";
 import photo from "./img/finallogo.jpg";
@@ -10,38 +10,33 @@ import { useUserAuth } from "../../context/UserContextApi";
 import { useState } from "react";
 import { Alert, stepClasses } from "@mui/material";
 import GoogleButton from "react-google-button";
-// import bg from './img/logintest2.svg';
+function ForgotPass() {
+    let navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [error, setError] = useState("");
+    const [password, setPassword] = useState("");
 
-const Login = () => {
-  /*const navigate = useNavigate();*/
-  let navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [password, setPassword] = useState("");
+    const { logIn, googleSignIn, forgotPasswordAPI } = useUserAuth(); // to get the logIn function from the context
 
-  const { logIn, googleSignIn, forgotPasswordAPI } = useUserAuth(); // to get the logIn function from the context
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    /*navigate("/home");*/
-    setError("");
-    /*navigate("/home");*/
-    try {
-      await logIn(email, password);
-      navigate("/home");
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-  const handleGoogleSignIn = async (e) => {
-    e.preventDefault();
-    try {
-      await googleSignIn();
-      navigate("/home");
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      /*navigate("/home");*/
+      setError("");
+      /*navigate("/home");*/
+      try {
+        await forgotPasswordAPI(email).then((result) => {
+            console.log("req send");
+            console.log(result);
+            navigate("/login");
+        }).catch((err) => {
+            console.log("error in reset",err);
+            setError(err.message);
+        });
+        
+      } catch (err) {
+        setError(err.message);
+      }
+    };
   return (
     <div className="loginpage">
       <nav className="navbar navbar-expand-lg navbar-light  fixed-top">
@@ -89,7 +84,7 @@ const Login = () => {
         <div className="auth-wrapper">
           <div className="auth-inner">
             <form onSubmit={handleSubmit}>
-              <h3>Login</h3>
+              <h3>Reset Password</h3>
               {error && <Alert variant="danger">{error}</Alert>}
               <div className="mb-3">
                 <label>Email address</label>
@@ -100,16 +95,10 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              <div className="mb-3">
-                <label>Password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="Enter password"
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div className="d-grid">
+              <div className="d-grid" style={{
+                    marginTop: "20px",
+                    marginBottom: "15px",
+              }}>
                 <button
                   type="submit"
                   className="btn btn-primary"
@@ -121,18 +110,9 @@ const Login = () => {
                   Sign In
                 </button>
               </div>
-              <div className="d-grid mt-2">
-                <button
-                  type="submit"
-                  className="googleBtn"
-                  onClick={handleGoogleSignIn}
-                >
-                  <a>Sign In via Google</a>&nbsp;&nbsp;
-                  <img src={google} alt="click" />
-                </button>
-              </div>
+            
               <p className="forgot-password text-right">
-                Forgot password  <a href="/forgot-password"> {`reset`}</a>
+                Wanna login ?  <a href="/login"> Sign In</a>
               </p>
             </form>
           </div>
@@ -141,6 +121,6 @@ const Login = () => {
       </div>
     </div>
   );
-};
+}
 
-export default Login;
+export default ForgotPass

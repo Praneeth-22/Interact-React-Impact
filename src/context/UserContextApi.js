@@ -6,6 +6,8 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
+  sendPasswordResetEmail,
+  updatePassword,
 } from "firebase/auth";
 import { auth, storage, db } from "../firebase_service";
 import firebase from "firebase/compat/app";
@@ -27,7 +29,9 @@ import {
   orderBy,
   onSnapshot,
   setDoc,
-  doc,where,
+  doc,
+  where,
+  updateDoc,
 } from "firebase/firestore";
 import { v4 } from "uuid";
 //
@@ -40,7 +44,7 @@ export function UserAuthContextProvider({ children }) {
   const [articles, setArticles] = useState([]); // to store the articles from firebase
   const [postLiked, setPostLiked] = useState([]); // to store the liked posts
   const [event, setEvent] = useState([]); // to store the events from firebase
-
+  const [changeEmail, setChangeEmail] = useState("");
   // function logIn(email, password) {
   //   // to sign in the user
   //   return signInWithEmailAndPassword(auth, email, password).then((user) => {
@@ -349,10 +353,68 @@ export function UserAuthContextProvider({ children }) {
     console.log("in userContext event:", event);
     return unsubscribe;
   }
+// forgot password
+  // function forgotPasswordAPI(email) {
+  //   return sendPasswordResetEmail(auth, email,{
+  //     url: "http://localhost:3000/login",
+  //   }).then((res)=>{
+  //     console.log("password reset email sent");
+    
+  //     // change the user password info in the user collections
+    
+  //   }).catch((error)=>{
+  //     console.log("error:",error);
+  //   })
+  // }
+
+
 
   //get current user data
-  function currUserInfoAPI() {}
+ 
   //get users
+  function forgotPasswordAPI(email) {
+    return sendPasswordResetEmail(auth, email, {
+      // url: "http://localhost:3000/login",
+    })
+      .then((res) => {
+        console.log("password reset email sent");
+
+        // update user's password in Firebase Authentication
+        const newPassword = "new-password"; // replace with new password
+        const user = auth.currentUser;
+        user
+          .updatePassword(newPassword)
+          .then(() => {
+            console.log("user password updated successfully");
+            // update user's password in your user collection in database
+            const userId = user.uid; // get user id
+            const userRef = collection("users").doc(userId);
+            userRef
+              .update({
+                password: newPassword,
+              })
+              .then(() => {
+                console.log("user password updated in database successfully");
+              })
+              .catch((error) => {
+                console.error(
+                  "error updating user password in database",
+                  error
+                );
+              });
+          })
+          .catch((error) => {
+            console.error(
+              "error updating user password in Firebase Authentication",
+              error
+            );
+          });
+      })
+      .catch((error) => {
+        console.log("error:", error);
+      });
+  }
+
   function getUsersAPI() {
     const q = query(collection(db, "users"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -401,6 +463,7 @@ export function UserAuthContextProvider({ children }) {
         event,
         getEventsAPI,
         getUsersAPI,
+        forgotPasswordAPI,
       }} // to provide the context to the children
     >
       {children}
