@@ -118,7 +118,7 @@ const Login = () => {
                     backgroundColor: "#28104e",
                   }}
                 >
-                  Submit
+                  Sign In
                 </button>
               </div>
               <div className="d-grid mt-2">

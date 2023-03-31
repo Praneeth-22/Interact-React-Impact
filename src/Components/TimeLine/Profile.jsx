@@ -22,6 +22,7 @@ import {
   getMetadata,
   uploadBytesResumable,
   Timestamp,
+ 
 } from "firebase/storage";
 import { auth, storage, db } from "../../firebase_service";
 import {
@@ -32,7 +33,9 @@ import {
   orderBy,
   onSnapshot,
   where,
+
 } from "firebase/firestore";
+import { getAuth, updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 
 function Profile() {
@@ -69,66 +72,54 @@ function Profile() {
       setDisplayName(user.displayName);
       console.log("user in useeffect profile page is:", user);
     }
-  }, []);
+  }, [user]);
   console.log("users in profile page is:", user);
   //changing the profile values
-  const [newPassword, setNewPassword] = useState("");
-  const [newName, setNewName] = useState("");
+  const [newPassword, setNewPassword] = useState(user?.password);
+  const [newName, setNewName] = useState(displayName);
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [changeImg, setChangeImg] = useState(user.photoURL);
+  const [changeImg, setChangeImg] = useState(photoUrl);
   const [userDocId, setUserDocId] = useState("");
   const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
   const handleNewProfileChanges = async (event) => {
-    //update the changes into firebase user collection
-    event.preventDefault();
-    //store image into firebase storage
-    const storageRef = ref(storage, `profilePictures/${user.displayName}/${user.uid}`);
-    const snapshot = await uploadBytes(storageRef, photoUrl);
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    console.log("File available at", downloadURL);
-    //update the changes into firebase user collection with user id = uid
-
-    const userRef = collection(db, "users");
-    const q = query(userRef, where("uid", "==", user.uid));
-    console.log("q is:", q);
-    const querySnapshot = await getDocs(q);
-    console.log("querySnapshot is:", querySnapshot);
-
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
-      setUserDocId(doc.id);
-    });
-    const userIdRef = doc(db, "users", userDocId);
-    console.log("userIdRef is:", userIdRef);
-    await updateDoc(userIdRef, {
-      displayName: newName,
-      avatarUrl: downloadURL,
-      password: newPassword,
-    });
-    //update user authentaion data with new changes
-    // await updateProfile(user, {
-    //   displayName: newName,
-    //   photoURL: downloadURL,
-    // });
-
-    // console.log("changes updated successfully",userIdRef)
-    // console.log("user.uid is:", user.uid);
-    // const userRef = doc(db, "users", user.uid);
-    // console.log("userRef is:", userRef)
-    // await updateDoc(userRef, {
-    //   displayName: newName,
-    //   avatarUrl: downloadURL,
-    //   password: newPassword,
-    // });
-
-    //reset state variables
-    setNewName("");
-    setNewPassword("");
-    // setProfilePicture("");
+      event.preventDefault();
+      const userDoc = await getDocs(
+        query(
+          collection(db, "users"),
+          where("email", "==", user.email)
+        )
+      );
+      userDoc.forEach((doc) => {
+        setUserDocId(doc.id);
+      }
+      );
+      console.log("userDocId of updating profile-------------------is:", userDocId);
+      //
+      const userDocRef = doc(db, "users", userDocId);
+      console.log("photoUrl", photoUrl)
+      console.log("values", newName, changeImg, newPassword)
+      await updateDoc(userDocRef, {
+        displayName: newName,
+        avatarUrl: changeImg,
+        password: newPassword,
+      });
+      console.log("after updating the profile page -------------------is:", userDocId);
+      //update the user in local storage
+      const updatedUser = {
+        ...user,
+        displayName: newName,
+        photoURL: changeImg,
+        password: newPassword,
+      }
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      //update the user in context
+      getUsersAPI();
   };
+
   return (
     <div>
       <Typography
@@ -139,16 +130,16 @@ function Profile() {
       >
         Profile : {user.displayName}
       </Typography>
-      <Box
+      {/* <Box
         sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
       >
-        {/* <input
+        <input
           type="file"
           accept="image/*"
           ref={fileInputRef}
           style={{ display: "none" }}
           onChange={handleProfilePictureChange}
-        /> */}
+        />
         <label htmlFor="icon-button-file">
           <IconButton
             color="primary"
@@ -164,7 +155,7 @@ function Profile() {
                 sx={{ width: 90, height: 90 }}
               />
               <div style={{ position: "absolute", bottom: 0, right: 0 }}>
-                {/* <PhotoCamera
+                <PhotoCamera
                   fontSize="large"
                   sx={{
                     color: "white",
@@ -172,7 +163,46 @@ function Profile() {
                     borderRadius: "50%",
                     p: 1,
                   }}
-                /> */}
+                />
+              </div>
+            </div>
+          </IconButton>
+        </label>
+      </Box> */}
+      <Box
+        sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
+      >
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          onChange={handleProfilePictureChange}
+        />
+        <label htmlFor="icon-button-file">
+          <IconButton
+            color="primary"
+            aria-label="upload picture"
+            component="span"
+            sx={{ mb: 1 }}
+            onClick={handleEditPictureClick}
+          >
+            <div style={{ position: "relative" }}>
+              <Avatar
+                alt="Profile Picture"
+                src={photoUrl}
+                sx={{ width: 90, height: 90 }}
+              />
+              <div style={{ position: "absolute", bottom: 0, right: 0 }}>
+                <PhotoCamera
+                  fontSize="large"
+                  sx={{
+                    color: "white",
+                    backgroundColor: "gray",
+                    borderRadius: "50%",
+                    p: 1,
+                  }}
+                />
               </div>
             </div>
           </IconButton>
@@ -192,8 +222,8 @@ function Profile() {
             id="outlined-multiline-static"
             label="Name"
             variant="outlined"
-            defaultValue={user?.displayName}
-            // onChange={(e) => setNewName(e.target.value)}
+            defaultValue={user.displayName}
+            onChange={(e) => setNewName(e.target.value)}
           />
           <TextField
             id="outlined-multiline-static"
@@ -202,13 +232,13 @@ function Profile() {
             variant="outlined"
             defaultValue={user.email}
           />
-          {/* <TextField
+          <TextField
             id="outlined-multiline-static"
             label="Old Password"
             variant="outlined"
             disabled
             defaultValue={user.password}
-          /> */}
+          />
           {/* <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
             <InputLabel htmlFor="outlined-adornment-password">
               New Password
@@ -231,17 +261,17 @@ function Profile() {
               }
               label="Password"
             />
-          </FormControl> */}
-          
+          </FormControl>
+           */}
         </div>
         <Box sx={{ mt: 2 }}>
-          {/* <Button
+          <Button
             variant="contained"
             color="success"
             onClick={handleNewProfileChanges}
           >
             Save
-          </Button> */}
+          </Button>
           <Button
             variant="outlined"
             color="error"

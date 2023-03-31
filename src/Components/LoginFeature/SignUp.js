@@ -56,7 +56,7 @@ const SignUp = () => {
         userpassword
       );
       //Create a unique image name
-      const avatarName = `${user.uid}-${new Date().getTime()}-${
+      const avatarName = `SignUp${user.uid}-${new Date().getTime()}-${
         userAvator.name
       }`;
       const storageRef = ref(storage, avatarName);
