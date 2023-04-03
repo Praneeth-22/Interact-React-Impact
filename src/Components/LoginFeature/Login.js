@@ -89,10 +89,26 @@ const Login = () => {
         <div className="auth-wrapper">
           <div className="auth-inner">
             <form onSubmit={handleSubmit}>
-              <h3>Login</h3>
+              <h3
+                style={{
+                  color: "#28104e",
+                  fontWeight: "700",
+                  letterSpacing: "1px",
+                }}
+              >
+                Login
+              </h3>
               {error && <Alert variant="danger">{error}</Alert>}
               <div className="mb-3">
-                <label>Email address</label>
+                <label
+                  style={{
+                    color: "#28104e",
+                    fontWeight: "600",
+                    fontSize: "12px",
+                  }}
+                >
+                  Email :
+                </label>
                 <input
                   type="email"
                   className="form-control"
@@ -101,7 +117,15 @@ const Login = () => {
                 />
               </div>
               <div className="mb-3">
-                <label>Password</label>
+                <label
+                  style={{
+                    color: "#28104e",
+                    fontWeight: "600",
+                    fontSize: "12px",
+                  }}
+                >
+                  Password :
+                </label>
                 <input
                   type="password"
                   className="form-control"
@@ -124,16 +148,51 @@ const Login = () => {
               <div className="d-grid mt-2">
                 <button
                   type="submit"
-                  className="googleBtn"
+                  className="btn btn-primary"
                   onClick={handleGoogleSignIn}
+                  style={{
+                    color: "#28104e",
+                    backgroundColor: "#f5f5f5",
+                    border: "1px solid #28104e",
+                  }}
                 >
                   <a>Sign In via Google</a>&nbsp;&nbsp;
                   <img src={google} alt="click" />
                 </button>
               </div>
-              <p className="forgot-password text-right">
-                Forgot password  <a href="/forgot-password"> {`reset`}</a>
-              </p>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  float: "right",
+                  alignItems: "flex-end",
+                }}
+              >
+                <span
+                  className="forgot-password text-right"
+                  style={{
+                    color: "#28104e",
+                    marginTop: "6px",
+                    float: "right",
+                    marginButtom: "0px",
+                
+                  
+                  }}
+                >
+                  Forgot password <a href="/forgot-password"> {`reset?`}</a>
+                </span>
+                <span
+                  className="forgot-password text-right"
+                  style={{
+                    color: "#28104e",
+                    float: "right",
+            
+                    
+                  }}
+                >
+                  Don't have an account? <a href="/sign-up"> {`signup`}</a>
+                </span>
+              </div>
             </form>
           </div>
         </div>

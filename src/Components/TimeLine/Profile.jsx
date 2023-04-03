@@ -37,6 +37,7 @@ import {
 } from "firebase/firestore";
 import { getAuth, updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
+import _ from "lodash";
 
 function Profile() {
 
@@ -128,9 +129,9 @@ function Profile() {
         id="transition-modal-title"
         variant="h6"
         component="h2"
-        style={{ fontWeight: "bold" }}
+        style={{ fontWeight: "bold", color: "#28104E", letterSpacing: "1px" }}
       >
-        Profile : {user.displayName}
+        Profile : {_.capitalize(user.displayName)}
       </Typography>
       {/* <Box
         sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
@@ -226,6 +227,7 @@ function Profile() {
             variant="outlined"
             defaultValue={user.displayName}
             onChange={(e) => setNewName(e.target.value)}
+            size="small"
           />
           <TextField
             id="outlined-multiline-static"
@@ -233,6 +235,7 @@ function Profile() {
             disabled
             variant="outlined"
             defaultValue={user.email}
+            size="small"
           />
           <TextField
             id="outlined-multiline-static"
@@ -240,26 +243,30 @@ function Profile() {
             variant="outlined"
             disabled
             defaultValue={user.password}
+            size="small"
           />
           <TextField
             id="outlined-multiline-static"
             label="location"
             variant="outlined"
             defaultValue={user.location}
+            size="small"
           />
           <TextField
             id="outlined-multiline-static"
             label="Phone Number"
             variant="outlined"
             defaultValue={user.phoneNumber}
+            size="small"
           />
           <TextField
             id="outlined-multiline-static"
             label="University"
             variant="outlined"
             defaultValue={user.university}
+            size="small"
           />
-        
+
           {/* <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
             <InputLabel htmlFor="outlined-adornment-password">
               New Password
@@ -287,21 +294,28 @@ function Profile() {
 
            */}
         </div>
-        <Box sx={{ mt: 2 }}>
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleNewProfileChanges}
-          >
-            Save
-          </Button>
+        <Box sx={{ mt: 2, float: "right" }}>
           <Button
             variant="outlined"
             color="error"
-            sx={{ ml: 2 }}
+            sx={{ mr: 2 ,
+              // color: "#28104E",
+              // borderColor: "#28104E",
+            }}
             onClick={() => (window.location.href = "/home")}
           >
             Close
+          </Button>
+          <Button
+            variant="contained"
+            // color="success"
+            sx={{ mr: 2 ,
+               color: "white",
+              backgroundColor: "#28104E",
+            }}
+            onClick={handleNewProfileChanges}
+          >
+            Save
           </Button>
         </Box>
       </Box>

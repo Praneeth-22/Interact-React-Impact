@@ -14,6 +14,7 @@ import Modal from "react-bootstrap/Modal";
 function MyEvent() {
   const navigate = useNavigate();
   const { user, event, getEventsAPI } = useUserAuth();
+   const [events, setEvents] = useState([]);
   useEffect(() => {
     const unsubscribe = getEventsAPI();
     return () => {
@@ -46,13 +47,31 @@ function MyEvent() {
   };
 
   console.log(".................", event, ".................");
+
   const myDetails = event.map((item) => {
     return (
-      <Card className="card">
-        <p
+      <Card
+        className="card"
+        sx={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <div
           onClick={(e) => {
             console.log("clicked");
             handleCurrentEVent(e, item.id);
+          }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "start",
+            width: "100%",
+            flexDirection: "row",
+            marginBottom: "8px",
           }}
         >
           <span
@@ -63,7 +82,7 @@ function MyEvent() {
               cursor: "pointer",
             }}
           >
-            {item.event.university} -{" "}
+            {item.event.university} 
           </span>
           <span
             style={{
@@ -75,18 +94,19 @@ function MyEvent() {
           >
             {item.event.title}
           </span>
-        </p>
+        </div>
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "start",
+            justifyContent: "space-between",
             width: "100%",
+            flexDirection: "row",
           }}
         >
-          <p
+          <span
             style={{
-              color: "#28104e",
+              color: "#4A1D91",
               fontSize: "12px",
               fontWeight: 600,
               letterSpacing: "1.5px",
@@ -98,15 +118,15 @@ function MyEvent() {
                 style={{
                   fontSize: "18px",
                   marginRight: "5px",
-                  color: "#28104e",
+                  color: "#4A1D91",
                 }}
               />
             </span>
             {item.event.date}
-          </p>
+          </span>
           <p
             style={{
-              color: "#28104e",
+              color: "#4A1D91",
               fontSize: "12px",
               letterSpacing: "1.5px",
               fontWeight: 600,
@@ -118,7 +138,7 @@ function MyEvent() {
                 style={{
                   fontSize: "16px",
                   marginRight: "5px",
-                  color: "#28104e",
+                  color: "#4A1D91",
                 }}
               />
             </span>
@@ -137,9 +157,9 @@ function MyEvent() {
       <h3
         style={{
           color: "#28104e",
-          fontWeight: 500,
+          fontWeight: 600,
           alignItems: "center",
-          letterSpacing: "1.5px",
+          letterSpacing: "1px",
         }}
       >
         Events
