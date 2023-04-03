@@ -61,8 +61,8 @@ span {
   margin: auto;
   background: #ffffff;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
-  padding: 40px 55px 45px 55px;
-  border-radius: 15px;
+  padding: 40px 55px 80px 55px;
+  border-radius: 8px;
   transition: all 0.3s;
 }
 .signup > .notNav > .auth-wrapper > .auth-inner {
@@ -71,8 +71,8 @@ span {
   margin-top: 50px;
   background: #ffffff;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
-  padding: 10px 55px 10px 55px;
-  border-radius: 15px;
+  padding: 30px 55px 55px 55px;
+  border-radius: 8px;
   transition: all 0.3s;
   font-size: 14px;
 }

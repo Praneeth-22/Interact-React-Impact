@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import bg from "./img/background.jpg";
 import { useUserAuth } from "../../context/UserContextApi";
 import { Alert } from "@mui/material";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Add from "./img/add.png";
 import { auth, db, storage } from "../../firebase_service";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
@@ -146,10 +147,26 @@ const SignUp = () => {
         <div className="auth-wrapper">
           <div className="auth-inner">
             <form onSubmit={handleSubmit}>
-              <h3>Sign Up</h3>
+              <h3
+                style={{
+                  color: "#28104e",
+                  fontWeight: "600",
+                  letterSpacing: "1px",
+                }}
+              >
+                Sign Up
+              </h3>
               {error && <Alert variant="danger">{error}</Alert>}
-              <div className="mb-3  ">
-                <label>Username</label>
+              <div className="mb-3">
+                <label
+                  style={{
+                    color: "#28104e",
+                    fontWeight: "600",
+                    fontSize: "12px",
+                  }}
+                >
+                  Username :
+                </label>
                 <input
                   type="text"
                   className="form-control"
@@ -158,7 +175,15 @@ const SignUp = () => {
                 />
               </div>
               <div className="mb-3">
-                <label>Email address</label>
+                <label
+                  style={{
+                    color: "#28104e",
+                    fontWeight: "600",
+                    fontSize: "12px",
+                  }}
+                >
+                  Email :
+                </label>
                 <input
                   type="email"
                   className="form-control"
@@ -167,7 +192,15 @@ const SignUp = () => {
                 />
               </div>
               <div className="mb-3">
-                <label>Password</label>
+                <label
+                  style={{
+                    color: "#28104e",
+                    fontWeight: "600",
+                    fontSize: "12px",
+                  }}
+                >
+                  Password :
+                </label>
                 <input
                   type="password"
                   className="form-control"
@@ -180,11 +213,34 @@ const SignUp = () => {
                 <label
                   htmlFor="file"
                   style={{
+                    color: "#28104e",
+                    fontWeight: "600",
                     cursor: "pointer",
                   }}
                 >
-                  <img src={Add} alt=" " />
-                  <span>Add an avatar</span>
+                  {/* <img
+                    src={Add}
+                    alt=" "
+                    style={{
+                      width: "30px",
+                      height: "20px",
+                      marginRight: "8px",
+                    }}
+                  /> */}
+                  <PersonAddIcon sx={{
+                    width: "30px",
+                    height: "20px",
+                    marginRight: "6px",
+                  }}/>
+                  <span
+                    style={{
+                      color: "#28104e",
+                      fontWeight: "600",
+                      fontSize: "12px",
+                    }}
+                  >
+                    Add an avatar
+                  </span>
                 </label>
               </div>
               <div className="d-grid">
@@ -199,13 +255,13 @@ const SignUp = () => {
                   Sign Up
                 </button>
               </div>
-              {/* <div className="d-grid mt-2">
-                <button type="submit" className="googleBtn">
-                  <a>Sign Up via Google</a>&nbsp;&nbsp;
-                  <img src={google} alt="click" />
-                </button>
-              </div> */}
-              <p className="forgot-password text-right">
+              <p className="forgot-password text-right" style={{
+                    color: "#28104e",
+                    // fontWeight: "600",
+                    float: "right",
+                    fontSize: "14px", 
+                    marginTop: "10px"
+              }}>
                 Already registered <a href="/">sign in?</a>
               </p>
             </form>

@@ -7,6 +7,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { faker } from "@faker-js/faker";
 import ReactPlayer from "react-player";
+import _ from "lodash";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 //
 import { useUserAuth } from "../../context/UserContextApi";
@@ -120,25 +121,51 @@ useEffect(() => {
         <Container>
           <Content>
             <Header>
-              <h2>Create a Post</h2>
-              <button onClick={reset}>
+              <h2
+                style={{
+                  color: "#28104E",
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  letterSpacing: "1px",
+                }}
+              >
+                Create a Post
+              </h2>
+              <button
+                onClick={reset}
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                  color: "#28104E",
+                  outline: "none",
+                }}
+              >
                 <CloseIcon className="close" />
               </button>
             </Header>
             <SharedContent>
               <UserInfo>
                 {photoUrl ? (
-                  <img src={photoUrl} alt="" referrerpolicy="no-referrer"  style={{
-                    width: "50px",
-                    height: "50px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}/>
+                  <img
+                    src={photoUrl}
+                    alt=""
+                    referrerpolicy="no-referrer"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                  />
                 ) : (
                   <img src={ava} alt="" referrerpolicy="no-referrer" />
                 )}
 
-                <span>{displayName}</span>
+                <span style={{
+                  color: "#28104E",
+                  fontWeight: "bold",
+                  letterSpacing: "1px",
+                }}>{_.capitalize(displayName)}</span>
               </UserInfo>
               {/* <Autocomplete
                 value={Cvalue}
@@ -210,11 +237,12 @@ useEffect(() => {
                   </RadioGroup>
                 </FormControl> */}
                 <textarea
-                  placeholder="Hi, there..."
+                  placeholder="  Hi, there..."
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  style= {{
+                  style={{
                     borderRadius: "10px",
+
                   }}
                 ></textarea>
 
@@ -245,9 +273,15 @@ useEffect(() => {
                     <div>
                       <input
                         type="text"
-                        placeholder="Please enter a video link"
+                        placeholder="  Please enter a video link"
                         value={videoLink}
                         onChange={(e) => setVideoLink(e.target.value)}
+                        style={{
+                          outlier: "none",
+                          marginTop: "10px",
+                          border: "1px solid lightgray",
+                          borderRadius: "5px",
+                        }}
                       />
                       {videoLink && (
                         <ReactPlayer width={"100%"} url={videoLink} />
@@ -276,7 +310,9 @@ useEffect(() => {
               </AttachAssets>
               <PostButton
                 disabled={shareImage || videoLink || text ? false : true}
-                onClick={(event) => {postArticle(event)}} //
+                onClick={(event) => {
+                  postArticle(event);
+                }} //
               >
                 Post
               </PostButton>
@@ -306,7 +342,7 @@ const Content = styled.div`
   background-color: whitesmoke;
   max-height: 90%;
   overflow: initial;
-  border-radius: 15px;
+  border-radius: 8px;
   display: flex;
   position: relative;
   flex-direction: column;
@@ -390,12 +426,13 @@ const AttachAssets = styled.div`
 `;
 
 const PostButton = styled.button`
-  min-width: 60px;
+  min-width: 80px;
+  
   border-radius: 20px;
   padding-left: 16px;
   padding-right: 16px;
   background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#0a66c2")};
-  color: ${(props) => (props.disabled ? "rgba(1,1,1,0.2)": "white")};
+  color: ${(props) => (props.disabled ? "white": "white")};
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   &:hover {
     background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#004182")};

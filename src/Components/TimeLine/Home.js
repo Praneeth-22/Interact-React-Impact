@@ -264,6 +264,10 @@ function Home(props) {
                   src={user.photoURL}
                   alt="user"
                   referrerpolicy="no-referrer"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                  }}
                 />
               ) : (
                 <img src={userImgUnLoad} alt="user" />
@@ -274,7 +278,7 @@ function Home(props) {
               >{` Start a post`}</button>
             </div>
             <div>
-              <button>
+              <button onClick={() => setIsOpen(true)}>
                 <AddPhotoAlternateIcon style={{ color: "#28104e" }} />
                 <span
                   style={{
@@ -723,7 +727,7 @@ function Home(props) {
                                       {comment.username}
                                     </a>
                                     <div className="description">
-                                      {comment.text} 
+                                      {comment.text}
                                     </div>
                                   </div>
                                 </div>
@@ -749,7 +753,13 @@ function Home(props) {
       </Rightbar>
       <Modal show={openEvent} onHide={() => setOpenEvent(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Event</Modal.Title>
+          <Modal.Title
+            style={{
+              color: "#28104E",
+            }}
+          >
+            Add Event
+          </Modal.Title>
         </Modal.Header>
         <form
           onSubmit={(e) => {
@@ -784,7 +794,8 @@ function Home(props) {
                       title: e.target.value,
                     })
                   }
-                  
+                  sx={{}}
+                  size="small"
                 />
                 <TextField
                   id="outlined-basic"
@@ -796,8 +807,9 @@ function Home(props) {
                       university: e.target.value,
                     })
                   }
+                  size="small"
                 />
-               
+
                 <TextField
                   id="outlined-basic"
                   label="location"
@@ -813,6 +825,7 @@ function Home(props) {
                       location: e.target.value,
                     })
                   }
+                  size="small"
                 >
                   {locations.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -821,7 +834,9 @@ function Home(props) {
                   ))}
                 </TextField>
 
-                <Box>
+                <Box sx={{
+                 
+                }}>
                   <TextField
                     id="outlined-basic"
                     label="Time"
@@ -834,6 +849,7 @@ function Home(props) {
                         time: e.target.value,
                       })
                     }
+                    size="small"
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -846,6 +862,7 @@ function Home(props) {
                     label="Date"
                     variant="outlined"
                     type="date"
+                    size="small"
                     value={eventInfo.date}
                     InputLabelProps={{
                       shrink: true,
@@ -870,6 +887,7 @@ function Home(props) {
                 label="Description"
                 variant="outlined"
                 multiline
+                size="small"
                 maxRows={4}
                 onChange={(e) =>
                   setEventInfo({
@@ -882,6 +900,7 @@ function Home(props) {
                 id="outlined-flexible"
                 label="Link"
                 type={"url"}
+                size="small"
                 value={eventInfo.link}
                 variant="outlined"
                 onChange={(e) =>
@@ -890,9 +909,9 @@ function Home(props) {
                     link: e.target.value,
                   })
                 }
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                // InputLabelProps={{
+                //   shrink: true,
+                // }}
               />
             </Box>
           </Modal.Body>
@@ -901,7 +920,7 @@ function Home(props) {
               variant="primary"
               type="submit"
               sx={{
-                backgroundColor: "#0a66c2",
+                backgroundColor: "#28104E",
                 color: "#fff",
                 "&:hover": {
                   backgroundColor: "#004182",
@@ -956,9 +975,10 @@ const ShareBox = styled(CommonCard)`
       align-items: center;
       padding: 8px 16px 0px 16px;
       img {
-        width: 48px;
+        width: 40px;
         border-radius: 50%;
         margin-right: 8px;
+        
       }
       button {
         margin: 4px 0;

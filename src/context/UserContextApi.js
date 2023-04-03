@@ -209,7 +209,7 @@ export function UserAuthContextProvider({ children }) {
            uid: user.user.uid,
          };
          setUser(preparedUser);
-         // localStorage.setItem("user", JSON.stringify(preparedUser));
+         localStorage.setItem("user", JSON.stringify(preparedUser));
        } else {
          const preparedUser = {
            displayName: currentUser.displayName,
@@ -218,7 +218,7 @@ export function UserAuthContextProvider({ children }) {
            uid: currentUser.uid,
          };
          setUser(preparedUser);
-         // localStorage.setItem("user", JSON.stringify(preparedUser));
+         localStorage.setItem("user", JSON.stringify(preparedUser));
           localStorage.setItem("user", JSON.stringify(preparedUser));
        }
      });
@@ -317,6 +317,21 @@ export function UserAuthContextProvider({ children }) {
         console.log("Error adding document: ", error);
       }
     }
+    // sending email notification
+  const notificationPayload = {
+    notification: {
+      title: "New post uploaded!",
+      body: `${payload.user.displayName} has uploaded a new post`,
+    },
+    data: {
+      click_action: "FLUTTER_NOTIFICATION_CLICK",
+      sound: "default",
+      status: "done",
+      screen: "article",
+    },
+    topic: "all_users",
+  };
+
   }
 
   function getArticlesAPI() {
@@ -340,7 +355,7 @@ export function UserAuthContextProvider({ children }) {
   function getEventsAPI() {
     //get data from events collection
     setLoading(true); // to start the loading
-    const q = query(collection(db, "events"));
+    const q = query(collection(db, "events"), orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const payload = querySnapshot.docs.map((doc) => ({
         id: doc.id,
