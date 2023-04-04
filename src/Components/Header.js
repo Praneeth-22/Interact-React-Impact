@@ -15,39 +15,40 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { faker } from "@faker-js/faker";
 import logo from "../images/logo/logo2.jpg";
 import { useUserAuth } from ".././context/UserContextApi";
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Profile from "./TimeLine/Profile";
 //
-const pages = ["Home", "Category", "Chat"];
+const pages = ["Home", "Events","Chat"]; // change the caterogy
 const settings = ["Profile", "Logout"];
 function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { setOpenModel } = props;
-  const { user,logOut } = useUserAuth();
+  const { logOut } = useUserAuth();
   const ava = faker.image.avatar();
-  const [photoUrl, setPhotoUrl] = useState(ava);
+  const [avatarUrl, setavatarUrl] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [modelOpen, setModelOpen] = useState(false);
   const handleOpenModel = () => setModelOpen(true);
   const handleCloseModel = () => setModelOpen(false);
+  // const [user, setUser] = useState()
+  const user = JSON.parse(localStorage.getItem("user"));
+  useEffect(() => {
+    console.log("user in header:", user);
+    const prepareData = {
+      displayName: user?.displayName,
+      email: user?.email,
+      avatarUrl: user?.avatarUrl,
+    };
 
-  useEffect(
-    () => {
-      if (user.photoURL) { // user != null && user.photoURL != null
-        console.log("photo   is:", user.photoURL);
-        console.log("display name is:", user.displayName);
-        setPhotoUrl(user.photoURL);
-        setDisplayName(user.displayName);
-        setEmail(user.email);
-      }
-    },[user]
-  );
-  console.log("user is:", user);
+    setavatarUrl(prepareData?.avatarUrl);
+    setDisplayName(prepareData?.displayName);
+    setEmail(prepareData?.email);
+  }, [user]);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -61,7 +62,10 @@ function Header(props) {
     } else if (option === "Category") {
       setOpenModel(true);
     } else if (option === "Chat") {
-      window.location.href = "/chat-register";
+      window.location.href = "/chat-home";
+    }
+    else if (option === "Events") {
+      window.location.href = "/events";
     }
     console.log("option", option);
     setAnchorElNav(null);
@@ -74,10 +78,10 @@ function Header(props) {
     } else if (setting === "Logout") {
       logOut(); // to logout the user
       window.location.href = "/";
+    } else if (setting === "Edit Profile") {
     }
     setAnchorElUser(null);
   };
-
 
   return (
     <AppBar
@@ -191,7 +195,7 @@ function Header(props) {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   alt="avatar"
-                  src={photoUrl}
+                  src={avatarUrl}
                   referrerpolicy="no-referrer"
                 />
               </IconButton>
@@ -250,7 +254,7 @@ function Header(props) {
                 p: 4,
               }}
             >
-              <Profile name={displayName} email={email} />
+              <Profile />
             </Box>
           </Fade>
         </Modal>

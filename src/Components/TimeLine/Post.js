@@ -7,6 +7,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { faker } from "@faker-js/faker";
 import ReactPlayer from "react-player";
+import _ from "lodash";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 //
 import { useUserAuth } from "../../context/UserContextApi";
@@ -19,10 +20,11 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import CircularProgress from "@mui/material/CircularProgress";
 //
 
 // Post component
@@ -36,17 +38,19 @@ const options = [
 ];
 
 function Post(props) {
-  const { isOpen, setIsOpen } = props; // destructuring props
+  const { isOpen, setIsOpen, isSubmitting, setIsSubmitting } = props; // destructuring props
   const [shareImage, setShareImage] = useState(""); // state for image
   const [text, setText] = useState(""); // state for text
   const [videoLink, setVideoLink] = useState(""); // state for video link
   const [assetArea, setAssetArea] = useState(""); // state for asset area
-  console.log("at posts-->props :", props); // console log for props
+  // console.log("at posts-->props :", props); // console log for props
   //
-  const { user, postArticleAPI } = useUserAuth(); // destructuring user from context
+  const { postArticleAPI } = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
-  const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [avatarUrl, setavatarUrl] = useState(ava); // state for photo url
   const [displayName, setDisplayName] = useState(""); // state for display name
+  const [email, setEmail] = useState("");
   //
   const [Cvalue, setCValue] = React.useState(options[0]);
   const [inputCValue, setInputCValue] = React.useState("");
@@ -66,9 +70,12 @@ function Post(props) {
     setVideoLink("");
     setAssetArea(area);
   };
+  // const [isSubmitting, setIsSubmitting] = useState(false);
   const postArticle = (e) => {
     // function to post article
     e.preventDefault();
+    setIsSubmitting(true);
+
     if (e.target !== e.currentTarget) {
       return;
     }
@@ -78,10 +85,11 @@ function Post(props) {
       user: user,
       description: text,
       timestamp: new Date().getTime(),
-    }
+    };
     console.log("payload is:", payload);
     postArticleAPI(payload);
     reset(e);
+     setIsSubmitting(false);
   };
 
   const reset = (e) => {
@@ -93,21 +101,23 @@ function Post(props) {
     setIsOpen(false);
   };
   useEffect(() => {
-    if (user.photoURL) {
-      // user != null && user.photoURL != null
-      console.log("photo   is:", user.photoURL);
-      console.log("display name is:", user.displayName);
-      setPhotoUrl(user.photoURL);
-      setDisplayName(user.displayName);
-    }
-  }, [user]);
+    console.log("user in post:", user);
+    const prepareData = {
+      displayName: user?.displayName,
+      email: user?.email,
+      avatarUrl: user?.avatarUrl,
+    };
+    setavatarUrl(prepareData?.avatarUrl);
+    setDisplayName(prepareData?.displayName);
+    setEmail(prepareData?.email);
+  }, []);
 
   //
-   const [cat, setCat] = React.useState("");
-   const handleCatChange = (event) => {
-      setCat(event.target.value);
-    };
-    console.log("cat is:", cat);
+  const [cat, setCat] = React.useState("");
+  const handleCatChange = (event) => {
+    setCat(event.target.value);
+  };
+  // console.log("cat is:", cat);
   //
   return (
     // return statement
@@ -116,20 +126,55 @@ function Post(props) {
         <Container>
           <Content>
             <Header>
-              <h2>Create a Post</h2>
-              <button onClick={reset}>
+              <h2
+                style={{
+                  color: "#28104E",
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  letterSpacing: "1px",
+                }}
+              >
+                Create a Post
+              </h2>
+              <button
+                onClick={reset}
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                  color: "#28104E",
+                  outline: "none",
+                }}
+              >
                 <CloseIcon className="close" />
               </button>
             </Header>
             <SharedContent>
               <UserInfo>
-                {photoUrl ? (
-                  <img src={photoUrl} alt="" referrerpolicy="no-referrer" />
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt=""
+                    referrerpolicy="no-referrer"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                  />
                 ) : (
                   <img src={ava} alt="" referrerpolicy="no-referrer" />
                 )}
 
-                <span>{displayName}</span>
+                <span
+                  style={{
+                    color: "#28104E",
+                    fontWeight: "bold",
+                    letterSpacing: "1px",
+                  }}
+                >
+                  {_.capitalize(displayName)}
+                </span>
               </UserInfo>
               {/* <Autocomplete
                 value={Cvalue}
@@ -172,7 +217,7 @@ function Post(props) {
               {/* </FormControl> */}
 
               <Editor>
-                <FormControl sx={{}}>
+                {/* <FormControl sx={{}}>
                   <FormLabel id="demo-row-radio-buttons-group-label">
                     Tag
                   </FormLabel>
@@ -199,11 +244,14 @@ function Post(props) {
                       label="Career & Jobs"
                     />
                   </RadioGroup>
-                </FormControl>
+                </FormControl> */}
                 <textarea
-                  placeholder="Hi, there..."
+                  placeholder="  Hi, there..."
                   value={text}
                   onChange={(e) => setText(e.target.value)}
+                  style={{
+                    borderRadius: "10px",
+                  }}
                 ></textarea>
 
                 {assetArea === "image" ? (
@@ -233,9 +281,15 @@ function Post(props) {
                     <div>
                       <input
                         type="text"
-                        placeholder="Please enter a video link"
+                        placeholder="  Please enter a video link"
                         value={videoLink}
                         onChange={(e) => setVideoLink(e.target.value)}
+                        style={{
+                          outlier: "none",
+                          marginTop: "10px",
+                          border: "1px solid lightgray",
+                          borderRadius: "5px",
+                        }}
                       />
                       {videoLink && (
                         <ReactPlayer width={"100%"} url={videoLink} />
@@ -264,7 +318,9 @@ function Post(props) {
               </AttachAssets>
               <PostButton
                 disabled={shareImage || videoLink || text ? false : true}
-                onClick={(event) => {postArticle(event)}} //
+                onClick={(event) => {
+                  postArticle(event);
+                }} //
               >
                 Post
               </PostButton>
@@ -294,7 +350,7 @@ const Content = styled.div`
   background-color: whitesmoke;
   max-height: 90%;
   overflow: initial;
-  border-radius: 15px;
+  border-radius: 8px;
   display: flex;
   position: relative;
   flex-direction: column;
@@ -378,12 +434,13 @@ const AttachAssets = styled.div`
 `;
 
 const PostButton = styled.button`
-  min-width: 60px;
+  min-width: 80px;
+
   border-radius: 20px;
   padding-left: 16px;
   padding-right: 16px;
   background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#0a66c2")};
-  color: ${(props) => (props.disabled ? "rgba(1,1,1,0.2)": "white")};
+  color: ${(props) => (props.disabled ? "white" : "white")};
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   &:hover {
     background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#004182")};
@@ -427,7 +484,5 @@ const UploadImage = styled.div`
     }
   }
 `;
-
-
 
 export default Post;

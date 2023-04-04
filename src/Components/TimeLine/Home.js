@@ -16,7 +16,9 @@ import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
 import SchoolIcon from "@mui/icons-material/School";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import Box from "@mui/material/Box";
 import Container from "react-bootstrap/Container";
 import demo2 from "./../../images/demo2.jpg";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
@@ -26,7 +28,7 @@ import spinner from "./Images/spin.svg";
 import { useNavigate } from "react-router-dom";
 import Post from "./Post";
 import { faker } from "@faker-js/faker";
-import DemoPost from "./DemoPost";
+import Modal from "react-bootstrap/Modal";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./Home.css";
@@ -34,10 +36,16 @@ import MyEvent from "./MyEvent";
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
 import ConstructionOutlinedIcon from "@mui/icons-material/ConstructionOutlined";
 import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
-//
+import TextField from "@mui/material/TextField";
 import { useUserAuth } from "../../context/UserContextApi";
 import { db } from "../../firebase_service";
-import { doc, collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import {
   getFirestore,
   query,
@@ -46,30 +54,50 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import firebase from "firebase/compat/app";
+// import Select from "@material-ui/core/Select";
+// import MenuItem from "@material-ui/core/MenuItem";
+import MenuItem from "@mui/material/MenuItem";
+import CircularProgress from "@mui/material/CircularProgress";
 //
 function Home(props) {
   const navigate = useNavigate();
   //
-  const { user, loading, getArticlesAPI, articles } = useUserAuth(); // destructuring user from context
+  const { loading, getArticlesAPI, articles } = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
-  const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [avatarUrl, setavatarUrl] = useState(ava); // state for photo url
   const [displayName, setDisplayName] = useState(""); // state for display name
+  const [email, setEmail] = useState("");
   //
   const [isOpen, setIsOpen] = useState(false);
+  const [openEvent, setOpenEvent] = useState(false);
   const [value1, setValue1] = React.useState(0);
+  const defaultDate = new Date();
   const catcolor = { color: "#6237a0" };
   const handleChange = (event, newValue) => {
     setValue1(newValue);
   };
   const [articleId, setArticleId] = useState("");
-  const [likevalue, setLikeValue] = useState(3);
+  const [likevalue, setLikeValue] = useState(0);
   const handleClick = (e) => {
     e.preventDefault();
     setIsOpen(true);
   };
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]); // to store the comments from
-
+  const [eventInfo, setEventInfo] = useState({
+    title: "",
+    description: "",
+    category: "",
+    university: "",
+    date: defaultDate.toISOString().substr(0, 10),
+    time: "",
+    location: "",
+    uploadBy: "",
+    userimage: "",
+    eventId: "",
+    timestamp: null,
+  });
   //comment
 
   const prepareComments = (data) => {
@@ -91,6 +119,7 @@ function Home(props) {
       await addDoc(collection(db, `articles/${articleId}/comments`), {
         text: newComment,
         username: user.displayName,
+        userImg: user.avatarUrl,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
         .then(() => {
@@ -128,7 +157,7 @@ function Home(props) {
             collection(doc(db, "articles", id), "comments")
           );
           querySnapshot.forEach((doc) => {
-            console.log(doc.id, " => ", doc.data());
+            // console.log(doc.id, " => ", doc.data());
             allComments.push({ articleId: id, comments: doc.data() });
           });
         }
@@ -139,12 +168,101 @@ function Home(props) {
   }, [newComment]);
 
   useEffect(() => {
-    if (user.photoURL) {
-      setPhotoUrl(user.photoURL);
-      setDisplayName(user.displayName);
-    }
+    const prepareData = {
+      displayName: user?.displayName,
+      email: user?.email,
+      avatarUrl: user?.avatarUrl,
+    };
+    setavatarUrl(prepareData?.avatarUrl);
+    setDisplayName(prepareData?.displayName);
+    setEmail(prepareData?.email);
+
     getArticlesAPI();
-  }, [user.displayName, user.photoURL]);
+    console.log("home page user: ", user);
+  }, []);
+
+  const handleLikes = (e, articleId) => {
+    e.preventDefault();
+    // setLikeValue(likevalue + 1);
+    const articleRef = doc(db, "articles", articleId);
+    updateDoc(articleRef, {
+      //update likes with uid
+      likes: firebase.firestore.FieldValue.arrayUnion(user.uid),
+    });
+  };
+  //add event into event collection
+  const addEvent = async (event) => {
+    console.log("------------------adding event:----------- ");
+    event.preventDefault();
+    const userName = user.displayName;
+    const userImg = user.avatarUrl;
+    const EventId = Math.floor(Math.random() * 1000000000);
+    const preparedData = {
+      ...eventInfo,
+      uploadBy: userName,
+      userimage: userImg,
+      eventId: EventId,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    console.log("-----------event-----------------------", event);
+    console.log("eventInfo: ", eventInfo);
+    try {
+      // add event info into a new document in the events collection
+      const docRef = await addDoc(collection(db, "events"), preparedData);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding event: ", error);
+    }
+    setEventInfo({
+      title: "",
+      description: "",
+      category: "",
+      date: "",
+      time: "",
+      location: "",
+      uploadBy: "",
+      userimage: "",
+    });
+  };
+  //location
+  const locations = [
+    {
+      value: "new-york",
+      label: "New York",
+    },
+    {
+      value: "los-angeles",
+      label: "Los Angeles",
+    },
+    {
+      value: "chicago",
+      label: "Chicago",
+    },
+    {
+      value: "houston",
+      label: "Houston",
+    },
+    {
+      value: "philadelphia",
+      label: "Philadelphia",
+    },
+    {
+      value: "Massachusetts",
+      label: "Massachusetts",
+    },
+    {
+      value: "San Francisco",
+      label: "San Francisco",
+    },
+    {
+      value: "Seattle",
+      label: "Seattle",
+    },
+    
+  ];
+  // console.log("user:pic", user.avatarUrl)
+  //loader
+  const [isSubmitting, setIsSubmitting] = useState(false);
   return (
     <div
       style={{
@@ -156,16 +274,18 @@ function Home(props) {
       }}
     >
       {articles.length === 0 ? (
-        <p></p>
-      ) : (
         <HomeContainer>
           <ShareBox>
             <div>
-              {user && user.photoURL ? (
+              {user && user.avatarUrl ? (
                 <img
-                  src={user.photoURL}
+                  src={user.avatarUrl}
                   alt="user"
                   referrerpolicy="no-referrer"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                  }}
                 />
               ) : (
                 <img src={userImgUnLoad} alt="user" />
@@ -186,6 +306,7 @@ function Home(props) {
                     marginLeft: "7px",
                     letterSpacing: "1.5px",
                   }}
+                  onClick={handleClick}
                 >
                   Photo
                 </span>
@@ -200,6 +321,7 @@ function Home(props) {
                     marginLeft: "7px",
                     letterSpacing: "1.5px",
                   }}
+                  onClick={() => setOpenEvent(true)}
                 >
                   Event
                 </span>
@@ -214,56 +336,13 @@ function Home(props) {
                     marginLeft: "7px",
                     letterSpacing: "1.5px",
                   }}
+                  onClick={handleClick}
                 >
                   Article
                 </span>
               </button>
             </div>
           </ShareBox>
-
-          {/* <Category>
-          <Chip
-            avatar={<CategoryOutlinedIcon />}
-            label="All"
-            component="a"
-            href="#basic-chip"
-            clickable
-            variant="outlined"
-            onClick={() => navigate("/home")}
-          />
-          <Chip
-            avatar={<SportsBasketballIcon />}
-            label="Sport"
-            component="a"
-            href="#basic-chip"
-            clickable
-            variant="outlined"
-          />
-          <Chip
-            avatar={<SchoolIcon />}
-            label="Academics"
-            component="a"
-            href="#basic-chip"
-            clickable
-            variant="outlined"
-          />
-          <Chip
-            avatar={<CelebrationIcon />}
-            label="Activities"
-            component="a"
-            href="#basic-chip"
-            clickable
-            variant="outlined"
-          />
-          <Chip
-            label="More"
-            component="a"
-            href="#basic-chip"
-            clickable
-            variant="outlined"
-            avatar={<ArrowRightIcon />}
-          />
-        </Category> */}
           <div>
             <Tabs
               TabIndicatorProps={{ style: { backgroundColor: "#28104e" } }}
@@ -353,6 +432,177 @@ function Home(props) {
               />
             </Tabs>
           </div>
+          <Post isOpen={isOpen} setIsOpen={setIsOpen} />
+        </HomeContainer>
+      ) : (
+        <HomeContainer>
+          <ShareBox>
+            <div>
+              {user && user.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt="user"
+                  referrerpolicy="no-referrer"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                  }}
+                />
+              ) : (
+                <img
+                  src={userImgUnLoad}
+                  alt="user"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                  }}
+                />
+              )}
+              <button
+                onClick={handleClick}
+                // disabled={!loading ? true : false}
+              >{` Start a post`}</button>
+            </div>
+            <div>
+              <button>
+                <AddPhotoAlternateIcon style={{ color: "#28104e" }} />
+                <span
+                  style={{
+                    color: "#28104e",
+                    fontWeight: 600,
+                    alignItems: "center",
+                    marginLeft: "7px",
+                    letterSpacing: "1.5px",
+                  }}
+                  onClick={handleClick}
+                >
+                  Photo
+                </span>
+              </button>
+              <button>
+                <EventIcon style={{ color: "#28104e" }} />
+                <span
+                  style={{
+                    color: "#28104e",
+                    fontWeight: 600,
+                    alignItems: "center",
+                    marginLeft: "7px",
+                    letterSpacing: "1.5px",
+                  }}
+                  onClick={() => setOpenEvent(true)}
+                >
+                  Event
+                </span>
+              </button>
+              <button>
+                <ArticleIcon style={{ color: "#28104e" }} />
+                <span
+                  style={{
+                    color: "#28104e",
+                    fontWeight: 600,
+                    alignItems: "center",
+                    marginLeft: "7px",
+                    letterSpacing: "1.5px",
+                  }}
+                  onClick={handleClick}
+                >
+                  Article
+                </span>
+              </button>
+            </div>
+          </ShareBox>
+
+          <div>
+            <Tabs
+              TabIndicatorProps={{ style: { backgroundColor: "#28104e" } }}
+              value={value1}
+              onChange={handleChange}
+              variant="scrollable"
+              scrollButtons="auto"
+              aria-label="scrollable auto tabs example"
+              style={{
+                marginBottom: "10px",
+                boxShadow: "0 0 0 1px rgb(0 0 0 / 15%), 0 0 0 rgb(0 0 0 / 20%)",
+                borderRadius: "5px",
+                backgroundColor: "#fff",
+              }}
+            >
+              <Tab
+                label="All"
+                icon={<CategoryOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="Workshops"
+                icon={<ConstructionOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+
+              <Tab
+                label="Sports"
+                icon={<SportsBasketballIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="Academics"
+                icon={<SchoolIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="Career fair"
+                icon={<BusinessCenterOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="
+              Activities"
+                icon={<CelebrationIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="E-sports"
+                icon={<SportsEsportsOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+            </Tabs>
+          </div>
+          {/* display loader */}
+          {isSubmitting && <CircularProgress />}
           <Content>
             {/* {!loading && <img src={spinner} alt="loading" />} */}
             {articles.length > 0 &&
@@ -391,7 +641,9 @@ function Home(props) {
                             </span>
                           </div>
                         </a>
-                        <button>
+                        <button
+                        //on click of this button it will show the dropdown menu containing the options to edit and delete the post
+                        >
                           <MoreHorizIcon />
                         </button>
                       </SharedActor>
@@ -407,72 +659,7 @@ function Home(props) {
                           )}
                         </a>
                       </SharedImg>
-                      {/* <SocialCounts>
-                        <li>
-                          <button
-                            style={{
-                              border: "none",
-                              outline: "none",
-                              backgroundColor: "transparent",
-                              padding: "0",
-                            }}
-                          >
-                            <span>{likevalue}</span> likes
-                          </button>
-                        </li>
-                        <div className="ui labeled button" tabindex="0">
-                          <div className="ui red button">
-                            <i className="heart icon"></i> Like
-                          </div>
-                          <a className="ui basic red left pointing label">
-                            {likevalue}
-                          </a>
-                        </div>
-                        <li>
-                          <a>
-                            {comments[id]?.length ? comments[id]?.length : 0}{" "}
-                            comments
-                            {/* <CommentIcon />{" "} */}
-                      {/* </a>
-                        </li>
-                      </SocialCounts> */}{" "}
-                      {/* <SocialActions>
-                        <button>
-                          <ThumbUpOutlinedIcon
-                            onClick={(event) => {
-                              setLikeValue(likevalue + 1);
-                            }}
-                            style={{ color: "#28104e" }}
-                          />
-                          <span>Like</span>
-                        </button>
-                        <button>
-                          <CommentIcon />
-                          <span>Comment</span>
-                        </button>
-                        <button>
-                          <ShareOutlinedIcon />
-                          <span>Share</span>
-                        </button>
-                      </SocialActions> */}
-                      {/* <form className="post_commentbox">
-                        <input
-                          type="text"
-                          placeholder="Post comment...."
-                          value={newComment}
-                          className="post_input"
-                          onChange={(e) => setNewComment(e.target.value)}
-                        />
-                        <Button
-                          variant="contained"
-                          className="post_button"
-                          onClick={(e) => postComment(e, id)}
-                          type="submit"
-                          disabled={!newComment}
-                        >
-                          POST
-                        </Button>
-                      </form> */}
+
                       <div
                         className="ui card"
                         style={{ background: "#fff", width: "100%" }}
@@ -492,9 +679,14 @@ function Home(props) {
                             <span style={{ margin: "0px 5px" }}>comments</span>
                           </span>
                           <span className="left floated">
-                            <i className="heart filled red like icon"></i>
+                            <i
+                              className="heart filled transparent like icon"
+                              onClick={(event) => {
+                                handleLikes(event, id);
+                              }}
+                            ></i>
                             <span style={{ margin: "0px 5px" }}>
-                              {likevalue}likes
+                              {article.likes ? article.likes.length : 0} likes
                             </span>
                           </span>
                         </div>
@@ -512,7 +704,7 @@ function Home(props) {
                           >
                             <img
                               class="ui avatar image"
-                              src={article.actor.image}
+                              src={user?.avatarUrl}
                             />
                             <div
                               className="ui large action left icon input rounded-circle"
@@ -545,13 +737,26 @@ function Home(props) {
                                 style={{ display: "flex", margin: "0px 30px" }}
                               >
                                 <div className="item">
-                                  <i className="large github middle aligned icon"></i>
+                                  <i
+                                    className="large middle aligned icon"
+                                    style={{}}
+                                  >
+                                    <img
+                                      src={comment.userImg}
+                                      alt="user"
+                                      style={{
+                                        borderRadius: "50%",
+                                        width: "40px",
+                                        height: "40px",
+                                      }}
+                                    />
+                                  </i>
                                   <div className="content left float ">
                                     <a className="header left float">
                                       {comment.username}
                                     </a>
                                     <div className="description">
-                                      {comment.text} 10 mins ago
+                                      {comment.text}
                                     </div>
                                   </div>
                                 </div>
@@ -569,12 +774,196 @@ function Home(props) {
                 );
               })}
           </Content>
-          <Post isOpen={isOpen} setIsOpen={setIsOpen} />
+          <Post
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            isSubmitting={isSubmitting}
+            setIsSubmitting={setIsSubmitting}
+          />
         </HomeContainer>
       )}
       <Rightbar>
         <MyEvent />
       </Rightbar>
+      <Modal show={openEvent} onHide={() => setOpenEvent(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title
+            style={{
+              color: "#28104E",
+            }}
+          >
+            Add Event
+          </Modal.Title>
+        </Modal.Header>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setOpenEvent(false);
+            addEvent(e);
+          }}
+        >
+          <Modal.Body>
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "25ch" },
+              }}
+              noValidate
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
+                }}
+              >
+                <TextField
+                  id="outlined-basic"
+                  label="Event Title"
+                  variant="outlined"
+                  onChange={(e) =>
+                    setEventInfo({
+                      ...eventInfo,
+                      title: e.target.value,
+                    })
+                  }
+                  sx={{}}
+                  size="small"
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="Event University"
+                  variant="outlined"
+                  onChange={(e) =>
+                    setEventInfo({
+                      ...eventInfo,
+                      university: e.target.value,
+                    })
+                  }
+                  size="small"
+                />
+
+                <TextField
+                  id="outlined-basic"
+                  label="location"
+                  variant="outlined"
+                  select
+                  value={eventInfo.location}
+                  InputProps={{
+                    startAdornment: <LocationOnIcon />,
+                  }}
+                  onChange={(e) =>
+                    setEventInfo({
+                      ...eventInfo,
+                      location: e.target.value,
+                    })
+                  }
+                  size="small"
+                >
+                  {locations.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+                <Box sx={{}}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Time"
+                    type={"time"}
+                    variant="outlined"
+                    value={eventInfo.time}
+                    onChange={(e) =>
+                      setEventInfo({
+                        ...eventInfo,
+                        time: e.target.value,
+                      })
+                    }
+                    size="small"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      step: 300, // 5 min
+                    }}
+                  />
+                  <TextField
+                    id="outlined-basic"
+                    label="Date"
+                    variant="outlined"
+                    type="date"
+                    size="small"
+                    value={eventInfo.date}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    onChange={(e) =>
+                      setEventInfo({
+                        ...eventInfo,
+                        date: e.target.value,
+                      })
+                    }
+                  />
+                </Box>
+              </div>
+            </Box>
+            <Box
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "90%" },
+              }}
+            >
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Description"
+                variant="outlined"
+                multiline
+                size="small"
+                maxRows={4}
+                onChange={(e) =>
+                  setEventInfo({
+                    ...eventInfo,
+                    description: e.target.value,
+                  })
+                }
+              />
+              <TextField
+                id="outlined-flexible"
+                label="Link"
+                type={"url"}
+                size="small"
+                value={eventInfo.link}
+                variant="outlined"
+                onChange={(e) =>
+                  setEventInfo({
+                    ...eventInfo,
+                    link: e.target.value,
+                  })
+                }
+                // InputLabelProps={{
+                //   shrink: true,
+                // }}
+              />
+            </Box>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              type="submit"
+              sx={{
+                backgroundColor: "#28104E",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#004182",
+                },
+              }}
+            >
+              Upload
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
     </div>
   );
 }
@@ -618,7 +1007,7 @@ const ShareBox = styled(CommonCard)`
       align-items: center;
       padding: 8px 16px 0px 16px;
       img {
-        width: 48px;
+        width: 40px;
         border-radius: 50%;
         margin-right: 8px;
       }
