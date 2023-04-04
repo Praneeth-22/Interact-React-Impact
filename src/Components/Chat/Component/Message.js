@@ -1,10 +1,10 @@
-import React,{useState,useEffect,useContext,useRef} from 'react'
-import { ChatContext } from '../ChatContext';
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { ChatContext } from "../ChatContext";
 export default function Message({ message }) {
   console.log("------messeges----".message);
   //
   const currentUser = JSON.parse(localStorage.getItem("user"));
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [avatarUrl, setavatarUrl] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   useEffect(() => {
@@ -12,19 +12,19 @@ export default function Message({ message }) {
     const prepareData = {
       displayName: currentUser?.displayName,
       email: currentUser?.email,
-      photoURL: currentUser?.photoURL,
+      avatarUrl: currentUser?.avatarUrl,
     };
-    setPhotoUrl(prepareData?.photoURL);
+    setavatarUrl(prepareData?.avatarUrl);
     setDisplayName(prepareData?.displayName);
     setEmail(prepareData?.email);
   }, [currentUser]);
   //
-    const { data } = useContext(ChatContext);
-     const ref = useRef();
+  const { data } = useContext(ChatContext);
+  const ref = useRef();
 
-     useEffect(() => {
-       ref.current?.scrollIntoView({ behavior: "smooth" });
-     }, [message]);
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  }, [message]);
   return (
     <div
       className={`message ${message.senderId === currentUser.uid && "owner"}`}
@@ -33,22 +33,21 @@ export default function Message({ message }) {
         <img
           src={
             message.senderId === currentUser.uid
-              ? currentUser.photoURL
-              : data.user.photoURL
+              ? currentUser.avatarUrl
+              : data.user.avatarUrl
           }
           alt=""
         />
-        <span>{
-          //compute time
-        
-
-        }</span>
+        <span>
+          {
+            //compute time
+          }
+        </span>
       </div>
-        <div className="messageContent">
+      <div className="messageContent">
         <p>{message.text}</p>
         {message.img && <img src={message.img} alt="" />}
       </div>
- 
     </div>
   );
 }

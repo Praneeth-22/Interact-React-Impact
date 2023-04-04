@@ -27,9 +27,9 @@ function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { setOpenModel } = props;
-  const {logOut } = useUserAuth();
+  const { logOut } = useUserAuth();
   const ava = faker.image.avatar();
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [avatarUrl, setavatarUrl] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [modelOpen, setModelOpen] = useState(false);
@@ -42,10 +42,10 @@ function Header(props) {
     const prepareData = {
       displayName: user?.displayName,
       email: user?.email,
-      photoURL: user?.photoURL,
+      avatarUrl: user?.avatarUrl,
     };
 
-    setPhotoUrl(prepareData?.photoURL);
+    setavatarUrl(prepareData?.avatarUrl);
     setDisplayName(prepareData?.displayName);
     setEmail(prepareData?.email);
   }, [user]);
@@ -192,7 +192,7 @@ function Header(props) {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   alt="avatar"
-                  src={photoUrl}
+                  src={avatarUrl}
                   referrerpolicy="no-referrer"
                 />
               </IconButton>

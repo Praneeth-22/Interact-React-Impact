@@ -74,7 +74,7 @@ function Header() {
     //       </NavList>
     //       <User>
     //         <a>
-    //           {/* {props.user && props.user.photoURL ? ( */}
+    //           {/* {props.user && props.user.avatarUrl ? ( */}
     //           {/* <img src={user} alt="" /> */}
     //           {/* ) : ( */}
     //           <img src={faker.image.avatar()} alt="" />

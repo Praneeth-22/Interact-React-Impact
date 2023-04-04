@@ -1,4 +1,4 @@
-import React, { useContext, useState,useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   collection,
   query,
@@ -18,21 +18,21 @@ export default function Search() {
   const [user, setUser] = useState(null);
   //
   const currentUser = JSON.parse(localStorage.getItem("user"));
-const [photoUrl, setPhotoUrl] = useState("");
-const [displayName, setDisplayName] = useState("");
-const [email, setEmail] = useState("");
- useEffect(() => {
-   console.log("user in search chat:", currentUser);
-   const prepareData = {
-     displayName: currentUser?.displayName,
-     email: currentUser?.email,
-     photoURL: currentUser?.photoURL,
-   };
-   setPhotoUrl(prepareData?.photoURL);
-   setDisplayName(prepareData?.displayName);
-   setEmail(prepareData?.email);
- }, [currentUser]);
-//
+  const [avatarUrl, setavatarUrl] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  useEffect(() => {
+    console.log("user in search chat:", currentUser);
+    const prepareData = {
+      displayName: currentUser?.displayName,
+      email: currentUser?.email,
+      avatarUrl: currentUser?.avatarUrl,
+    };
+    setavatarUrl(prepareData?.avatarUrl);
+    setDisplayName(prepareData?.displayName);
+    setEmail(prepareData?.email);
+  }, [currentUser]);
+  //
   const handleSearch = async () => {
     console.log("searching");
     const q = query(
@@ -66,8 +66,8 @@ const [email, setEmail] = useState("");
     // console.log("searched user.uid", user.uid);
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
-      console.log("combine key in try",combinedId);
-      console.log("res in try",res);
+      console.log("combine key in try", combinedId);
+      console.log("res in try", res);
       if (!res.exists()) {
         //create a new chat
         console.log("going to create new chat-----");
@@ -80,21 +80,21 @@ const [email, setEmail] = useState("");
           [combinedId + ".userInfo"]: {
             uid: user.uid,
             displayName: user.displayName,
-            photoURL: user.avatarUrl,
+            avatarUrl: user.avatarUrl,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
         console.log("1-user chats created-----");
         console.log("going to create 2-user chats-----");
-         await updateDoc(doc(db, "userChats", user.uid), {
-           [combinedId + ".userInfo"]: {
-             uid: currentUser.uid,
-             displayName: currentUser.displayName,
-             photoURL: currentUser.photoURL,
-           },
-           [combinedId + ".date"]: serverTimestamp(),
-         });
-            console.log("2-user chats created-----");
+        await updateDoc(doc(db, "userChats", user.uid), {
+          [combinedId + ".userInfo"]: {
+            uid: currentUser.uid,
+            displayName: currentUser.displayName,
+            avatarUrl: currentUser.avatarUrl,
+          },
+          [combinedId + ".date"]: serverTimestamp(),
+        });
+        console.log("2-user chats created-----");
       }
     } catch (err) {
       console.log("error in search------", err);
@@ -121,7 +121,6 @@ const [email, setEmail] = useState("");
           <img src={user.avatarUrl} alt="avatar" />
           <div className="userChatInfo">
             <span className="name">{user.displayName}</span>
-            
           </div>
         </div>
       )}

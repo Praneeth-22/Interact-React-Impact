@@ -39,7 +39,13 @@ import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined
 import TextField from "@mui/material/TextField";
 import { useUserAuth } from "../../context/UserContextApi";
 import { db } from "../../firebase_service";
-import { doc, collection, addDoc, getDocs,updateDoc } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import {
   getFirestore,
   query,
@@ -55,10 +61,10 @@ import MenuItem from "@mui/material/MenuItem";
 function Home(props) {
   const navigate = useNavigate();
   //
-  const {loading, getArticlesAPI, articles } = useUserAuth(); // destructuring user from context
+  const { loading, getArticlesAPI, articles } = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
   const user = JSON.parse(localStorage.getItem("user"));
-  const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
+  const [avatarUrl, setavatarUrl] = useState(ava); // state for photo url
   const [displayName, setDisplayName] = useState(""); // state for display name
   const [email, setEmail] = useState("");
   //
@@ -112,7 +118,7 @@ function Home(props) {
       await addDoc(collection(db, `articles/${articleId}/comments`), {
         text: newComment,
         username: user.displayName,
-        userImg: user.photoURL,
+        userImg: user.avatarUrl,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
         .then(() => {
@@ -161,15 +167,15 @@ function Home(props) {
   }, [newComment]);
 
   useEffect(() => {
-     const prepareData = {
-       displayName: user?.displayName,
-       email: user?.email,
-       photoURL: user?.photoURL,
-     };
-     setPhotoUrl(prepareData?.photoURL);
-     setDisplayName(prepareData?.displayName);
-     setEmail(prepareData?.email);
-   
+    const prepareData = {
+      displayName: user?.displayName,
+      email: user?.email,
+      avatarUrl: user?.avatarUrl,
+    };
+    setavatarUrl(prepareData?.avatarUrl);
+    setDisplayName(prepareData?.displayName);
+    setEmail(prepareData?.email);
+
     getArticlesAPI();
     console.log("home page user: ", user);
   }, []);
@@ -177,17 +183,17 @@ function Home(props) {
   const handleLikes = (e, articleId) => {
     e.preventDefault();
     // setLikeValue(likevalue + 1);
-     const articleRef = doc(db, "articles", articleId);
-     updateDoc(articleRef, {
-        //update likes with uid
-        likes: firebase.firestore.FieldValue.arrayUnion(user.uid),
-     });
+    const articleRef = doc(db, "articles", articleId);
+    updateDoc(articleRef, {
+      //update likes with uid
+      likes: firebase.firestore.FieldValue.arrayUnion(user.uid),
+    });
   };
   //add event into event collection
   const addEvent = async (event) => {
     event.preventDefault();
     const userName = user.displayName;
-    const userImg= user.photoURL;
+    const userImg = user.avatarUrl;
     const EventId = Math.floor(Math.random() * 1000000000);
     const preparedData = {
       ...eventInfo,
@@ -195,8 +201,8 @@ function Home(props) {
       userimage: userImg,
       eventId: EventId,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    }
-    console.log("event", event)
+    };
+    console.log("event", event);
     console.log("eventInfo: ", eventInfo);
     try {
       // add event info into a new document in the events collection
@@ -217,33 +223,42 @@ function Home(props) {
     });
   };
   //location
-   const locations = [
-     {
-       value: "new-york",
-       label: "New York",
-     },
-     {
-       value: "los-angeles",
-       label: "Los Angeles",
-     },
-     {
-       value: "chicago",
-       label: "Chicago",
-     },
-     {
-       value: "houston",
-       label: "Houston",
-     },
-     {
-        value: "philadelphia",
-        label: "Philadelphia",
-     },
-      {
-        value:"Massachusetts",
-        label:"Massachusetts"
-      },
-   ];
-// console.log("user:pic", user.photoURL)
+  const locations = [
+    {
+      value: "new-york",
+      label: "New York",
+    },
+    {
+      value: "los-angeles",
+      label: "Los Angeles",
+    },
+    {
+      value: "chicago",
+      label: "Chicago",
+    },
+    {
+      value: "houston",
+      label: "Houston",
+    },
+    {
+      value: "philadelphia",
+      label: "Philadelphia",
+    },
+    {
+      value: "Massachusetts",
+      label: "Massachusetts",
+    },
+    {
+      value: "San Francisco",
+      label: "San Francisco",
+    },
+    {
+      value: "Seattle",
+      label: "Seattle",
+    },
+    
+  ];
+  // console.log("user:pic", user.avatarUrl)
 
   return (
     <div
@@ -259,9 +274,9 @@ function Home(props) {
         <HomeContainer>
           <ShareBox>
             <div>
-              {user && user.photoURL ? (
+              {user && user.avatarUrl ? (
                 <img
-                  src={user.photoURL}
+                  src={user.avatarUrl}
                   alt="user"
                   referrerpolicy="no-referrer"
                   style={{
@@ -278,7 +293,7 @@ function Home(props) {
               >{` Start a post`}</button>
             </div>
             <div>
-              <button onClick={() => setIsOpen(true)}>
+              <button>
                 <AddPhotoAlternateIcon style={{ color: "#28104e" }} />
                 <span
                   style={{
@@ -288,6 +303,7 @@ function Home(props) {
                     marginLeft: "7px",
                     letterSpacing: "1.5px",
                   }}
+                  onClick={handleClick}
                 >
                   Photo
                 </span>
@@ -317,6 +333,7 @@ function Home(props) {
                     marginLeft: "7px",
                     letterSpacing: "1.5px",
                   }}
+                  onClick={handleClick}
                 >
                   Article
                 </span>
@@ -418,9 +435,9 @@ function Home(props) {
         <HomeContainer>
           <ShareBox>
             <div>
-              {user && user.photoURL ? (
+              {user && user.avatarUrl ? (
                 <img
-                  src={user.photoURL}
+                  src={user.avatarUrl}
                   alt="user"
                   referrerpolicy="no-referrer"
                   style={{
@@ -454,6 +471,7 @@ function Home(props) {
                     marginLeft: "7px",
                     letterSpacing: "1.5px",
                   }}
+                  onClick={handleClick}
                 >
                   Photo
                 </span>
@@ -483,6 +501,7 @@ function Home(props) {
                     marginLeft: "7px",
                     letterSpacing: "1.5px",
                   }}
+                  onClick={handleClick}
                 >
                   Article
                 </span>
@@ -617,7 +636,9 @@ function Home(props) {
                             </span>
                           </div>
                         </a>
-                        <button>
+                        <button
+                          //on click of this button it will show the dropdown menu containing the options to edit and delete the post
+                        >        
                           <MoreHorizIcon />
                         </button>
                       </SharedActor>
@@ -676,7 +697,10 @@ function Home(props) {
                               alignItems: "center",
                             }}
                           >
-                            <img class="ui avatar image" src={user?.photoURL} />
+                            <img
+                              class="ui avatar image"
+                              src={user?.avatarUrl}
+                            />
                             <div
                               className="ui large action left icon input rounded-circle"
                               style={{ width: "100%" }}
@@ -834,9 +858,7 @@ function Home(props) {
                   ))}
                 </TextField>
 
-                <Box sx={{
-                 
-                }}>
+                <Box sx={{}}>
                   <TextField
                     id="outlined-basic"
                     label="Time"
@@ -978,7 +1000,6 @@ const ShareBox = styled(CommonCard)`
         width: 40px;
         border-radius: 50%;
         margin-right: 8px;
-        
       }
       button {
         margin: 4px 0;

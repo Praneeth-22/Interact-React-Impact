@@ -65,7 +65,7 @@ export function UserAuthContextProvider({ children }) {
   //       const preparedUser = {
   //         displayName: currentUser[0].displayName,
   //         email: currentUser[0].email,
-  //         photoURL: currentUser[0].avatarUrl,
+  //         avatarUrl: currentUser[0].avatarUrl,
   //         password: currentUser[0].password,
   //         uid: currentUser[0].uid,
   //       };
@@ -76,12 +76,12 @@ export function UserAuthContextProvider({ children }) {
   //     //storing user in local storage
   //   });
   // }
-   function logIn(email, password) {
-     // to sign in the user
-     return signInWithEmailAndPassword(auth, email, password).then((user) => {
-       console.log("user in usercontext:", user);
-       // setUser(user);
-       //get the current user email from user collection and set it to the user object
+  function logIn(email, password) {
+    // to sign in the user
+    return signInWithEmailAndPassword(auth, email, password).then((user) => {
+      console.log("user in usercontext:", user);
+      // setUser(user);
+      //get the current user email from user collection and set it to the user object
       const userRef = collection(db, "users");
       const q = query(userRef, where("email", "==", user.user.email));
       getDocs(q)
@@ -91,7 +91,7 @@ export function UserAuthContextProvider({ children }) {
           const preparedUser = {
             displayName: currentUser.displayName,
             email: currentUser.email,
-            photoURL: currentUser.avatarUrl,
+            avatarUrl: currentUser.avatarUrl,
             password: currentUser.password,
             uid: currentUser.uid,
           };
@@ -102,9 +102,9 @@ export function UserAuthContextProvider({ children }) {
         .catch((error) => {
           console.log("Error getting user information: ", error);
         });
-       //storing user in local storage
-     });
-   }
+      //storing user in local storage
+    });
+  }
   function signUp(email, password) {
     // to sign up the user
     return createUserWithEmailAndPassword(auth, email, password);
@@ -122,11 +122,10 @@ export function UserAuthContextProvider({ children }) {
   //     console.log("user in usercontext:", user);
   //     // add user into collection if not exist
 
-
-  //     console.log(user.user.photoURL)
+  //     console.log(user.user.avatarUrl)
   //     const displayName = user.user.displayName;
   //     const useremail = user.user.email;
-  //     const userAvator = user.user.photoURL;
+  //     const userAvator = user.user.avatarUrl;
   //     const avatarName = `${user.user.uid}-${new Date().getTime()}-${
   //       userAvator.name
   //     }`;
@@ -156,7 +155,7 @@ export function UserAuthContextProvider({ children }) {
   //       const preparedUser = {
   //         displayName: currentUser[0].displayName,
   //         email: currentUser[0].email,
-  //         photoURL: currentUser[0].avatarUrl,
+  //         avatarUrl: currentUser[0].avatarUrl,
   //         password: currentUser[0].password,
   //         uid: currentUser[0].uid,
   //       };
@@ -167,25 +166,24 @@ export function UserAuthContextProvider({ children }) {
   //     });
   //   });
   // }
-   function googleSignIn() {
-     // to sign in the user using google
-     const googleAuthProvider = new GoogleAuthProvider();
-     return signInWithPopup(auth, googleAuthProvider).then(async (user) => {
-
-       const userRef = collection(db, "users");
-       const q = query(userRef, where("email", "==", user.user.email));
-       const querySnapshot = await getDocs(q);
-       const currentUser = querySnapshot.docs.map((doc) => doc.data())[0];
-       if (!currentUser) {
-         const displayName = user.user.displayName;
-         const useremail = user.user.email;
-         const userAvator = user.user.photoURL;
-         const avatarName = `${user.user.uid}-${new Date().getTime()}-${
-           userAvator.name
-         }`;
-         const storageRef = ref(storage, `googleSignimages/${avatarName}`);
-         const snapshot = await uploadBytes(storageRef, userAvator);
-         const avatarUrl = await getDownloadURL(snapshot.ref);
+  function googleSignIn() {
+    // to sign in the user using google
+    const googleAuthProvider = new GoogleAuthProvider();
+    return signInWithPopup(auth, googleAuthProvider).then(async (user) => {
+      const userRef = collection(db, "users");
+      const q = query(userRef, where("email", "==", user.user.email));
+      const querySnapshot = await getDocs(q);
+      const currentUser = querySnapshot.docs.map((doc) => doc.data())[0];
+      if (!currentUser) {
+        const displayName = user.user.displayName;
+        const useremail = user.user.email;
+        const userAvator = user.user.photoURL;
+        const avatarName = `${
+          user.user.uid
+        }-${new Date().getTime()}-avatar.jpg`;
+        const storageRef = ref(storage, `googleSignimages/${avatarName}`);
+        const snapshot = await uploadBytes(storageRef, userAvator);
+        const avatarUrl = await getDownloadURL(snapshot.ref);
         //  const userDocRef = await addDoc(collection(db, "users"), {
         //    uid: user.user.uid,
         //    displayName: displayName,
@@ -194,42 +192,89 @@ export function UserAuthContextProvider({ children }) {
         //  });
         //  console.log("User added with ID: ", userDocRef.id);
         //  await setDoc(doc(db, "userChats", userDocRef.uid), {});
-          await setDoc(doc(db, "users", user.user.uid), {
-            uid: user.user.uid,
-            displayName: displayName,
-            email: useremail,
-            avatarUrl: avatarUrl,
-          });
-          await setDoc(doc(db, "userChats", user.user.uid), {});
+        await setDoc(doc(db, "users", user.user.uid), {
+          uid: user.user.uid,
+          displayName: displayName,
+          email: useremail,
+          avatarUrl: avatarUrl,
+        });
+        await setDoc(doc(db, "userChats", user.user.uid), {});
 
-         const preparedUser = {
-           displayName,
-           email: useremail,
-           photoURL: avatarUrl,
-           uid: user.user.uid,
-         };
-         setUser(preparedUser);
-         localStorage.setItem("user", JSON.stringify(preparedUser));
-       } else {
-         const preparedUser = {
-           displayName: currentUser.displayName,
-           email: currentUser.email,
-           photoURL: currentUser.avatarUrl,
-           uid: currentUser.uid,
-         };
-         setUser(preparedUser);
-         localStorage.setItem("user", JSON.stringify(preparedUser));
-          localStorage.setItem("user", JSON.stringify(preparedUser));
-       }
-     });
-   }
+        const preparedUser = {
+          displayName,
+          email: useremail,
+          avatarUrl: avatarUrl,
+          uid: user.user.uid,
+        };
+        setUser(preparedUser);
+        localStorage.setItem("user", JSON.stringify(preparedUser));
+      } else {
+        const preparedUser = {
+          displayName: currentUser.displayName,
+          email: currentUser.email,
+          avatarUrl: currentUser.avatarUrl,
+          uid: currentUser.uid,
+        };
+        setUser(preparedUser);
+        localStorage.setItem("user", JSON.stringify(preparedUser));
+        // localStorage.setItem("user", JSON.stringify(preparedUser));
+      }
+    });
+  }
+// function googleSignIn() {
+//   // to sign in the user using google
+//   const googleAuthProvider = new GoogleAuthProvider();
+//   return signInWithPopup(auth, googleAuthProvider).then(async (user) => {
+//     const userRef = collection(db, "users");
+//     const q = query(userRef, where("email", "==", user.user.email));
+//     const querySnapshot = await getDocs(q);
+//     const currentUser = querySnapshot.docs.map((doc) => doc.data())[0];
+//     if (!currentUser) {
+//       const displayName = user.user.displayName;
+//       const useremail = user.user.email;
+//       const userAvator = user.user.photoURL;
+//       const avatarName = `${user.user.uid}-${new Date().getTime()}-avatar.jpg`;
+//       const storageRef = ref(storage, `googleSignimages/${avatarName}`);
+//       const snapshot = await uploadBytes(
+//         storageRef,
+//         // await fetch(userAvator).then((res) => res.blob())
+//         await fetch(userAvator, { mode: "cors" }).then((res) => res.blob())
+//       );
+//       const avatarUrl = await getDownloadURL(snapshot.ref);
+//       await setDoc(doc(db, "users", user.user.uid), {
+//         uid: user.user.uid,
+//         displayName: displayName,
+//         email: useremail,
+//         avatarUrl: avatarUrl,
+//       });
+//       await setDoc(doc(db, "userChats", user.user.uid), {});
 
+//       const preparedUser = {
+//         displayName,
+//         email: useremail,
+//         avatarUrl: avatarUrl,
+//         uid: user.user.uid,
+//       };
+//       setUser(preparedUser);
+//       localStorage.setItem("user", JSON.stringify(preparedUser));
+//     } else {
+//       const preparedUser = {
+//         displayName: currentUser.displayName,
+//         email: currentUser.email,
+//         avatarUrl: currentUser.avatarUrl,
+//         uid: currentUser.uid,
+//       };
+//       setUser(preparedUser);
+//       localStorage.setItem("user", JSON.stringify(preparedUser));
+//     }
+//   });
+// }
   function postArticleAPI(payload) {
     // to post the article
     setLoading(true); // to start the loading
 
     if (payload.image !== "") {
-      const storageRef = ref(storage, `images/${payload.image.name + v4()}`);
+      const storageRef = ref(storage, `Articles/${payload.image.name + v4()}`);
       const upload = uploadBytesResumable(storageRef, payload.image);
       console.log("upload img:", upload);
       upload.on(
@@ -255,7 +300,7 @@ export function UserAuthContextProvider({ children }) {
                 email: payload.user.email,
                 title: payload.user.displayName,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                image: payload.user.photoURL,
+                image: payload.user.avatarUrl,
               },
               video: payload.video,
               sharedImg: downloadURL,
@@ -280,7 +325,7 @@ export function UserAuthContextProvider({ children }) {
             email: payload.user.email,
             title: payload.user.displayName,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            image: payload.user.photoURL,
+            image: payload.user.avatarUrl,
           },
           video: payload.video,
           sharedImg: "",
@@ -303,7 +348,7 @@ export function UserAuthContextProvider({ children }) {
             email: payload.user.email,
             title: payload.user.displayName,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            image: payload.user.photoURL,
+            image: payload.user.avatarUrl,
           },
           video: "",
           sharedImg: "",
@@ -318,20 +363,19 @@ export function UserAuthContextProvider({ children }) {
       }
     }
     // sending email notification
-  const notificationPayload = {
-    notification: {
-      title: "New post uploaded!",
-      body: `${payload.user.displayName} has uploaded a new post`,
-    },
-    data: {
-      click_action: "FLUTTER_NOTIFICATION_CLICK",
-      sound: "default",
-      status: "done",
-      screen: "article",
-    },
-    topic: "all_users",
-  };
-
+    const notificationPayload = {
+      notification: {
+        title: "New post uploaded!",
+        body: `${payload.user.displayName} has uploaded a new post`,
+      },
+      data: {
+        click_action: "FLUTTER_NOTIFICATION_CLICK",
+        sound: "default",
+        status: "done",
+        screen: "article",
+      },
+      topic: "all_users",
+    };
   }
 
   function getArticlesAPI() {
@@ -368,24 +412,22 @@ export function UserAuthContextProvider({ children }) {
     console.log("in userContext event:", event);
     return unsubscribe;
   }
-// forgot password
+  // forgot password
   // function forgotPasswordAPI(email) {
   //   return sendPasswordResetEmail(auth, email,{
   //     url: "http://localhost:3000/login",
   //   }).then((res)=>{
   //     console.log("password reset email sent");
-    
+
   //     // change the user password info in the user collections
-    
+
   //   }).catch((error)=>{
   //     console.log("error:",error);
   //   })
   // }
 
-
-
   //get current user data
- 
+
   //get users
   function forgotPasswordAPI(email) {
     return sendPasswordResetEmail(auth, email, {

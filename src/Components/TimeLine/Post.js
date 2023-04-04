@@ -20,10 +20,10 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
 //
 
 // Post component
@@ -44,10 +44,10 @@ function Post(props) {
   const [assetArea, setAssetArea] = useState(""); // state for asset area
   // console.log("at posts-->props :", props); // console log for props
   //
-  const {  postArticleAPI } = useUserAuth(); // destructuring user from context
+  const { postArticleAPI } = useUserAuth(); // destructuring user from context
   const ava = faker.image.avatar();
   const user = JSON.parse(localStorage.getItem("user"));
-  const [photoUrl, setPhotoUrl] = useState(ava); // state for photo url
+  const [avatarUrl, setavatarUrl] = useState(ava); // state for photo url
   const [displayName, setDisplayName] = useState(""); // state for display name
   const [email, setEmail] = useState("");
   //
@@ -81,7 +81,7 @@ function Post(props) {
       user: user,
       description: text,
       timestamp: new Date().getTime(),
-    }
+    };
     console.log("payload is:", payload);
     postArticleAPI(payload);
     reset(e);
@@ -95,24 +95,24 @@ function Post(props) {
     switchAssetArea("");
     setIsOpen(false);
   };
-useEffect(() => {
-  console.log("user in post:", user);
-  const prepareData = {
-    displayName: user?.displayName,
-    email: user?.email,
-    photoURL: user?.photoURL,
-  };
-  setPhotoUrl(prepareData?.photoURL);
-  setDisplayName(prepareData?.displayName);
-  setEmail(prepareData?.email);
-}, []);
+  useEffect(() => {
+    console.log("user in post:", user);
+    const prepareData = {
+      displayName: user?.displayName,
+      email: user?.email,
+      avatarUrl: user?.avatarUrl,
+    };
+    setavatarUrl(prepareData?.avatarUrl);
+    setDisplayName(prepareData?.displayName);
+    setEmail(prepareData?.email);
+  }, []);
 
   //
-   const [cat, setCat] = React.useState("");
-   const handleCatChange = (event) => {
-      setCat(event.target.value);
-    };
-    // console.log("cat is:", cat);
+  const [cat, setCat] = React.useState("");
+  const handleCatChange = (event) => {
+    setCat(event.target.value);
+  };
+  // console.log("cat is:", cat);
   //
   return (
     // return statement
@@ -145,9 +145,9 @@ useEffect(() => {
             </Header>
             <SharedContent>
               <UserInfo>
-                {photoUrl ? (
+                {avatarUrl ? (
                   <img
-                    src={photoUrl}
+                    src={avatarUrl}
                     alt=""
                     referrerpolicy="no-referrer"
                     style={{
@@ -161,11 +161,15 @@ useEffect(() => {
                   <img src={ava} alt="" referrerpolicy="no-referrer" />
                 )}
 
-                <span style={{
-                  color: "#28104E",
-                  fontWeight: "bold",
-                  letterSpacing: "1px",
-                }}>{_.capitalize(displayName)}</span>
+                <span
+                  style={{
+                    color: "#28104E",
+                    fontWeight: "bold",
+                    letterSpacing: "1px",
+                  }}
+                >
+                  {_.capitalize(displayName)}
+                </span>
               </UserInfo>
               {/* <Autocomplete
                 value={Cvalue}
@@ -242,7 +246,6 @@ useEffect(() => {
                   onChange={(e) => setText(e.target.value)}
                   style={{
                     borderRadius: "10px",
-
                   }}
                 ></textarea>
 
@@ -427,12 +430,12 @@ const AttachAssets = styled.div`
 
 const PostButton = styled.button`
   min-width: 80px;
-  
+
   border-radius: 20px;
   padding-left: 16px;
   padding-right: 16px;
   background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#0a66c2")};
-  color: ${(props) => (props.disabled ? "white": "white")};
+  color: ${(props) => (props.disabled ? "white" : "white")};
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   &:hover {
     background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#004182")};
@@ -476,7 +479,5 @@ const UploadImage = styled.div`
     }
   }
 `;
-
-
 
 export default Post;
