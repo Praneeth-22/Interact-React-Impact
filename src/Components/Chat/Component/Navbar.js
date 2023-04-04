@@ -29,7 +29,25 @@ export default function Navbar() {
       <div className="user">
         <img src={avatarUrl} alt="" />
         <span>{displayName}</span>
-        <button onClick={() => loggingOut()}>log Out</button>
+        <button
+          onClick={() => loggingOut()}
+          style={{
+            // backgroundColor: "transparent",
+            border: "none",
+            // color: "white",
+            // fontSize: "16px",
+            fontWeight: "600",
+            lineHeight: "20px",
+            letterSpacing: "1px",
+            // padding: "10px",
+            borderRadius: "10px",
+            // backgroundColor: message.senderId === currentUser.uid ? "#4A1D91" : "#28104e",
+            backgroundColor: "white",
+            color: "#4A1D91",
+          }}
+        >
+          log Out
+        </button>
       </div>
     </div>
   );

@@ -88,6 +88,7 @@ function Event() {
               gutterBottom
               sx={{
                 color: "#4A1D91",
+                // overflowY: "scroll",
               }}
               aria-owns={open ? "mouse-over-popover" : undefined}
               aria-haspopup="true"

@@ -146,7 +146,7 @@ const [isSubmitting, setIsSubmitting] = useState(false);
                   Sign In
                 </button>
               </div>
-              <div className="d-grid mt-2">
+              {/* <div className="d-grid mt-2">
                 <button
                   type="submit"
                   className="btn btn-primary"
@@ -160,7 +160,7 @@ const [isSubmitting, setIsSubmitting] = useState(false);
                   <a>Sign In via Google</a>&nbsp;&nbsp;
                   <img src={google} alt="click" />
                 </button>
-              </div>
+              </div> */}
               <div
                 style={{
                   display: "flex",

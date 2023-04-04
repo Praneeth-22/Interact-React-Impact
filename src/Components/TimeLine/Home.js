@@ -192,6 +192,7 @@ function Home(props) {
   };
   //add event into event collection
   const addEvent = async (event) => {
+    console.log("------------------adding event:----------- ");
     event.preventDefault();
     const userName = user.displayName;
     const userImg = user.avatarUrl;
@@ -203,7 +204,7 @@ function Home(props) {
       eventId: EventId,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     };
-    console.log("event", event);
+    console.log("-----------event-----------------------", event);
     console.log("eventInfo: ", eventInfo);
     try {
       // add event info into a new document in the events collection
