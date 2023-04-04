@@ -22,7 +22,6 @@ import {
   getMetadata,
   uploadBytesResumable,
   Timestamp,
- 
 } from "firebase/storage";
 import { auth, storage, db } from "../../firebase_service";
 import {
@@ -33,19 +32,21 @@ import {
   orderBy,
   onSnapshot,
   where,
-
 } from "firebase/firestore";
 import { getAuth, updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import _ from "lodash";
 
 function Profile() {
-
   const fileInputRef = useRef(null);
-  const {  getUsersAPI } = useUserAuth();
+  const { getUsersAPI } = useUserAuth();
   const user = JSON.parse(localStorage.getItem("user"));
-  const [photoUrl, setPhotoUrl] = useState(user?.photoURL);
+  const [avatarUrl, setavatarUrl] = useState(user?.avatarUrl);
   const [displayName, setDisplayName] = useState(user?.displayName);
+  const [location, setLocation] = useState(user?.location);
+  // const [bio, setBio] = useState(user?.bio);
+  const [pno, setPno] = useState(user?.contact_no);
+  const [userUniversity, setUserUniversity] = useState(user?.userUniversity);
   console.log("user in profile page is:", user);
   //
   const handleProfilePictureChange = (event) => {
@@ -60,18 +61,17 @@ function Profile() {
       console.log("File data URL:", dataUrl);
       setChangeImg(dataUrl);
       console.log("changeImg-------------------------------------:", changeImg);
-      setPhotoUrl(dataUrl); 
-      console.log("------changed photoUrl:-------", photoUrl);
+      setavatarUrl(dataUrl);
+      console.log("------changed avatarUrl:-------", avatarUrl);
     };
   };
-  
 
   const handleEditPictureClick = () => {
     fileInputRef.current.click();
   };
   useEffect(() => {
     if (user) {
-      setPhotoUrl(user.photoURL);
+      setavatarUrl(user.avatarUrl);
       setDisplayName(user.displayName);
       console.log("user in useeffect profile page is:", user);
     }
@@ -89,38 +89,47 @@ function Profile() {
   };
 
   const handleNewProfileChanges = async (event) => {
-      event.preventDefault();
-      const userDoc = await getDocs(
-        query(
-          collection(db, "users"),
-          where("email", "==", user.email)
-        )
-      );
-      userDoc.forEach((doc) => {
-        setUserDocId(doc.id);
-      }
-      );
-      console.log("userDocId of updating profile-------------------is:", userDocId);
-      //
-      const userDocRef = doc(db, "users", userDocId);
-      console.log("photoUrl", photoUrl)
-      console.log("values", newName, changeImg, newPassword)
-      await updateDoc(userDocRef, {
-        displayName: newName,
-        avatarUrl: changeImg,
-        password: newPassword,
-      });
-      console.log("after updating the profile page -------------------is:", userDocId);
-      //update the user in local storage
-      const updatedUser = {
-        ...user,
-        displayName: newName,
-        photoURL: changeImg,
-        password: newPassword,
-      }
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      //update the user in context
-      getUsersAPI();
+    event.preventDefault();
+    const userDoc = await getDocs(
+      query(collection(db, "users"), where("email", "==", user.email))
+    );
+    let docNum;
+    userDoc.forEach((doc) => {
+      docNum = doc.id;
+    });
+    console.log("userDocId of updating profile-------------------is:", docNum);
+    //
+    const userDocRef = doc(db, "users", docNum);
+    console.log("avatarUrl", avatarUrl);
+    console.log("values", newName, changeImg, newPassword);
+    const payload = {
+      ...user,
+      displayName: newName,
+      avatarUrl: avatarUrl,
+      password: newPassword,
+      location: location,
+      userUniversity: userUniversity,
+      contact_no: pno,
+    };
+    console.log("payload", payload);
+    await updateDoc(userDocRef, payload);
+    console.log(
+      "after updating the profile page -------------------is:",
+      userDocId
+    );
+    //update the user in local storage
+    const updatedUser = {
+      ...user,
+      displayName: newName,
+      avatarUrl: changeImg,
+      password: newPassword,
+      location: location,
+      userUniversity: userUniversity,
+      contact_no: pno,
+    };
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    //update the user in context
+    getUsersAPI();
   };
 
   return (
@@ -154,7 +163,7 @@ function Profile() {
             <div style={{ position: "relative" }}>
               <Avatar
                 alt="Profile Picture"
-                src={photoUrl}
+                src={avatarUrl}
                 sx={{ width: 90, height: 90 }}
               />
               <div style={{ position: "absolute", bottom: 0, right: 0 }}>
@@ -193,7 +202,7 @@ function Profile() {
             <div style={{ position: "relative" }}>
               <Avatar
                 alt="Profile Picture"
-                src={photoUrl}
+                src={avatarUrl}
                 sx={{ width: 90, height: 90 }}
               />
               <div style={{ position: "absolute", bottom: 0, right: 0 }}>
@@ -239,31 +248,26 @@ function Profile() {
           />
           <TextField
             id="outlined-multiline-static"
-            label="Old Password"
-            variant="outlined"
-            disabled
-            defaultValue={user.password}
-            size="small"
-          />
-          <TextField
-            id="outlined-multiline-static"
             label="location"
             variant="outlined"
             defaultValue={user.location}
+            onChange={(e) => setLocation(e.target.value)}
             size="small"
           />
           <TextField
             id="outlined-multiline-static"
             label="Phone Number"
             variant="outlined"
-            defaultValue={user.phoneNumber}
+            defaultValue={user?.contact_no}
+            onChange={(e) => setPno(e.target.value)}
             size="small"
           />
           <TextField
             id="outlined-multiline-static"
             label="University"
             variant="outlined"
-            defaultValue={user.university}
+            defaultValue={user.userUniversity}
+            onChange={(e) => setUserUniversity(e.target.value)}
             size="small"
           />
 
@@ -298,7 +302,8 @@ function Profile() {
           <Button
             variant="outlined"
             color="error"
-            sx={{ mr: 2 ,
+            sx={{
+              mr: 2,
               // color: "#28104E",
               // borderColor: "#28104E",
             }}
@@ -309,10 +314,7 @@ function Profile() {
           <Button
             variant="contained"
             // color="success"
-            sx={{ mr: 2 ,
-               color: "white",
-              backgroundColor: "#28104E",
-            }}
+            sx={{ mr: 2, color: "white", backgroundColor: "#28104E" }}
             onClick={handleNewProfileChanges}
           >
             Save

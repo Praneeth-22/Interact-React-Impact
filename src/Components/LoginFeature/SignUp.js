@@ -21,15 +21,20 @@ import {
   doc,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import CircularProgress from "@mui/material/CircularProgress";
 const SignUp = () => {
   let navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
   const { signUp } = useUserAuth();
+  //loader
+    const [isSubmitting, setIsSubmitting] = useState(false);
+  //
   const handleSubmit = async (e) => {
     e.preventDefault();
     /*navigate("/home");*/
+    setIsSubmitting(true);
     const displayName = e.target[0].value;
     const useremail = e.target[1].value;
     const userpassword = e.target[2].value;
@@ -57,33 +62,12 @@ const SignUp = () => {
         userpassword
       );
       //Create a unique image name
-      const avatarName = `SignUp${user.uid}-${new Date().getTime()}-${
+      const avatarName = `SignUp/${user.uid}-${new Date().getTime()}-${
         userAvator.name
       }`;
       const storageRef = ref(storage, avatarName);
       const snapshot = await uploadBytes(storageRef, userAvator);
       const avatarUrl = await getDownloadURL(snapshot.ref);
-      //create user on firestore
-
-      // await setDoc(doc(db, "users", user.user.uid), {
-      //   uid: user.user.uid,
-      //   displayName: displayName,
-      //   email: useremail,
-      //   avatarUrl: avatarUrl,
-      //   password: userpassword,
-      // });
-
-      // const userDocRef = await addDoc(collection(db, "users"), {
-      //   uid: user.uid,
-      //   displayName: displayName,
-      //   email: useremail,
-      //   avatarUrl: avatarUrl,
-      //   password: userpassword,
-      // });
-      // console.log("User added with ID: ", userDocRef.id);
-      //  await setDoc(doc(db, "userChats", userDocRef.uid), {});
-      //create empty user chats on firestore
-      //get uid present in userDocRef
       console.log(" ---user id for creating ----",user.id)
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
@@ -100,6 +84,7 @@ const SignUp = () => {
     } catch (err) {
       setError(err.message);
     }
+    setIsSubmitting(false);
   };
   return (
     <div className="signup">
@@ -227,11 +212,13 @@ const SignUp = () => {
                       marginRight: "8px",
                     }}
                   /> */}
-                  <PersonAddIcon sx={{
-                    width: "30px",
-                    height: "20px",
-                    marginRight: "6px",
-                  }}/>
+                  <PersonAddIcon
+                    sx={{
+                      width: "30px",
+                      height: "20px",
+                      marginRight: "6px",
+                    }}
+                  />
                   <span
                     style={{
                       color: "#28104e",
@@ -255,15 +242,19 @@ const SignUp = () => {
                   Sign Up
                 </button>
               </div>
-              <p className="forgot-password text-right" style={{
-                    color: "#28104e",
-                    // fontWeight: "600",
-                    float: "right",
-                    fontSize: "14px", 
-                    marginTop: "10px"
-              }}>
+              <p
+                className="forgot-password text-right"
+                style={{
+                  color: "#28104e",
+                  // fontWeight: "600",
+                  float: "right",
+                  fontSize: "14px",
+                  marginTop: "10px",
+                }}
+              >
                 Already registered <a href="/">sign in?</a>
               </p>
+              {isSubmitting && <CircularProgress color="secondary" />}
             </form>
           </div>
         </div>
