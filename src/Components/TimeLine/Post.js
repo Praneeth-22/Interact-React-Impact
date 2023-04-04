@@ -24,6 +24,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
+import CircularProgress from "@mui/material/CircularProgress";
 //
 
 // Post component
@@ -37,7 +38,7 @@ const options = [
 ];
 
 function Post(props) {
-  const { isOpen, setIsOpen } = props; // destructuring props
+  const { isOpen, setIsOpen, isSubmitting, setIsSubmitting } = props; // destructuring props
   const [shareImage, setShareImage] = useState(""); // state for image
   const [text, setText] = useState(""); // state for text
   const [videoLink, setVideoLink] = useState(""); // state for video link
@@ -69,9 +70,12 @@ function Post(props) {
     setVideoLink("");
     setAssetArea(area);
   };
+  // const [isSubmitting, setIsSubmitting] = useState(false);
   const postArticle = (e) => {
     // function to post article
     e.preventDefault();
+    setIsSubmitting(true);
+
     if (e.target !== e.currentTarget) {
       return;
     }
@@ -85,6 +89,7 @@ function Post(props) {
     console.log("payload is:", payload);
     postArticleAPI(payload);
     reset(e);
+     setIsSubmitting(false);
   };
 
   const reset = (e) => {

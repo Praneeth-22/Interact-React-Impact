@@ -57,6 +57,7 @@ import firebase from "firebase/compat/app";
 // import Select from "@material-ui/core/Select";
 // import MenuItem from "@material-ui/core/MenuItem";
 import MenuItem from "@mui/material/MenuItem";
+import CircularProgress from "@mui/material/CircularProgress";
 //
 function Home(props) {
   const navigate = useNavigate();
@@ -259,7 +260,8 @@ function Home(props) {
     
   ];
   // console.log("user:pic", user.avatarUrl)
-
+  //loader
+  const [isSubmitting, setIsSubmitting] = useState(false);
   return (
     <div
       style={{
@@ -598,6 +600,8 @@ function Home(props) {
               />
             </Tabs>
           </div>
+          {/* display loader */}
+          {isSubmitting && <CircularProgress />}
           <Content>
             {/* {!loading && <img src={spinner} alt="loading" />} */}
             {articles.length > 0 &&
@@ -637,8 +641,8 @@ function Home(props) {
                           </div>
                         </a>
                         <button
-                          //on click of this button it will show the dropdown menu containing the options to edit and delete the post
-                        >        
+                        //on click of this button it will show the dropdown menu containing the options to edit and delete the post
+                        >
                           <MoreHorizIcon />
                         </button>
                       </SharedActor>
@@ -769,7 +773,12 @@ function Home(props) {
                 );
               })}
           </Content>
-          <Post isOpen={isOpen} setIsOpen={setIsOpen} />
+          <Post
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            isSubmitting={isSubmitting}
+            setIsSubmitting={setIsSubmitting}
+          />
         </HomeContainer>
       )}
       <Rightbar>

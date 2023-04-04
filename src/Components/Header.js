@@ -21,7 +21,7 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Profile from "./TimeLine/Profile";
 //
-const pages = ["Home", "Chat"]; // change the caterogy
+const pages = ["Home", "Events","Chat"]; // change the caterogy
 const settings = ["Profile", "Logout"];
 function Header(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -63,6 +63,9 @@ function Header(props) {
       setOpenModel(true);
     } else if (option === "Chat") {
       window.location.href = "/chat-home";
+    }
+    else if (option === "Events") {
+      window.location.href = "/events";
     }
     console.log("option", option);
     setAnchorElNav(null);

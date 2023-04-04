@@ -10,8 +10,7 @@ import { useUserAuth } from "../../context/UserContextApi";
 import { useState } from "react";
 import { Alert, stepClasses } from "@mui/material";
 import GoogleButton from "react-google-button";
-// import bg from './img/logintest2.svg';
-
+import CircularProgress from "@mui/material/CircularProgress";
 const Login = () => {
   /*const navigate = useNavigate();*/
   let navigate = useNavigate();
@@ -20,18 +19,20 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const { logIn, googleSignIn, forgotPasswordAPI } = useUserAuth(); // to get the logIn function from the context
-
+//loader
+const [isSubmitting, setIsSubmitting] = useState(false);
+//
   const handleSubmit = async (e) => {
     e.preventDefault();
-    /*navigate("/home");*/
+   setIsSubmitting(true);
     setError("");
-    /*navigate("/home");*/
     try {
       await logIn(email, password);
       navigate("/home");
     } catch (err) {
       setError(err.message);
     }
+    setIsSubmitting(false);
   };
   const handleGoogleSignIn = async (e) => {
     e.preventDefault();
@@ -175,8 +176,6 @@ const Login = () => {
                     marginTop: "6px",
                     float: "right",
                     marginButtom: "0px",
-                
-                  
                   }}
                 >
                   Forgot password <a href="/forgot-password"> {`reset?`}</a>
@@ -186,13 +185,12 @@ const Login = () => {
                   style={{
                     color: "#28104e",
                     float: "right",
-            
-                    
                   }}
                 >
                   Don't have an account? <a href="/sign-up"> {`signup`}</a>
                 </span>
               </div>
+              {isSubmitting && <CircularProgress color="secondary" />}
             </form>
           </div>
         </div>
