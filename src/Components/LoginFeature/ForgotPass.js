@@ -107,7 +107,7 @@ function ForgotPass() {
                     backgroundColor: "#28104e",
                   }}
                 >
-                  Sign In
+                  Submit
                 </button>
               </div>
             
