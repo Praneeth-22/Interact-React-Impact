@@ -43,6 +43,10 @@ function Profile() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [avatarUrl, setavatarUrl] = useState(user?.avatarUrl);
   const [displayName, setDisplayName] = useState(user?.displayName);
+  const [location, setLocation] = useState(user?.location);
+  // const [bio, setBio] = useState(user?.bio);
+  const [pno, setPno] = useState(user?.contact_no);
+  const [userUniversity, setUserUniversity] = useState(user?.userUniversity);
   console.log("user in profile page is:", user);
   //
   const handleProfilePictureChange = (event) => {
@@ -103,6 +107,9 @@ function Profile() {
       displayName: newName,
       avatarUrl: avatarUrl,
       password: newPassword,
+      location: location,
+      userUniversity: userUniversity,
+      contact_no: pno,
     };
     console.log("payload", payload);
     await updateDoc(userDocRef, payload);
@@ -116,6 +123,9 @@ function Profile() {
       displayName: newName,
       avatarUrl: changeImg,
       password: newPassword,
+      location: location,
+      userUniversity: userUniversity,
+      contact_no: pno,
     };
     localStorage.setItem("user", JSON.stringify(updatedUser));
     //update the user in context
@@ -236,33 +246,28 @@ function Profile() {
             defaultValue={user.email}
             size="small"
           />
-          {/* <TextField
-            id="outlined-multiline-static"
-            label="Old Password"
-            variant="outlined"
-            disabled
-            defaultValue={user.password}
-            size="small"
-          /> */}
           <TextField
             id="outlined-multiline-static"
             label="location"
             variant="outlined"
             defaultValue={user.location}
+            onChange={(e) => setLocation(e.target.value)}
             size="small"
           />
           <TextField
             id="outlined-multiline-static"
             label="Phone Number"
             variant="outlined"
-            defaultValue={user.phoneNumber}
+            defaultValue={user?.contact_no}
+            onChange={(e) => setPno(e.target.value)}
             size="small"
           />
           <TextField
             id="outlined-multiline-static"
             label="University"
             variant="outlined"
-            defaultValue={user.university}
+            defaultValue={user.userUniversity}
+            onChange={(e) => setUserUniversity(e.target.value)}
             size="small"
           />
 

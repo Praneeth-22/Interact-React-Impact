@@ -94,6 +94,9 @@ export function UserAuthContextProvider({ children }) {
             avatarUrl: currentUser.avatarUrl,
             password: currentUser.password,
             uid: currentUser.uid,
+            contact_no: currentUser.contact_no,
+            location: currentUser.location,
+            userUniversity: currentUser.userUniversity,
           };
           setUser(preparedUser);
           console.log("user in userContext after setUser:", user);

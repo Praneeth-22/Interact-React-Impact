@@ -1,5 +1,5 @@
 import React from "react";
-import schedule from "./static_Data/events";
+// import schedule from "./static_Data/events";
 import Divider from "@mui/material/Divider";
 import { Card } from "@mui/material";
 import EventIcon from "@mui/icons-material/Event";
@@ -17,6 +17,7 @@ function MyEvent() {
    const [events, setEvents] = useState([]);
   useEffect(() => {
     const unsubscribe = getEventsAPI();
+
     return () => {
       unsubscribe();
     };
@@ -45,10 +46,17 @@ function MyEvent() {
     setEventId(id);
     settingCurrentEVent(id);
   };
-
+console.log("................. Sorting events.................");
+//   const sortedEvents = [...event].sort((a, b) => {
+//     return b.timestamp - a.timestamp;
+//   });
+//  const top3Events = sortedEvents
+//    .sort((a, b) => new Date(a.event.date) - new Date(b.event.date))
+//    .slice(0, 3);
+// const top3Events = sortedEvents.slice(0, 3);
   console.log(".................", event, ".................");
 
-  const myDetails = event.map((item) => {
+  const myDetails = event.slice(0,3).map((item) => {
     return (
       <Card
         className="card"
@@ -82,7 +90,7 @@ function MyEvent() {
               cursor: "pointer",
             }}
           >
-            {item.event.university} 
+            {item.event.university}
           </span>
           <span
             style={{
@@ -165,6 +173,43 @@ function MyEvent() {
         Events
       </h3>
       {myDetails}
+      <Card
+        className="card"
+        sx={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        {" "}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            flexDirection: "row",
+            marginBottom: "8px",
+          }} 
+          onClick={() => {
+            navigate("/events");
+          }}
+        >
+          <span
+            style={{
+              color: "#28104e",
+              fontWeight: 600,
+              letterSpacing: "1px",
+              cursor: "pointer",
+            }}
+          >
+            {" "}
+            View All
+          </span>
+        </div>
+      </Card>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>
@@ -217,7 +262,9 @@ function MyEvent() {
           </Button>
           <Button variant="primary" onClick={handleClose}>
             <a
-              href={currentEvent.event?.link ? currentEvent.event?.link : "/home"}
+              href={
+                currentEvent.event?.link ? currentEvent.event?.link : "/home"
+              }
               target="_blank"
               style={{
                 color: "white",
