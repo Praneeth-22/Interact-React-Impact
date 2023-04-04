@@ -45,8 +45,23 @@ export default function Message({ message }) {
         </span>
       </div>
       <div className="messageContent">
-        <p>{message.text}</p>
-        {message.img && <img src={message.img} alt="" />}
+        <p style={{
+          color: "white",
+          fontSize: "14px",
+          fontWeight: "500",
+          lineHeight: "20px",
+          letterSpacing: "1px",
+          padding: "10px",
+          borderRadius: "10px",
+          backgroundColor: message.senderId === currentUser.uid ? "#4A1D91" : "#28104e",
+        }}>{message?.text 
+        }</p>
+        {message.img && <img src={message.img} alt="" style={{
+          width: "200px",
+          height: "150px",
+          objectFit: "cover",
+          borderRadius: "10px",
+        }}/>}
       </div>
     </div>
   );

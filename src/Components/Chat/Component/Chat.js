@@ -3,6 +3,7 @@ import Messages from './Messages'
 import Input from './Input'
 import { ChatContext } from '../ChatContext';
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import _ from "lodash";
 function Chat() {
   const {data} = React.useContext(ChatContext)
   const backHome = () => {
@@ -15,7 +16,9 @@ function Chat() {
           fontSize: "1.5rem",
           fontWeight: "bold",
           color: "white",
-          
+          letterSpacing: "1.5px",
+          marginLeft: "10px",
+
         }}>{data.user?.displayName}</span>
         <div className="chatIcons" style={{
           display: "flex",
