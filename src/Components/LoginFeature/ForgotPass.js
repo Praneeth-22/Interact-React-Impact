@@ -10,6 +10,7 @@ import { useUserAuth } from "../../context/UserContextApi";
 import { useState } from "react";
 import { Alert, stepClasses } from "@mui/material";
 import GoogleButton from "react-google-button";
+  import { toast, ToastContainer } from "react-toastify";
 function ForgotPass() {
     let navigate = useNavigate();
     const [email, setEmail] = useState("");
