@@ -2,14 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
-// import user from '../Components/images/user.svg'
 import EventIcon from "@mui/icons-material/Event";
 import ArticleIcon from "@mui/icons-material/Article";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import Rating from "@mui/material/Rating";
-import CommentIcon from "@mui/icons-material/Comment";
-import StarIcon from "@mui/icons-material/Star";
-import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import Button from "@mui/material/Button";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
@@ -19,10 +14,10 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
-import Container from "react-bootstrap/Container";
-import demo2 from "./../../images/demo2.jpg";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import userImgUnLoad from "./Images/user.png";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import spinner from "./Images/spin.svg";
 // import demo2 from "../images/demo2.jpg";
 import { useNavigate } from "react-router-dom";
@@ -39,6 +34,7 @@ import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined
 import TextField from "@mui/material/TextField";
 import { useUserAuth } from "../../context/UserContextApi";
 import { db } from "../../firebase_service";
+
 import {
   doc,
   collection,
@@ -52,12 +48,13 @@ import {
   where,
   orderBy,
   onSnapshot,
+  getDoc,
+  setDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import firebase from "firebase/compat/app";
-// import Select from "@material-ui/core/Select";
-// import MenuItem from "@material-ui/core/MenuItem";
-import MenuItem from "@mui/material/MenuItem";
 import CircularProgress from "@mui/material/CircularProgress";
+import Divider from "@mui/material/Divider";
 //
 function Home(props) {
   const navigate = useNavigate();
@@ -258,11 +255,60 @@ function Home(props) {
       value: "Seattle",
       label: "Seattle",
     },
-    
   ];
   // console.log("user:pic", user.avatarUrl)
   //loader
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeArticleId, setActiveArticleId] = useState(null);
+  const toggleMenu = (id) => {
+    setActiveArticleId(id);
+    setIsMenuOpen(!isMenuOpen);
+  };
+  //
+  const deleteArticle = async (id) => {
+    alert("Are you sure you want to delete this article?");
+    console.log(
+      "--------------going to delete article id:---------------- ",
+      id
+    );
+    try {
+      const docRef = doc(db, "articles", id);
+      await deleteDoc(docRef);
+      console.log("Document successfully deleted!");
+    } catch (error) {
+      console.error("Error removing document: ", error);
+    }
+  };
+  const editTest = async (id) => {
+    alert("Are you sure you want to edit this article?");
+    console.log("--------------going to edit article id:---------------- ", id);
+    articles.map((article) => {
+      if (article.id === id) {
+        console.log("-------------test article:----------------- ", article);
+      }
+    });
+  };
+  //edit article
+  const [editPost, setEditPost] = useState(false);
+  const handleEditClose = () => setEditPost(false);
+  const handleEditShow = () => setEditPost(true);
+  const [newDescription, setNewDescription] = useState("");
+  const [newImage, setNewImage] = useState("");
+  const [newVideo, setNewVideo] = useState("");
+  const [getArticle, setGetArticle] = useState([]);
+
+  //menu bar
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+  //  alert(getArticle)
+  console.log("getArticle:------------ ", getArticle);
   return (
     <div
       style={{
@@ -607,6 +653,9 @@ function Home(props) {
             {/* {!loading && <img src={spinner} alt="loading" />} */}
             {articles.length > 0 &&
               articles?.map(({ id, article }) => {
+                const isCurrentUser =
+                  user && article.actor.email === user.email;
+                const isCurrArticle = articleId === id;
                 return (
                   <>
                     <Article key={id}>
@@ -641,11 +690,156 @@ function Home(props) {
                             </span>
                           </div>
                         </a>
-                        <button
-                        //on click of this button it will show the dropdown menu containing the options to edit and delete the post
-                        >
-                          <MoreHorizIcon />
-                        </button>
+                        {isCurrentUser && (
+                          <div>
+                            <Button
+                              id="basic-button"
+                              aria-controls={open ? "basic-menu" : undefined}
+                              aria-haspopup="true"
+                              aria-expanded={open ? "true" : undefined}
+                              onClick={handleMenuClick}
+                            >
+                              <MoreHorizIcon onClick={toggleMenu} />
+                            </Button>
+                            <Menu
+                              key={id}
+                              id="basic-menu"
+                              anchorEl={anchorEl}
+                              open={open}
+                              onClose={handleMenuClose}
+                              MenuListProps={{
+                                "aria-labelledby": "basic-button",
+                              }}
+                            >
+                              <MenuItem
+                                onClick={() => {
+                                  console.log("hjsdbhfbsdbskj: ", id);
+                                  setGetArticle(article);
+                                  // editTest(id);
+                                  setEditPost(true);
+                                  // setArticleId(id);
+                                  handleMenuClose();
+                                  setAnchorEl(null);
+                                }}
+                              >
+                                Edit
+                              </MenuItem>
+                              <MenuItem
+                                onClick={() => {
+                                  console.log(
+                                    "------------------------delete--------------------: ",
+                                    id
+                                  );
+                                  deleteArticle(id);
+                                  handleMenuClose();
+                                }}
+                              >
+                                Delete
+                              </MenuItem>
+                            </Menu>
+                            <Modal
+                              show={editPost}
+                              onHide={handleEditClose}
+                              sx={{}}
+                            >
+                              <Modal.Header closeButton>
+                                <Modal.Title
+                                  style={{
+                                    fontWeight: 600,
+                                    fontSize: "16px",
+                                    letterSpacing: "1px",
+                                  }}
+                                >
+                                  Editing the Post
+                                </Modal.Title>
+                              </Modal.Header>
+                              <Modal.Body>
+                                <div>
+                                  <div>
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        margin: "0px 0px 0px 0px",
+                                        padding: "0px 0px 0px 0px",
+                                      }}
+                                    >
+                                      <TextField
+                                        id="outlined-basic"
+                                        label="Outlined"
+                                        variant="outlined"
+                                        value={getArticle.description}
+                                        onChange={(e) => {
+                                          setNewDescription(e.target.value);
+                                        }}
+                                        size="small"
+                                        sx={{
+                                          margin: "5px",
+                                        }}
+                                      />
+                                      {article.sharedImg ? (
+                                        <div
+                                          style={{
+                                            width: "500px",
+                                            height: "300px",
+                                            margin: "5px",
+                                          }}
+                                        >
+                                          <img
+                                            src={getArticle.sharedImg}
+                                            alt="shared"
+                                            style={{
+                                              width: "100%",
+                                              height: "100%",
+                                              objectFit: "contain",
+                                            }}
+                                          />
+                                        </div>
+                                      ) : (
+                                        article.video && (
+                                          <div>
+                                            <ReactPlayer
+                                              width={"100%"}
+                                              url={getArticle.video}
+                                            />
+                                            <TextField
+                                              id="outlined-basic"
+                                              label="video link"
+                                              variant="outlined"
+                                              value={getArticle.video}
+                                              size="small"
+                                              sx={{
+                                                width: "100%",
+                                                height: "100%",
+                                                margin: "5px",
+                                              }}
+                                            />
+                                          </div>
+                                        )
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </Modal.Body>
+                              <Modal.Footer>
+                                <Button
+                                  variant="secondary"
+                                  onClick={handleEditClose}
+                                >
+                                  Close
+                                </Button>
+                                <Button
+                                  variant="primary"
+                                  onClick={handleEditClose}
+                                >
+                                  Save Changes
+                                </Button>
+                              </Modal.Footer>
+                            </Modal>
+                          </div>
+                        )}
                       </SharedActor>
                       <Description>{article.description}</Description>
                       <SharedImg>

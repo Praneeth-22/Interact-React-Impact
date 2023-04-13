@@ -13,6 +13,7 @@ import ChatHome from '../src/Components/Chat/ChatHome';
 import ProtectedRoute from '../src/Components/LoginFeature/ProtectedRoute';
 import { ChatContextProvider } from '../src/Components/Chat/ChatContext';
 import ForgotPass from "./Components/LoginFeature/ForgotPass";
+ import "react-toastify/dist/ReactToastify.css";
 //
 function App() {
   return (

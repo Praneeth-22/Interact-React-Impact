@@ -434,7 +434,7 @@ export function UserAuthContextProvider({ children }) {
   //get users
   function forgotPasswordAPI(email) {
     return sendPasswordResetEmail(auth, email, {
-      // url: "http://localhost:3000/login",
+      url: "http://localhost:3000/login",
     })
       .then((res) => {
         console.log("password reset email sent");
@@ -442,8 +442,8 @@ export function UserAuthContextProvider({ children }) {
         // update user's password in Firebase Authentication
         const newPassword = "new-password"; // replace with new password
         const user = auth.currentUser;
-        user
-          .updatePassword(newPassword)
+        if(user){
+          user.updatePassword(newPassword)
           .then(() => {
             console.log("user password updated successfully");
             // update user's password in your user collection in database
@@ -468,10 +468,12 @@ export function UserAuthContextProvider({ children }) {
               "error updating user password in Firebase Authentication",
               error
             );
-          });
+          });}else{
+            console.log("user not found");
+          }
       })
       .catch((error) => {
-        console.log("error:", error);
+        console.log("error in forgot password:", error);
       });
   }
 
