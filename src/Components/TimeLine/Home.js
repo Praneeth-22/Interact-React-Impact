@@ -33,7 +33,7 @@ import ConstructionOutlinedIcon from "@mui/icons-material/ConstructionOutlined";
 import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
 import TextField from "@mui/material/TextField";
 import { useUserAuth } from "../../context/UserContextApi";
-import { db } from "../../firebase_service";
+import { db,storage } from "../../firebase_service";
 
 import {
   doc,
@@ -52,6 +52,7 @@ import {
   setDoc,
   deleteDoc,
 } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import firebase from "firebase/compat/app";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
@@ -281,11 +282,26 @@ function Home(props) {
     }
   };
   const editTest = async (id) => {
-    alert("Are you sure you want to edit this article?");
+    // alert("Are you sure you want to edit this article?");
+    // console.log("--------------going to edit article id:---------------- ", articleId);
     console.log("--------------going to edit article id:---------------- ", id);
+
     articles.map((article) => {
       if (article.id === id) {
-        console.log("-------------test article:----------------- ", article);
+        // console.log("-------------test article:----------------- ", article);
+        const preEditArticle = {
+          id: article.id,
+          article: {
+            description: article.article?.description,
+            sharedImg: article.article?.sharedImg,
+            video: article.article?.video,
+          },
+        };
+        console.log(
+          "-------------preEditArticle:----------------- ",
+          preEditArticle
+        );
+        setGetArticle(preEditArticle);
       }
     });
   };
@@ -296,8 +312,15 @@ function Home(props) {
   const [newDescription, setNewDescription] = useState("");
   const [newImage, setNewImage] = useState("");
   const [newVideo, setNewVideo] = useState("");
-  const [getArticle, setGetArticle] = useState([]);
-
+  const [getArticle, setGetArticle] = useState({
+    id: "",
+    article: {
+      description: "",
+      sharedImg: "",
+      video: "",
+    },
+  });
+  const [editImgSelect, setEditImgSelect] = useState();
   //menu bar
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -307,8 +330,48 @@ function Home(props) {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-  //  alert(getArticle)
-  console.log("getArticle:------------ ", getArticle);
+  //edit image
+
+  const selectNewImage = () => {
+    // e.preventDefault();
+    console.log("-------------selectNewImage:----------------- ");
+  };
+  // handle edited post
+  const handleEditPost = async () => {
+    //editing the article in the database
+    // e.preventDefault();
+    console.log("-----------article-----------------------", getArticle);
+    console.log(
+      "-------------handleEditPost:----------------- ",
+      getArticle.id
+    );
+    //update the firebase database with id equals  getArticle.id
+    // const articleRef = doc(db, "articles", getArticle.id);
+   console.log("-----------articleRef-----------------------", articles);
+    //map through the articles array and find the article with the id that matches getArticle.id
+    let artRef;
+    articles.map((article) => {
+      // console.log("id", article.id, "getArticle.id", getArticle.id);
+      if (article.id === getArticle.id) {
+        console.log("-------------test article:----------------- ", article);
+        artRef = article.id;
+    }
+    });
+    console.log("-----------artRef-----------------------", artRef);
+    const articleRef = doc(db, "articles", artRef);
+    //print the articleRef collection data to the console
+    const articleRefData = await getDoc(articleRef);
+    console.log("-----------articleRefData-----------------------", articleRefData.data());
+    //update the articleRef collection with the the updated description
+    await updateDoc(articleRef, {
+      ...articleRefData.data(),
+      description: getArticle.article.description,
+    });
+    console.log("-----------articleRefData-----------------------", articleRefData.data());
+    //close the edit modal
+    handleEditClose();
+    
+  };
   return (
     <div
       style={{
@@ -715,7 +778,7 @@ function Home(props) {
                                 onClick={() => {
                                   console.log("hjsdbhfbsdbskj: ", id);
                                   setGetArticle(article);
-                                  // editTest(id);
+                                  editTest(id);
                                   setEditPost(true);
                                   // setArticleId(id);
                                   handleMenuClose();
@@ -768,11 +831,19 @@ function Home(props) {
                                     >
                                       <TextField
                                         id="outlined-basic"
-                                        label="Outlined"
+                                        label="description"
+                                        multiline
                                         variant="outlined"
-                                        value={getArticle.description}
+                                        value={getArticle.article.description}
                                         onChange={(e) => {
-                                          setNewDescription(e.target.value);
+                                          setGetArticle({
+                                            ...getArticle,
+                                            article: {
+                                              ...getArticle.article,
+                                              description: e.target.value,
+                                            },
+                                          });
+                                          console.log("getArticle: ", getArticle.article.description);
                                         }}
                                         size="small"
                                         sx={{
@@ -782,13 +853,14 @@ function Home(props) {
                                       {article.sharedImg ? (
                                         <div
                                           style={{
-                                            width: "500px",
+                                            width: "400px",
                                             height: "300px",
                                             margin: "5px",
+                                            borderRadius: "10px",
                                           }}
                                         >
                                           <img
-                                            src={getArticle.sharedImg}
+                                            src={getArticle.article.sharedImg}
                                             alt="shared"
                                             style={{
                                               width: "100%",
@@ -802,7 +874,7 @@ function Home(props) {
                                           <div>
                                             <ReactPlayer
                                               width={"100%"}
-                                              url={getArticle.video}
+                                              url={getArticle.article.video}
                                             />
                                             <TextField
                                               id="outlined-basic"
@@ -820,6 +892,9 @@ function Home(props) {
                                         )
                                       )}
                                     </div>
+                                    <div>
+                                     
+                                    </div>
                                   </div>
                                 </div>
                               </Modal.Body>
@@ -832,7 +907,7 @@ function Home(props) {
                                 </Button>
                                 <Button
                                   variant="primary"
-                                  onClick={handleEditClose}
+                                  onClick={(handleEditClose, handleEditPost)}
                                 >
                                   Save Changes
                                 </Button>
