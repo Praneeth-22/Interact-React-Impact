@@ -41,6 +41,7 @@ function Post(props) {
   const { isOpen, setIsOpen, isSubmitting, setIsSubmitting } = props; // destructuring props
   const [shareImage, setShareImage] = useState(""); // state for image
   const [text, setText] = useState(""); // state for text
+  const [tag, setTag] = useState(""); // state for tag
   const [videoLink, setVideoLink] = useState(""); // state for video link
   const [assetArea, setAssetArea] = useState(""); // state for asset area
   // console.log("at posts-->props :", props); // console log for props
@@ -84,17 +85,20 @@ function Post(props) {
       video: videoLink,
       user: user,
       description: text,
+      tag:tag,
       timestamp: new Date().getTime(),
     };
     console.log("payload is:", payload);
     postArticleAPI(payload);
     reset(e);
      setIsSubmitting(false);
+    
   };
 
   const reset = (e) => {
     // function to reset
     setText("");
+     setTag("");
     setShareImage("");
     setVideoLink("");
     switchAssetArea("");
@@ -113,9 +117,9 @@ function Post(props) {
   }, []);
 
   //
-  const [cat, setCat] = React.useState("");
+  
   const handleCatChange = (event) => {
-    setCat(event.target.value);
+    setTag(event.target.value);
   };
   // console.log("cat is:", cat);
   //
@@ -176,48 +180,8 @@ function Post(props) {
                   {_.capitalize(displayName)}
                 </span>
               </UserInfo>
-              {/* <Autocomplete
-                value={Cvalue}
-                onChange={(event, newValue) => {
-                  setCValue(newValue);
-                }}
-                inputValue={inputCValue}
-                onInputChange={(event, newInputValue) => {
-                  setInputCValue(newInputValue);
-                }}
-                id="controllable-states-demo"
-                options={options}
-                sx={{
-               
-                }}
-                renderInput={(params) => <TextField {...params} sx={{ 
-                  width: "50% !important",
-                  height: "50px !important",
-                  backgroundColor: "white !important",
-                  borderRadius: "10px",
-                  border: "1px solid lightgray",
-                  zIndex: "99999999999900 !important",
-                }} />}
-              /> */}
-              {/* <FormControl sx={{ m: 1, minWidth: 120,zIndex:99999999 }}>
-                <Select
-                  value={age}
-                  onChange={handleChange}
-                  displayEmpty
-                  inputProps={{ "aria-label": "Without label" }}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-                {/* <FormHelperText>Without label</FormHelperText> */}
-              {/* </FormControl> */}
-
               <Editor>
-                {/* <FormControl sx={{}}>
+                <FormControl sx={{}}>
                   <FormLabel id="demo-row-radio-buttons-group-label">
                     Tag
                   </FormLabel>
@@ -225,16 +189,16 @@ function Post(props) {
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
-                    value={cat}
+                    value={tag}
                     onChange={handleCatChange}
                   >
                     <FormControlLabel
-                      value="sport"
+                      value="Sport"
                       control={<Radio />}
                       label="sport"
                     />
                     <FormControlLabel
-                      value="academics"
+                      value="Academics"
                       control={<Radio />}
                       label="academics"
                     />
@@ -244,7 +208,7 @@ function Post(props) {
                       label="Career & Jobs"
                     />
                   </RadioGroup>
-                </FormControl> */}
+                </FormControl>
                 <textarea
                   placeholder="  Hi, there..."
                   value={text}

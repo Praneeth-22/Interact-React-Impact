@@ -33,7 +33,7 @@ import ConstructionOutlinedIcon from "@mui/icons-material/ConstructionOutlined";
 import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
 import TextField from "@mui/material/TextField";
 import { useUserAuth } from "../../context/UserContextApi";
-import { db,storage } from "../../firebase_service";
+import { db, storage } from "../../firebase_service";
 
 import {
   doc,
@@ -69,12 +69,10 @@ function Home(props) {
   //
   const [isOpen, setIsOpen] = useState(false);
   const [openEvent, setOpenEvent] = useState(false);
-  const [value1, setValue1] = React.useState(0);
+
   const defaultDate = new Date();
   const catcolor = { color: "#6237a0" };
-  const handleChange = (event, newValue) => {
-    setValue1(newValue);
-  };
+
   const [articleId, setArticleId] = useState("");
   const [likevalue, setLikeValue] = useState(0);
   const handleClick = (e) => {
@@ -347,7 +345,7 @@ function Home(props) {
     );
     //update the firebase database with id equals  getArticle.id
     // const articleRef = doc(db, "articles", getArticle.id);
-   console.log("-----------articleRef-----------------------", articles);
+    console.log("-----------articleRef-----------------------", articles);
     //map through the articles array and find the article with the id that matches getArticle.id
     let artRef;
     articles.map((article) => {
@@ -355,22 +353,37 @@ function Home(props) {
       if (article.id === getArticle.id) {
         console.log("-------------test article:----------------- ", article);
         artRef = article.id;
-    }
+      }
     });
     console.log("-----------artRef-----------------------", artRef);
     const articleRef = doc(db, "articles", artRef);
     //print the articleRef collection data to the console
     const articleRefData = await getDoc(articleRef);
-    console.log("-----------articleRefData-----------------------", articleRefData.data());
+    console.log(
+      "-----------articleRefData-----------------------",
+      articleRefData.data()
+    );
     //update the articleRef collection with the the updated description
     await updateDoc(articleRef, {
       ...articleRefData.data(),
       description: getArticle.article.description,
     });
-    console.log("-----------articleRefData-----------------------", articleRefData.data());
+    console.log(
+      "-----------articleRefData-----------------------",
+      articleRefData.data()
+    );
     //close the edit modal
     handleEditClose();
-    
+  };
+  //handle category change
+  const [value1, setValue1] = React.useState(0);
+  const [categoryName, setCategoryName] = useState("All");
+  const handleChange = (event, newValue) => {
+    const tabLabel = event.target.innerText;
+    console.log("Selected tab label:", tabLabel);
+    setValue1(newValue);
+    setCategoryName(tabLabel);
+    console.log("-------------handleChange:----------------- ", value1);
   };
   return (
     <div
@@ -647,17 +660,6 @@ function Home(props) {
                 }}
               />
               <Tab
-                label="Workshops"
-                icon={<ConstructionOutlinedIcon />}
-                iconPosition="start"
-                sx={{
-                  fontWeight: 600,
-                  letterSpacing: "1.5px",
-                  textTransform: "capitalize",
-                }}
-              />
-
-              <Tab
                 label="Sports"
                 icon={<SportsBasketballIcon />}
                 iconPosition="start"
@@ -678,29 +680,8 @@ function Home(props) {
                 }}
               />
               <Tab
-                label="Career fair"
+                label="Career & Jobs"
                 icon={<BusinessCenterOutlinedIcon />}
-                iconPosition="start"
-                sx={{
-                  fontWeight: 600,
-                  letterSpacing: "1.5px",
-                  textTransform: "capitalize",
-                }}
-              />
-              <Tab
-                label="
-              Activities"
-                icon={<CelebrationIcon />}
-                iconPosition="start"
-                sx={{
-                  fontWeight: 600,
-                  letterSpacing: "1.5px",
-                  textTransform: "capitalize",
-                }}
-              />
-              <Tab
-                label="E-sports"
-                icon={<SportsEsportsOutlinedIcon />}
                 iconPosition="start"
                 sx={{
                   fontWeight: 600,
@@ -713,8 +694,8 @@ function Home(props) {
           {/* display loader */}
           {isSubmitting && <CircularProgress />}
           <Content>
-            {/* {!loading && <img src={spinner} alt="loading" />} */}
-            {articles.length > 0 &&
+            {categoryName === "All" &&
+              articles.length > 0 &&
               articles?.map(({ id, article }) => {
                 const isCurrentUser =
                   user && article.actor.email === user.email;
@@ -843,7 +824,10 @@ function Home(props) {
                                               description: e.target.value,
                                             },
                                           });
-                                          console.log("getArticle: ", getArticle.article.description);
+                                          console.log(
+                                            "getArticle: ",
+                                            getArticle.article.description
+                                          );
                                         }}
                                         size="small"
                                         sx={{
@@ -892,9 +876,7 @@ function Home(props) {
                                         )
                                       )}
                                     </div>
-                                    <div>
-                                     
-                                    </div>
+                                    <div></div>
                                   </div>
                                 </div>
                               </Modal.Body>
