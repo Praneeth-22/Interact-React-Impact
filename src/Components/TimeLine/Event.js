@@ -1,39 +1,29 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header";
-import Popover from "@mui/material/Popover";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { makeStyles } from "@mui/styles";
 import CardActions from "@mui/material/CardActions";
-import Grid from "@mui/material/Grid";
-import {
-  addDoc,
-  getDocs,
-  collection,
-  query,
-  orderBy,
-  onSnapshot,
-  setDoc,
-  doc,
-  where,
-  updateDoc,
-} from "firebase/firestore";
-import { db } from "../../firebase_service";
-import { useUserAuth } from "../../context/UserContextApi";
+
+import Container from "@mui/material/Container";
+import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
+import { useUserAuth } from "../../context/UserContextApi";
+// import bachelor from "../../images/bachelors-sim-science-gaming-animation-2021.jpg";
+import bachelor from '.././TimeLine/Images/user.png'
+import { TextField, InputAdornment } from "@material-ui/core";
+import { Search } from "@material-ui/icons";
+
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import SortIcon from "@mui/icons-material/Sort";
+import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
+import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
+import "./TimeLineCss/Events.css";
 
 function Event() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [events, setEvents] = useState([]);
   const { user, event, getEventsAPI } = useUserAuth();
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-  const open = Boolean(anchorEl);
+
   useEffect(() => {
     const unsubscribe = getEventsAPI();
     return () => {
@@ -44,124 +34,183 @@ function Event() {
   return (
     <>
       <Header />
-      <div>
-        {event.map((item) => (
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Card
-              key={item.event?.id}
-              sx={{
-                width: "400px",
-                height: "250px",
-                margin: "10px",
-                padding: "10px",
-                boxShadow: "0 0 10px 0 rgba(0,0,0,0.2)",
-                borderRadius: "10px",
-                backgroundColor: "#fff",
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                  transform: "translateY(-2px)",
-                  boxShadow: "0 0 20px 0 rgba(0,0,0,0.2)",
-                },
+      <Container className="py-4" style={{ backgroundColor: "	#F5F5F5" }}>
+        <div style={{ marginBottom: "10px" }}>
+          <h1
+            style={{
+              color: "#6237a0",
+              fontFamily: "Roboto",
+              fontWeight: "700",
+            }}
+          >
+            Let us explore the events
+          </h1>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <TextField
+                id="input-with-icon-textfield"
+                label="Search"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
+              <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
+                <InputLabel id="demo-simple-select-standard-label">
+                  Sort By
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-standard-label"
+                  id="demo-simple-select-standard"
+                  label="Sort By"
+                >
+                  <MenuItem value={10}>Date</MenuItem>
+                  <MenuItem value={20}>Name</MenuItem>
+                </Select>
+              </FormControl>
+              <SortIcon fontSize="large" />
+            </div>
+          </div>
+        </div>
+        <div>
+          <h1 style={{ color: "#6237a0", fontFamily: "Roboto" }}>
+            Recommended Events
+          </h1>
+
+          <div className="myCard-style">
+            <Card sx={{ maxWidth: 345, margin: "18px" }}>
+              <CardMedia
+                sx={{ height: 140 }}
+                image={bachelor}
+                title="green iguana"
+              />
               <CardContent>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  style={{
-                    color: "#28104e",
-                    fontWeight: 600,
-                    alignItems: "center",
-                    letterSpacing: "1px",
-                  }}
-                >
-                  {item.event?.title} {"-"} {item.event?.university}
-                </Typography>
-                <Typography
-                  gutterBottom
-                  sx={{
-                    color: "#4A1D91",
-                    // overflowY: "scroll",
-                  }}
-                  aria-owns={open ? "mouse-over-popover" : undefined}
-                  aria-haspopup="true"
-                  onMouseEnter={handlePopoverOpen}
-                  onMouseLeave={handlePopoverClose}
-                >
-                  {item.event?.description}
-                </Typography>
-                {/* <Popover
-              id="mouse-over-popover"
-              sx={{
-                pointerEvents: "none",
-              }}
-              open={open}
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              onClose={handlePopoverClose}
-              disableRestoreFocus
-            >
-              <Typography sx={{ p: 1 }}>{item.event?.description}</Typography>
-            </Popover> */}
-                <Typography
-                  sx={{
-                    color: "#4A1D91",
-                  }}
-                >
-                  {item.event?.date}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#4A1D91",
-                  }}
-                >
-                  {item.event?.location}
+                <Typography gutterBottom variant="h5" component="div">
+                  Event Name
                 </Typography>
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "end",
-                    marginTop: "10px",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: "10px",
                   }}
-                ></div>
+                >
+                  <Typography variant="body2" color="text.gray">
+                    <LocationOnRoundedIcon
+                      fontSize="medium"
+                      className="myIcon-style"
+                    />
+                    Location
+                  </Typography>
+                  <Typography variant="body2" color="text.gray">
+                    <CalendarTodayRoundedIcon
+                      fontSize="medium"
+                      className="myIcon-style"
+                    />
+                    04/20/2023
+                  </Typography>
+                </div>
+
+                <Typography variant="body2" color="text.secondary">
+                  Lizards are a widespread group of squamate reptiles, with over
+                  6,000 species, ranging across all continents except Antarctica
+                </Typography>
               </CardContent>
-              <CardActions
-                sx={{
-                  display: "flex",
-                  justifyContent: "end",
-                  marginTop: "10px",
-                }}
-              >
-                {/* <Button variant="secondary">Close</Button> */}
-                <Button variant="primary">
-                  <a
-                    href={item.event?.link ? item.event?.link : "/events"}
-                    target="_blank"
-                    style={{
-                      color: "black",
-                      textDecoration: "none",
-                      backgroundColor: "#28104e",
-                      padding: "10px",
-                      borderRadius: "5px",
-                      color: "white",
-                    }}
-                  >
-                    view
-                  </a>
+              <CardActions>
+                <Button size="small" className="Share-learn-more">
+                  Share
+                </Button>
+                <Button size="small" className="Share-learn-more">
+                  Learn More
                 </Button>
               </CardActions>
             </Card>
-          </Grid>
-        ))}
-      </div>
+          </div>
+        </div>
+
+        <h1 style={{ color: "#6237a0", fontFamily: "Roboto" }}>All Events</h1>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          {event.map((item) => (
+            <div className="myCard-style">
+              <Card sx={{ maxWidth: 345, margin: "18px" }}>
+                <CardMedia
+                  sx={{ height: 140 }}
+                  image={bachelor}
+                  title="green iguana"
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    Event Name
+                  </Typography>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <Typography variant="body2" color="text.gray">
+                      <LocationOnRoundedIcon
+                        fontSize="medium"
+                        className="myIcon-style"
+                      />
+                      Location
+                    </Typography>
+                    <Typography variant="body2" color="text.gray">
+                      <CalendarTodayRoundedIcon
+                        fontSize="medium"
+                        className="myIcon-style"
+                      />
+                      04/20/2023
+                    </Typography>
+                  </div>
+
+                  <Typography variant="body2" color="text.secondary">
+                    Lizards are a widespread group of squamate reptiles, with
+                    over 6,000 species, ranging across all continents except
+                    Antarctica
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" className="Share-learn-more">
+                    Share
+                  </Button>
+                  <Button size="small" className="Share-learn-more">
+                    Learn More
+                  </Button>
+                </CardActions>
+              </Card>
+            </div>
+          ))}
+        </div>
+      </Container>
     </>
   );
 }

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.11.0",
     "@mui/styles": "^5.11.13",
     "@mui/utils": "^5.11.13",
