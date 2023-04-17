@@ -83,78 +83,85 @@ function Event() {
             <h2 style={{ color: "#6237a0", fontFamily: "Roboto" }}>
               Upcoming Events
             </h2>
-            {upcommingEvents.map((item) => (
-              <div className="myCard-style">
-                <Card
-                  sx={{
-                    maxWidth: 345,
-                    margin: "15px",
-                    minHeight: 400,
-                    maxHeight: 500,
-                  }}
-                >
-                  <CardMedia
-                    sx={{ height: 200, width: "100%" }}
-                    image={
-                      item.event.eventImage ? item.event.eventImage : bachelor
-                    }
-                    title={item.event.title}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {item.event.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {item.event.description}
-                    </Typography>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginTop: "10px",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <CalendarTodayRoundedIcon
-                          sx={{ color: "#6237a0", marginRight: "5px" }}
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                          {new Date(item.event.date).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            }
-                          )}
-                        </Typography>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+              }}
+            >
+              {upcommingEvents.map((item) => (
+                <div style={{}}>
+                  <Card
+                    sx={{
+                      maxWidth: 345,
+                      margin: "15px",
+                      minHeight: 400,
+                      maxHeight: 500,
+                    }}
+                  >
+                    <CardMedia
+                      sx={{ height: 200, width: "100%" }}
+                      image={
+                        item.event.eventImage ? item.event.eventImage : bachelor
+                      }
+                      title={item.event.title}
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {item.event.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {item.event.description}
+                      </Typography>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          marginTop: "10px",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <CalendarTodayRoundedIcon
+                            sx={{ color: "#6237a0", marginRight: "5px" }}
+                          />
+                          <Typography variant="body2" color="text.secondary">
+                            {new Date(item.event.date).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              }
+                            )}
+                          </Typography>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <LocationOnRoundedIcon
+                            sx={{ color: "#6237a0", marginRight: "5px" }}
+                          />
+                          <Typography variant="body2" color="text.secondary">
+                            {item.event.location}
+                          </Typography>
+                        </div>
                       </div>
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <LocationOnRoundedIcon
-                          sx={{ color: "#6237a0", marginRight: "5px" }}
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                          {item.event.location}
-                        </Typography>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      size="small"
-                      color="primary"
-                      style={{
-                        color: "#6237a0",
-                      }}
-                      href={item.event.link ? item.event.link : "#"}
-                      target="_blank"
-                    >
-                      Know More
-                    </Button>
-                  </CardActions>
-                </Card>
-              </div>
-            ))}
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        size="small"
+                        color="primary"
+                        style={{
+                          color: "#6237a0",
+                        }}
+                        href={item.event.link ? item.event.link : "#"}
+                        target="_blank"
+                      >
+                        Know More
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </div>
+              ))}
+            </div>
           </div>
           <div style={{ width: "100%" }}>
             <h2 style={{ color: "#6237a0", fontFamily: "Roboto" }}>

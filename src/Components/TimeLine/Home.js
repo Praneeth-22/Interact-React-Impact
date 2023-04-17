@@ -759,8 +759,9 @@ function Home(props) {
             {articles.length > 0 &&
               filteredArticles?.map(({ id, article }) => {
                 const isCurrentUser =
-                  user && article.actor.email === user.email;
-                const isCurrArticle = articleId === id;
+                  user &&
+                  (article.actor.email === user.email ||
+                    user.email === "yennampraneeth@gmail.com")
                 return (
                   <>
                     <Article key={id}>
@@ -793,7 +794,7 @@ function Home(props) {
                                   .toDate()
                                   .toLocaleDateString()}
                             </span>
-                            <span>{article?.tag}</span>
+                            {/* <span>{article?.tag}</span> */}
                           </div>
                         </a>
                         {isCurrentUser && (
@@ -846,7 +847,12 @@ function Home(props) {
                             <Modal
                               show={editPost}
                               onHide={handleEditClose}
-                              sx={{}}
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                
+                              }}
                             >
                               <Modal.Header closeButton>
                                 <Modal.Title
@@ -861,7 +867,7 @@ function Home(props) {
                               </Modal.Header>
                               <Modal.Body>
                                 <div>
-                                  <div>
+                                 
                                     <div
                                       style={{
                                         display: "flex",
@@ -894,9 +900,7 @@ function Home(props) {
                                         size="small"
                                         sx={{
                                           margin: "5px",
-                                          width: "100%",
-                                          height: "100%",
-                                          
+                                      
                                         }}
                                       />
                                       {article.sharedImg ? (
@@ -942,35 +946,21 @@ function Home(props) {
                                       )}
                                     </div>
                                     <div></div>
-                                  </div>
+                               
                                 </div>
                               </Modal.Body>
                               <Modal.Footer>
                                 <Button
                                   variant="secondary"
                                   onClick={handleEditClose}
-                                  sx={{
-                                    background: "#fff",
-                                    color: "#000",
-                                    "&:hover": {
-                                      background: "#fff",
-                                      color: "#000",
-                                    },
-                                  }}
+                                 
                                 >
                                   Close
                                 </Button>
                                 <Button
                                   variant="primary"
                                   onClick={(handleEditClose, handleEditPost)}
-                                  sx={{
-                                    background: "#6237a0",
-                                    color: "#fff",
-                                    "&:hover": {
-                                      background: "#6237a0",
-                                      color: "#fff",
-                                    },
-                                  }}
+                                  
                                 >
                                   Save Changes
                                 </Button>
@@ -1008,7 +998,11 @@ function Home(props) {
                           <span className="right floated">
                             <i className="comment icon"></i>
                             {comments[id]?.length ? comments[id]?.length : 0}
-                            <span style={{ margin: "0px 5px" }}>comments</span>
+                            <span
+                              style={{ margin: "0px 5px", color: "#6237a0" }}
+                            >
+                              comments
+                            </span>
                           </span>
                           <span className="left floated">
                             <i
@@ -1017,7 +1011,9 @@ function Home(props) {
                                 handleLikes(event, id);
                               }}
                             ></i>
-                            <span style={{ margin: "0px 5px" }}>
+                            <span
+                              style={{ margin: "0px 5px", color: "#6237a0" }}
+                            >
                               {article.likes ? article.likes.length : 0} likes
                             </span>
                           </span>
@@ -1056,6 +1052,10 @@ function Home(props) {
                                 }}
                                 type="submit"
                                 disabled={!newComment}
+                                style={{
+                                  color: "#fff",
+                                  backgroundColor: "#6237a0",
+                                }}
                               >
                                 comment
                               </button>
@@ -1063,7 +1063,7 @@ function Home(props) {
                           </form>
                           <div class="ui divider"></div>
                           {comments[id]?.map((comment, index) => {
-                            if (!showAllComments && index >= 3) return null;
+                            if (!showAllComments && index >= 2) return null;
                             return (
                               <>
                                 <div
@@ -1089,7 +1089,10 @@ function Home(props) {
                                       />
                                     </i>
                                     <div className="content left float ">
-                                      <a className="header left float">
+                                      <a className="header left float" style={{
+                                        color: "#6237a0",
+                                        fontWeight: "bold",
+                                      }}>
                                         {comment.username}
                                       </a>
                                       <div className="description">
