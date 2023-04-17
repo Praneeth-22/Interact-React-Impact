@@ -10,7 +10,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import { useUserAuth } from "../../context/UserContextApi";
 // import bachelor from "../../images/bachelors-sim-science-gaming-animation-2021.jpg";
-import bachelor from '.././TimeLine/Images/user.png'
+import bachelor from ".././TimeLine/Images/user.png";
 import { TextField, InputAdornment } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 
@@ -23,14 +23,30 @@ import "./TimeLineCss/Events.css";
 function Event() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { user, event, getEventsAPI } = useUserAuth();
-
+  const [sortedEvents, setSortedEvents] = useState([]);
+  const [upcommingEvents, setUpcommingEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
+  console.log("---------------------all event-----------", event);
   useEffect(() => {
     const unsubscribe = getEventsAPI();
     return () => {
       unsubscribe();
     };
   }, []);
+  useEffect(() => {
+    // Sort events based on date in ascending order
+    const sorted = [...event].sort(
+      (a, b) => new Date(a.event.date) - new Date(b.event.date)
+    );
+    setSortedEvents(sorted);
 
+    // Filter upcoming and past events
+    const today = new Date();
+    const upcoming = sorted.filter((e) => new Date(e.event.date) >= today);
+    const past = sorted.filter((e) => new Date(e.event.date) < today);
+    setUpcommingEvents(upcoming);
+    setPastEvents(past);
+  }, [event]);
   return (
     <>
       <Header />
@@ -51,103 +67,10 @@ function Event() {
               justifyContent: "space-between",
               alignItems: "center",
             }}
-          >
-            <div>
-              <TextField
-                id="input-with-icon-textfield"
-                label="Search"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <FormControl variant="standard" sx={{ m: 1, minWidth: 150 }}>
-                <InputLabel id="demo-simple-select-standard-label">
-                  Sort By
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  label="Sort By"
-                >
-                  <MenuItem value={10}>Date</MenuItem>
-                  <MenuItem value={20}>Name</MenuItem>
-                </Select>
-              </FormControl>
-              <SortIcon fontSize="large" />
-            </div>
-          </div>
-        </div>
-        <div>
-          <h1 style={{ color: "#6237a0", fontFamily: "Roboto" }}>
-            Recommended Events
-          </h1>
-
-          <div className="myCard-style">
-            <Card sx={{ maxWidth: 345, margin: "18px" }}>
-              <CardMedia
-                sx={{ height: 140 }}
-                image={bachelor}
-                title="green iguana"
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  Event Name
-                </Typography>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <Typography variant="body2" color="text.gray">
-                    <LocationOnRoundedIcon
-                      fontSize="medium"
-                      className="myIcon-style"
-                    />
-                    Location
-                  </Typography>
-                  <Typography variant="body2" color="text.gray">
-                    <CalendarTodayRoundedIcon
-                      fontSize="medium"
-                      className="myIcon-style"
-                    />
-                    04/20/2023
-                  </Typography>
-                </div>
-
-                <Typography variant="body2" color="text.secondary">
-                  Lizards are a widespread group of squamate reptiles, with over
-                  6,000 species, ranging across all continents except Antarctica
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small" className="Share-learn-more">
-                  Share
-                </Button>
-                <Button size="small" className="Share-learn-more">
-                  Learn More
-                </Button>
-              </CardActions>
-            </Card>
-          </div>
+          ></div>
         </div>
 
-        <h1 style={{ color: "#6237a0", fontFamily: "Roboto" }}>All Events</h1>
-
+        {/* <h1 style={{ color: "#6237a0", fontFamily: "Roboto" }}>All Events</h1> */}
         <div
           style={{
             display: "flex",
@@ -156,59 +79,141 @@ function Event() {
             flexWrap: "wrap",
           }}
         >
-          {event.map((item) => (
-            <div className="myCard-style">
-              <Card sx={{ maxWidth: 345, margin: "18px" }}>
-                <CardMedia
-                  sx={{ height: 140 }}
-                  image={bachelor}
-                  title="green iguana"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Event Name
-                  </Typography>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <Typography variant="body2" color="text.gray">
-                      <LocationOnRoundedIcon
-                        fontSize="medium"
-                        className="myIcon-style"
-                      />
-                      Location
+          <div style={{ width: "100%" }}>
+            <h2 style={{ color: "#6237a0", fontFamily: "Roboto" }}>
+              Upcoming Events
+            </h2>
+            {upcommingEvents.map((item) => (
+              <div className="myCard-style">
+                <Card
+                  sx={{
+                    maxWidth: 345,
+                    margin: "15px",
+                    minHeight: 400,
+                    maxHeight: 500,
+                  }}
+                >
+                  <CardMedia
+                    sx={{ height: 200, width: "100%" }}
+                    image={
+                      item.event.eventImage ? item.event.eventImage : bachelor
+                    }
+                    title={item.event.title}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {item.event.title}
                     </Typography>
-                    <Typography variant="body2" color="text.gray">
+                    <Typography variant="body2" color="text.secondary">
+                      {item.event.description}
+                    </Typography>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: "10px",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <CalendarTodayRoundedIcon
+                          sx={{ color: "#6237a0", marginRight: "5px" }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {new Date(item.event.date).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )}
+                        </Typography>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <LocationOnRoundedIcon
+                          sx={{ color: "#6237a0", marginRight: "5px" }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {item.event.location}
+                        </Typography>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      color="primary"
+                      style={{
+                        color: "#6237a0",
+                      }}
+                      href={item.event.link ? item.event.link : "#"}
+                      target="_blank"
+                    >
+                      Know More
+                    </Button>
+                  </CardActions>
+                </Card>
+              </div>
+            ))}
+          </div>
+          <div style={{ width: "100%" }}>
+            <h2 style={{ color: "#6237a0", fontFamily: "Roboto" }}>
+              Past Events
+            </h2>
+            {pastEvents.map((item) => (
+              <div className="myCard-style">
+                <Card
+                  sx={{
+                    maxWidth: 345,
+                    margin: "15px",
+                    minHeight: 400,
+                    maxHeight: 500,
+                  }}
+                >
+                  <CardMedia
+                    sx={{ height: 200, width: "100%" }}
+                    image={
+                      item.event.eventImage ? item.event.eventImage : bachelor
+                    }
+                    title={item.event.title}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {item.event.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {item.event.description}
+                    </Typography>
+                    <div style={{ display: "flex", alignItems: "center" }}>
                       <CalendarTodayRoundedIcon
-                        fontSize="medium"
-                        className="myIcon-style"
+                        sx={{ color: "#6237a0", marginRight: "5px" }}
                       />
-                      04/20/2023
-                    </Typography>
-                  </div>
-
-                  <Typography variant="body2" color="text.secondary">
-                    Lizards are a widespread group of squamate reptiles, with
-                    over 6,000 species, ranging across all continents except
-                    Antarctica
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small" className="Share-learn-more">
-                    Share
-                  </Button>
-                  <Button size="small" className="Share-learn-more">
-                    Learn More
-                  </Button>
-                </CardActions>
-              </Card>
-            </div>
-          ))}
+                      <Typography variant="body2" color="text.secondary">
+                        {new Date(item.event.date).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </Typography>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <LocationOnRoundedIcon
+                        sx={{ color: "#6237a0", marginRight: "5px" }}
+                      />
+                      <Typography variant="body2" color="text.secondary">
+                        {item.event.location}
+                      </Typography>
+                    </div>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small" color="primary">
+                      Learn More
+                    </Button>
+                  </CardActions>
+                </Card>
+              </div>
+            ))}
+          </div>
         </div>
       </Container>
     </>

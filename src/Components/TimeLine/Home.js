@@ -56,6 +56,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import firebase from "firebase/compat/app";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
+import { Label } from "@material-ui/icons";
+import { filter } from "lodash";
 //
 function Home(props) {
   const navigate = useNavigate();
@@ -93,6 +95,7 @@ function Home(props) {
     userimage: "",
     eventId: "",
     timestamp: null,
+    eventImage: "",
   });
   //comment
 
@@ -174,7 +177,7 @@ function Home(props) {
     setEmail(prepareData?.email);
 
     getArticlesAPI();
-    console.log("home page user: ", user);
+    // console.log("home page user: ", user);
   }, []);
 
   const handleLikes = (e, articleId) => {
@@ -193,19 +196,26 @@ function Home(props) {
     const userName = user.displayName;
     const userImg = user.avatarUrl;
     const EventId = Math.floor(Math.random() * 1000000000);
+    // storing the eventImage into storage in firebase
+    const storageRef = ref(storage, `eventImages/${EventId}`);
+    const uploadTask = await uploadBytes(storageRef, eventInfo.eventImage);
+    const downloadURL = await getDownloadURL(uploadTask.ref);
+    // console.log("downloadURL: ", downloadURL);
+    // alert("Event added successfull");
     const preparedData = {
       ...eventInfo,
       uploadBy: userName,
       userimage: userImg,
       eventId: EventId,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      eventImage: downloadURL,
     };
-    console.log("-----------event-----------------------", event);
-    console.log("eventInfo: ", eventInfo);
+    // console.log("-----------event-----------------------", event);
+    // console.log("eventInfo: ", eventInfo);
     try {
       // add event info into a new document in the events collection
       const docRef = await addDoc(collection(db, "events"), preparedData);
-      console.log("Document written with ID: ", docRef.id);
+      // console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       console.error("Error adding event: ", error);
     }
@@ -218,6 +228,9 @@ function Home(props) {
       location: "",
       uploadBy: "",
       userimage: "",
+      eventId: "",
+      timestamp: null,
+      eventImage: "",
     });
   };
   //location
@@ -267,14 +280,14 @@ function Home(props) {
   //
   const deleteArticle = async (id) => {
     alert("Are you sure you want to delete this article?");
-    console.log(
-      "--------------going to delete article id:---------------- ",
-      id
-    );
+    // console.log(
+    //   "--------------going to delete article id:---------------- ",
+    //   id
+    // );
     try {
       const docRef = doc(db, "articles", id);
       await deleteDoc(docRef);
-      console.log("Document successfully deleted!");
+      // console.log("Document successfully deleted!");
     } catch (error) {
       console.error("Error removing document: ", error);
     }
@@ -282,7 +295,7 @@ function Home(props) {
   const editTest = async (id) => {
     // alert("Are you sure you want to edit this article?");
     // console.log("--------------going to edit article id:---------------- ", articleId);
-    console.log("--------------going to edit article id:---------------- ", id);
+    // console.log("--------------going to edit article id:---------------- ", id);
 
     articles.map((article) => {
       if (article.id === id) {
@@ -295,10 +308,10 @@ function Home(props) {
             video: article.article?.video,
           },
         };
-        console.log(
-          "-------------preEditArticle:----------------- ",
-          preEditArticle
-        );
+        // console.log(
+        //   "-------------preEditArticle:----------------- ",
+        //   preEditArticle
+        // );
         setGetArticle(preEditArticle);
       }
     });
@@ -332,59 +345,81 @@ function Home(props) {
 
   const selectNewImage = () => {
     // e.preventDefault();
-    console.log("-------------selectNewImage:----------------- ");
+    // console.log("-------------selectNewImage:----------------- ");
   };
   // handle edited post
   const handleEditPost = async () => {
     //editing the article in the database
     // e.preventDefault();
-    console.log("-----------article-----------------------", getArticle);
-    console.log(
-      "-------------handleEditPost:----------------- ",
-      getArticle.id
-    );
+    // console.log("-----------article-----------------------", getArticle);
+    // console.log(
+    //   "-------------handleEditPost:----------------- ",
+    //   getArticle.id
+    // );
     //update the firebase database with id equals  getArticle.id
     // const articleRef = doc(db, "articles", getArticle.id);
-    console.log("-----------articleRef-----------------------", articles);
+    // console.log("-----------articleRef-----------------------", articles);
     //map through the articles array and find the article with the id that matches getArticle.id
     let artRef;
     articles.map((article) => {
       // console.log("id", article.id, "getArticle.id", getArticle.id);
       if (article.id === getArticle.id) {
-        console.log("-------------test article:----------------- ", article);
+        // console.log("-------------test article:----------------- ", article);
         artRef = article.id;
       }
     });
-    console.log("-----------artRef-----------------------", artRef);
+    // console.log("-----------artRef-----------------------", artRef);
     const articleRef = doc(db, "articles", artRef);
     //print the articleRef collection data to the console
     const articleRefData = await getDoc(articleRef);
-    console.log(
-      "-----------articleRefData-----------------------",
-      articleRefData.data()
-    );
+    // console.log(
+    //   "-----------articleRefData-----------------------",
+    //   articleRefData.data()
+    // );
     //update the articleRef collection with the the updated description
     await updateDoc(articleRef, {
       ...articleRefData.data(),
       description: getArticle.article.description,
     });
-    console.log(
-      "-----------articleRefData-----------------------",
-      articleRefData.data()
-    );
+    // console.log(
+    //   "-----------articleRefData-----------------------",
+    //   articleRefData.data()
+    // );
     //close the edit modal
     handleEditClose();
   };
   //handle category change
   const [value1, setValue1] = React.useState(0);
-  const [categoryName, setCategoryName] = useState("All");
+  const [filteredArticles, setFilteredArticles] = useState([]);
+  const [activeTag, setActiveTag] = useState("All");
+
   const handleChange = (event, newValue) => {
-    const tabLabel = event.target.innerText;
-    console.log("Selected tab label:", tabLabel);
+    //const tabLabel = event.target.innerText;
+    setActiveTag(event.target.innerText)
+    //console.log("Selected tab label:", tabLabel);
     setValue1(newValue);
-    setCategoryName(tabLabel);
-    console.log("-------------handleChange:----------------- ", value1);
+    //setActiveTag(tabLabel);
+    //console.log("Selected ", activeTag);
+    // console.log("-------------handleChange:----------------- ", value1);
   };
+  const getFilteredArticles = async (tag) => {
+    console.log("-------------getFilteredArticles:----------------- ", tag);
+    const filteredArticles = articles.filter((article) => article.tag === tag);
+    console.log("-------------getFilteredArticles filtered:----------------- ", filteredArticles);
+    setFilteredArticles(filteredArticles);
+  };
+  useEffect(() => {
+    if (activeTag === "All") {
+      setFilteredArticles(articles);
+    } else {
+      console.log("-------------useEffect activeTag:----------------- ", activeTag);
+      getFilteredArticles(activeTag);
+    }
+    // console.log("-------------useEffect filtered:----------------- ", filteredArticles);
+  }, [activeTag, articles]);
+  useEffect(() => {
+    // console.log("Filtered Articles: ", filteredArticles);
+  }, [filteredArticles]);
   return (
     <div
       style={{
@@ -694,9 +729,8 @@ function Home(props) {
           {/* display loader */}
           {isSubmitting && <CircularProgress />}
           <Content>
-            {categoryName === "All" &&
-              articles.length > 0 &&
-              articles?.map(({ id, article }) => {
+            {articles.length > 0 &&
+              filteredArticles?.map(({ id, article }) => {
                 const isCurrentUser =
                   user && article.actor.email === user.email;
                 const isCurrArticle = articleId === id;
@@ -732,6 +766,7 @@ function Home(props) {
                                   .toDate()
                                   .toLocaleDateString()}
                             </span>
+                            <span>{article?.tag}</span>
                           </div>
                         </a>
                         {isCurrentUser && (
@@ -1196,6 +1231,26 @@ function Home(props) {
                 //   shrink: true,
                 // }}
               />
+              {/* <TextFiel */}
+              <input
+                type="file"
+                accept="image/gif, image/jpeg, image/png"
+                name="image"
+                id="file"
+                // style={{ display: "none" }}
+                onChange={(e) => {
+                  setEventInfo({
+                    ...eventInfo,
+                    eventImage: e.target.files[0],
+                  });
+                  // alert("Image uploaded");
+                }}
+              />
+              <p>
+                <label htmlFor="file" className="label">
+                  Select an image
+                </label>
+              </p>
             </Box>
           </Modal.Body>
           <Modal.Footer>

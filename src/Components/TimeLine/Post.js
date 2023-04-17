@@ -193,7 +193,7 @@ function Post(props) {
                     onChange={handleCatChange}
                   >
                     <FormControlLabel
-                      value="Sport"
+                      value="Sports"
                       control={<Radio />}
                       label="sport"
                     />
