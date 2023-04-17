@@ -760,8 +760,7 @@ function Home(props) {
               filteredArticles?.map(({ id, article }) => {
                 const isCurrentUser =
                   user &&
-                  (article.actor.email === user.email ||
-                    user.email === "yennampraneeth@gmail.com")
+                  (article.actor.email === user.email )
                 return (
                   <>
                     <Article key={id}>
@@ -900,7 +899,7 @@ function Home(props) {
                                         size="small"
                                         sx={{
                                           margin: "5px",
-                                      
+                                          width: "90%",
                                         }}
                                       />
                                       {article.sharedImg ? (
@@ -929,18 +928,7 @@ function Home(props) {
                                               width={"100%"}
                                               url={getArticle.article.video}
                                             />
-                                            <TextField
-                                              id="outlined-basic"
-                                              label="video link"
-                                              variant="outlined"
-                                              value={getArticle.video}
-                                              size="small"
-                                              sx={{
-                                                width: "100%",
-                                                height: "100%",
-                                                margin: "5px",
-                                              }}
-                                            />
+                                            
                                           </div>
                                         )
                                       )}

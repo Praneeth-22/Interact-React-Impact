@@ -43,6 +43,12 @@ const [isSubmitting, setIsSubmitting] = useState(false);
       console.log(error.message);
     }
   };
+  //
+  const [showChatBot, setShowChatBot] = useState(false);
+
+  const handleChatBotToggle = () => {
+    setShowChatBot(!showChatBot);
+  };
   return (
     <div className="loginpage">
       <nav className="navbar navbar-expand-lg navbar-light  fixed-top">
@@ -194,7 +200,8 @@ const [isSubmitting, setIsSubmitting] = useState(false);
             </form>
           </div>
         </div>
-        <ChatBotIcon />
+        {/* <button onClick={handleChatBotToggle}>Toggle ChatBot</button> */}
+        {/* {showChatBot && <ChatBotIcon />} */}
       </div>
     </div>
   );
