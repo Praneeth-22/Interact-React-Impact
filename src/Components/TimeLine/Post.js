@@ -135,7 +135,7 @@ function Post(props) {
                   color: "#28104E",
                   fontWeight: "bold",
                   fontSize: "20px",
-                  letterSpacing: "1px",
+                  letterSpacing: "1.5px",
                 }}
               >
                 Create a Post
