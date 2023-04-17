@@ -90,7 +90,7 @@ function MyEvent() {
               cursor: "pointer",
             }}
           >
-            {item.event.university}
+            {item.event.university} &nbsp;
           </span>
           <span
             style={{
