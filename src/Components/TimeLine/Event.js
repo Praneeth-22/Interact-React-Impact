@@ -184,25 +184,36 @@ function Event() {
                     <Typography variant="body2" color="text.secondary">
                       {item.event.description}
                     </Typography>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <CalendarTodayRoundedIcon
-                        sx={{ color: "#6237a0", marginRight: "5px" }}
-                      />
-                      <Typography variant="body2" color="text.secondary">
-                        {new Date(item.event.date).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </Typography>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <LocationOnRoundedIcon
-                        sx={{ color: "#6237a0", marginRight: "5px" }}
-                      />
-                      <Typography variant="body2" color="text.secondary">
-                        {item.event.location}
-                      </Typography>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: "10px",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <CalendarTodayRoundedIcon
+                          sx={{ color: "#6237a0", marginRight: "5px" }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {new Date(item.event.date).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )}
+                        </Typography>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <LocationOnRoundedIcon
+                          sx={{ color: "#6237a0", marginRight: "5px" }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {item.event.location}
+                        </Typography>
+                      </div>
                     </div>
                   </CardContent>
                   <CardActions>

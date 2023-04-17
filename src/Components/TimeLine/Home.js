@@ -394,18 +394,19 @@ function Home(props) {
   const [activeTag, setActiveTag] = useState("All");
 
   const handleChange = (event, newValue) => {
-    //const tabLabel = event.target.innerText;
-    setActiveTag(event.target.innerText)
-    //console.log("Selected tab label:", tabLabel);
+    let eve = event.target.innerText;
+    if (eve === undefined) {
+      eve = "All";
+    }
+    setActiveTag(eve);
+
     setValue1(newValue);
-    //setActiveTag(tabLabel);
-    //console.log("Selected ", activeTag);
-    // console.log("-------------handleChange:----------------- ", value1);
   };
   const getFilteredArticles = async (tag) => {
-    console.log("-------------getFilteredArticles:----------------- ", tag);
-    const filteredArticles = articles.filter((article) => article.tag === tag);
-    console.log("-------------getFilteredArticles filtered:----------------- ", filteredArticles);
+    const filteredArticles = articles.filter((article) => {
+      return article.article.tag === tag;
+    });
+
     setFilteredArticles(filteredArticles);
   };
   useEffect(() => {
