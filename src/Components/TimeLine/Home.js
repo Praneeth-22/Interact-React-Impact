@@ -421,6 +421,11 @@ function Home(props) {
   useEffect(() => {
     // console.log("Filtered Articles: ", filteredArticles);
   }, [filteredArticles]);
+  //more comments
+  const [showAllComments, setShowAllComments] = useState(false);
+  const handleShowAllComments = () => {
+    setShowAllComments(true);
+  };
   return (
     <div
       style={{
@@ -725,6 +730,27 @@ function Home(props) {
                   textTransform: "capitalize",
                 }}
               />
+              <Tab
+                label="
+              Activities"
+                icon={<CelebrationIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
+              <Tab
+                label="Workshops"
+                icon={<ConstructionOutlinedIcon />}
+                iconPosition="start"
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: "1.5px",
+                  textTransform: "capitalize",
+                }}
+              />
             </Tabs>
           </div>
           {/* display loader */}
@@ -868,6 +894,9 @@ function Home(props) {
                                         size="small"
                                         sx={{
                                           margin: "5px",
+                                          width: "100%",
+                                          height: "100%",
+                                          
                                         }}
                                       />
                                       {article.sharedImg ? (
@@ -920,12 +949,28 @@ function Home(props) {
                                 <Button
                                   variant="secondary"
                                   onClick={handleEditClose}
+                                  sx={{
+                                    background: "#fff",
+                                    color: "#000",
+                                    "&:hover": {
+                                      background: "#fff",
+                                      color: "#000",
+                                    },
+                                  }}
                                 >
                                   Close
                                 </Button>
                                 <Button
                                   variant="primary"
                                   onClick={(handleEditClose, handleEditPost)}
+                                  sx={{
+                                    background: "#6237a0",
+                                    color: "#fff",
+                                    "&:hover": {
+                                      background: "#6237a0",
+                                      color: "#fff",
+                                    },
+                                  }}
                                 >
                                   Save Changes
                                 </Button>
@@ -1017,43 +1062,65 @@ function Home(props) {
                             </div>
                           </form>
                           <div class="ui divider"></div>
-                          {comments[id]?.slice(0, 3).map((comment) => (
-                            <>
-                              <div
-                                className="ui relaxed divided list"
-                                style={{ display: "flex", margin: "0px 30px" }}
-                              >
-                                <div className="item">
-                                  <i
-                                    className="large middle aligned icon"
-                                    style={{}}
-                                  >
-                                    <img
-                                      src={comment.userImg}
-                                      alt="user"
-                                      style={{
-                                        borderRadius: "50%",
-                                        width: "40px",
-                                        height: "40px",
-                                      }}
-                                    />
-                                  </i>
-                                  <div className="content left float ">
-                                    <a className="header left float">
-                                      {comment.username}
-                                    </a>
-                                    <div className="description">
-                                      {comment.text}
+                          {comments[id]?.map((comment, index) => {
+                            if (!showAllComments && index >= 3) return null;
+                            return (
+                              <>
+                                <div
+                                  className="ui relaxed divided list"
+                                  style={{
+                                    display: "flex",
+                                    margin: "0px 30px",
+                                  }}
+                                >
+                                  <div className="item">
+                                    <i
+                                      className="large middle aligned icon"
+                                      style={{}}
+                                    >
+                                      <img
+                                        src={comment.userImg}
+                                        alt="user"
+                                        style={{
+                                          borderRadius: "50%",
+                                          width: "40px",
+                                          height: "40px",
+                                        }}
+                                      />
+                                    </i>
+                                    <div className="content left float ">
+                                      <a className="header left float">
+                                        {comment.username}
+                                      </a>
+                                      <div className="description">
+                                        {comment.text}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div
-                                class="ui divider"
-                                style={{ margin: "10px 30px" }}
-                              ></div>
-                            </>
-                          ))}
+                                <div
+                                  class="ui divider"
+                                  style={{ margin: "10px 30px" }}
+                                ></div>
+                              </>
+                            );
+                          })}
+                          {comments[id]?.length > 3 && !showAllComments && (
+                            <div
+                              className="ui basic button"
+                              onClick={handleShowAllComments}
+                            >
+                              Show more
+                            </div>
+                          )}
+                          {comments[id]?.length > 3 && showAllComments && (
+                            <div
+                              className="ui basic button"
+                              onClick={() => setShowAllComments(false)}
+                            >
+                              Show less
+                            </div>
+                          )}
                         </div>
                       </div>
                     </Article>

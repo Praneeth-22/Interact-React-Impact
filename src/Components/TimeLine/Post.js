@@ -207,6 +207,16 @@ function Post(props) {
                       control={<Radio />}
                       label="Career & Jobs"
                     />
+                    <FormControlLabel
+                      value="Activities"
+                      control={<Radio />}
+                      label="Activities"
+                    />
+                    <FormControlLabel
+                      value="Workshops"
+                      control={<Radio />}
+                      label="Workshops"
+                    />
                   </RadioGroup>
                 </FormControl>
                 <textarea
