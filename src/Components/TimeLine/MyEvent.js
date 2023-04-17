@@ -31,22 +31,22 @@ function MyEvent() {
   const [currentEvent, setCurrentEvent] = useState({});
 
   const settingCurrentEVent = (id) => {
-    console.log("clicked", id);
+    // console.log("clicked", id);
     event.map((item) => {
       if (item.id === id) {
         setCurrentEvent(item);
       }
     });
   };
-  console.log("selected event", currentEvent);
+  // console.log("selected event", currentEvent);
   const handleCurrentEVent = (e, id) => {
     e.preventDefault();
-    console.log("clicked", id);
+    // console.log("clicked", id);
     handleShow();
     setEventId(id);
     settingCurrentEVent(id);
   };
-console.log("................. Sorting events.................");
+// console.log("................. Sorting events.................");
 //   const sortedEvents = [...event].sort((a, b) => {
 //     return b.timestamp - a.timestamp;
 //   });
@@ -54,7 +54,7 @@ console.log("................. Sorting events.................");
 //    .sort((a, b) => new Date(a.event.date) - new Date(b.event.date))
 //    .slice(0, 3);
 // const top3Events = sortedEvents.slice(0, 3);
-  console.log(".................", event, ".................");
+  // console.log(".................", event, ".................");
 
   const myDetails = event.slice(0,3).map((item) => {
     return (

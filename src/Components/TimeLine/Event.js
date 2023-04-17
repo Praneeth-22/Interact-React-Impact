@@ -1,167 +1,232 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header";
-import Popover from "@mui/material/Popover";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { makeStyles } from "@mui/styles";
 import CardActions from "@mui/material/CardActions";
-import Grid from "@mui/material/Grid";
-import {
-  addDoc,
-  getDocs,
-  collection,
-  query,
-  orderBy,
-  onSnapshot,
-  setDoc,
-  doc,
-  where,
-  updateDoc,
-} from "firebase/firestore";
-import { db } from "../../firebase_service";
-import { useUserAuth } from "../../context/UserContextApi";
+
+import Container from "@mui/material/Container";
+import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
+import { useUserAuth } from "../../context/UserContextApi";
+// import bachelor from "../../images/bachelors-sim-science-gaming-animation-2021.jpg";
+import bachelor from ".././TimeLine/Images/user.png";
+import { TextField, InputAdornment } from "@material-ui/core";
+import { Search } from "@material-ui/icons";
+
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import SortIcon from "@mui/icons-material/Sort";
+import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
+import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
+import "./TimeLineCss/Events.css";
 
 function Event() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [events, setEvents] = useState([]);
   const { user, event, getEventsAPI } = useUserAuth();
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-  const open = Boolean(anchorEl);
+  const [sortedEvents, setSortedEvents] = useState([]);
+  const [upcommingEvents, setUpcommingEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
+  console.log("---------------------all event-----------", event);
   useEffect(() => {
     const unsubscribe = getEventsAPI();
     return () => {
       unsubscribe();
     };
   }, []);
+  useEffect(() => {
+    // Sort events based on date in ascending order
+    const sorted = [...event].sort(
+      (a, b) => new Date(a.event.date) - new Date(b.event.date)
+    );
+    setSortedEvents(sorted);
 
+    // Filter upcoming and past events
+    const today = new Date();
+    const upcoming = sorted.filter((e) => new Date(e.event.date) >= today);
+    const past = sorted.filter((e) => new Date(e.event.date) < today);
+    setUpcommingEvents(upcoming);
+    setPastEvents(past);
+  }, [event]);
   return (
     <>
       <Header />
-      <div>
-        {event.map((item) => (
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Card
-              key={item.event?.id}
-              sx={{
-                width: "400px",
-                height: "250px",
-                margin: "10px",
-                padding: "10px",
-                boxShadow: "0 0 10px 0 rgba(0,0,0,0.2)",
-                borderRadius: "10px",
-                backgroundColor: "#fff",
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                  transform: "translateY(-2px)",
-                  boxShadow: "0 0 20px 0 rgba(0,0,0,0.2)",
-                },
-              }}
-            >
-              <CardContent>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  style={{
-                    color: "#28104e",
-                    fontWeight: 600,
-                    alignItems: "center",
-                    letterSpacing: "1px",
-                  }}
-                >
-                  {item.event?.title} {"-"} {item.event?.university}
-                </Typography>
-                <Typography
-                  gutterBottom
+      <Container className="py-4" style={{ backgroundColor: "	#F5F5F5" }}>
+        <div style={{ marginBottom: "10px" }}>
+          <h1
+            style={{
+              color: "#6237a0",
+              fontFamily: "Roboto",
+              fontWeight: "700",
+            }}
+          >
+            Let us explore the events
+          </h1>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          ></div>
+        </div>
+
+        {/* <h1 style={{ color: "#6237a0", fontFamily: "Roboto" }}>All Events</h1> */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ width: "100%" }}>
+            <h2 style={{ color: "#6237a0", fontFamily: "Roboto" }}>
+              Upcoming Events
+            </h2>
+            {upcommingEvents.map((item) => (
+              <div className="myCard-style">
+                <Card
                   sx={{
-                    color: "#4A1D91",
-                    // overflowY: "scroll",
+                    maxWidth: 345,
+                    margin: "15px",
+                    minHeight: 400,
+                    maxHeight: 500,
                   }}
-                  aria-owns={open ? "mouse-over-popover" : undefined}
-                  aria-haspopup="true"
-                  onMouseEnter={handlePopoverOpen}
-                  onMouseLeave={handlePopoverClose}
                 >
-                  {item.event?.description}
-                </Typography>
-                {/* <Popover
-              id="mouse-over-popover"
-              sx={{
-                pointerEvents: "none",
-              }}
-              open={open}
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              onClose={handlePopoverClose}
-              disableRestoreFocus
-            >
-              <Typography sx={{ p: 1 }}>{item.event?.description}</Typography>
-            </Popover> */}
-                <Typography
+                  <CardMedia
+                    sx={{ height: 200, width: "100%" }}
+                    image={
+                      item.event.eventImage ? item.event.eventImage : bachelor
+                    }
+                    title={item.event.title}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {item.event.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {item.event.description}
+                    </Typography>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: "10px",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <CalendarTodayRoundedIcon
+                          sx={{ color: "#6237a0", marginRight: "5px" }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {new Date(item.event.date).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )}
+                        </Typography>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <LocationOnRoundedIcon
+                          sx={{ color: "#6237a0", marginRight: "5px" }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {item.event.location}
+                        </Typography>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      color="primary"
+                      style={{
+                        color: "#6237a0",
+                      }}
+                      href={item.event.link ? item.event.link : "#"}
+                      target="_blank"
+                    >
+                      Know More
+                    </Button>
+                  </CardActions>
+                </Card>
+              </div>
+            ))}
+          </div>
+          <div style={{ width: "100%" }}>
+            <h2 style={{ color: "#6237a0", fontFamily: "Roboto" }}>
+              Past Events
+            </h2>
+            {pastEvents.map((item) => (
+              <div className="myCard-style">
+                <Card
                   sx={{
-                    color: "#4A1D91",
+                    maxWidth: 345,
+                    margin: "15px",
+                    minHeight: 400,
+                    maxHeight: 500,
                   }}
                 >
-                  {item.event?.date}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#4A1D91",
-                  }}
-                >
-                  {item.event?.location}
-                </Typography>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "end",
-                    marginTop: "10px",
-                  }}
-                ></div>
-              </CardContent>
-              <CardActions
-                sx={{
-                  display: "flex",
-                  justifyContent: "end",
-                  marginTop: "10px",
-                }}
-              >
-                {/* <Button variant="secondary">Close</Button> */}
-                <Button variant="primary">
-                  <a
-                    href={item.event?.link ? item.event?.link : "/events"}
-                    target="_blank"
-                    style={{
-                      color: "black",
-                      textDecoration: "none",
-                      backgroundColor: "#28104e",
-                      padding: "10px",
-                      borderRadius: "5px",
-                      color: "white",
-                    }}
-                  >
-                    view
-                  </a>
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </div>
+                  <CardMedia
+                    sx={{ height: 200, width: "100%" }}
+                    image={
+                      item.event.eventImage ? item.event.eventImage : bachelor
+                    }
+                    title={item.event.title}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {item.event.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {item.event.description}
+                    </Typography>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: "10px",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <CalendarTodayRoundedIcon
+                          sx={{ color: "#6237a0", marginRight: "5px" }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {new Date(item.event.date).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )}
+                        </Typography>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <LocationOnRoundedIcon
+                          sx={{ color: "#6237a0", marginRight: "5px" }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {item.event.location}
+                        </Typography>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small" color="primary">
+                      Learn More
+                    </Button>
+                  </CardActions>
+                </Card>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Container>
     </>
   );
 }

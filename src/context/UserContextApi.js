@@ -310,6 +310,7 @@ export function UserAuthContextProvider({ children }) {
               comments: 0,
               description: payload.description,
               likes: [],
+              tag: payload.tag,
             });
             setLoading(false); // to stop the loading
             console.log("Document written with ID: ", docRef.id);
@@ -335,6 +336,7 @@ export function UserAuthContextProvider({ children }) {
           comments: 0,
           description: payload.description,
           likes: 0,
+          tag: payload.tag,
         });
         setLoading(false); // to stop the loading
         console.log("Document written with ID: ", docRef.id);
@@ -358,6 +360,7 @@ export function UserAuthContextProvider({ children }) {
           comments: 0,
           description: payload.description,
           likes: 0,
+          tag: payload.tag,
         });
         setLoading(false); // to stop the loading
         console.log("Document written with ID: ", docRef.id);
