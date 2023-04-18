@@ -1,136 +1,96 @@
-import React from "react";
-import styled from "styled-components";
-import { useState } from "react";
-import { ThemeProvider } from "styled-components";
-import CloseIcon from "@mui/icons-material/Close";
-// import myData from "./chatbotUtilities/ChatQuery";
-import ChatBot from "react-simple-chatbot";
-import chatbotImg from "../images/chatbot.jpg";
+import { useState, useEffect } from "react";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import "./ChatBot.css";
 
-const steps = [
-  {
-    id: "1",
-    message: "Hi, I'm a chatbot. What's your name?",
-    trigger: "2",
-  },
-  {
-    id: "2",
-    user: true,
-    trigger: "3",
-  },
-  {
-    id: "3",
-    message: "Hi {previousValue}, nice to meet you!",
-    trigger: "4",
-  },
-  {
-    id: "4",
-    message: "How can I help you?",
-    trigger: "5",
-  },
-  {
-    id: "5",
-    options: [],
-  },
-];
+const ChatBot = () => {
+  const [showChatBot, setShowChatBot] = useState(false);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [userMessage, setUserMessage] = useState("");
 
-const theme = {
-  background: "white",
-  headerBgColor: "#28104e",
-  headerFontSize: "20px",
-  botBubbleColor: "#0F3789",
-  headerFontColor: "white",
-  botFontColor: "white",
-  userBubbleColor: "#FF5733",
-  userFontColor: "white",
-};
-const config = {
-  botAvatar: chatbotImg,
-  floating: true,
-};
-const myData = [config, steps, theme];
-function ChatBotIcon() {
-  const [chat, setChat] = useState(false);
-  console.log(myData.theme);
-  const clickChat = () => {
-    console.log("clicked");
-    setChat(!chat);
+  // Initialize Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDnYVLIQfDx1xF2QMwcbyKhe3i43RVrHjM",
+    authDomain: "se-team-o.firebaseapp.com",
+    projectId: "se-team-o",
+    storageBucket: "se-team-o.appspot.com",
+    messagingSenderId: "516312440546",
+    appId: "1:516312440546:web:f26aefe7dca2cc36bb88bb",
+    measurementId: "G-V0NLJWLS16",
   };
-  const onClickCloseButton = () => {
-    setChat(false);
+  const app = initializeApp(firebaseConfig);
+  const firestore = getFirestore(app);
+
+  // Retrieve data from Firestore
+  useEffect(() => {
+    const eventsCollection = collection(firestore, "events");
+
+    getDocs(eventsCollection).then((querySnapshot) => {
+      const eventsData = [];
+      querySnapshot.forEach((doc) => {
+        eventsData.push(doc.data());
+      });
+      setChatMessages((prevState) => [...prevState, ...eventsData]);
+    });
+  }, [firestore]);
+
+  // Handle user message input
+  const handleUserMessageChange = (event) => {
+    setUserMessage(event.target.value);
   };
+
+  // Handle user message submit
+  const handleUserMessageSubmit = (event) => {
+    event.preventDefault();
+    const userMessageData = {
+      text: userMessage,
+      sender: "user",
+    };
+    setChatMessages((prevState) => [...prevState, userMessageData]);
+    setUserMessage("");
+
+    // TODO: Add logic to respond to user message
+  };
+
+  // Toggle chatbot display
+  const handleChatBotToggle = () => {
+    setShowChatBot(!showChatBot);
+  };
+
   return (
-    <ChatbotMain>
-      <ThemeProvider theme={theme}>
-        <ChatBot
-          // This appears as the header
-          // text for the chat bot
-          headerTitle="chatbot"
-          steps={[
-            {
-              id: "1",
-              message: "Hi, I'm a chatbot. What's your name?",
-              trigger: "2",
-            },
-            {
-              id: "2",
-              user: true,
-              trigger: "3",
-            },
-            {
-              id: "3",
-              message: "Hi {previousValue}, nice to meet you!",
-              trigger: "4",
-            },
-            {
-              id: "4",
-              message: "How can I help you?",
-              trigger: "5",
-            },
-            {
-              id: "5",
-              options: [],
-            },
-          ]}
-          {...config}
-        />
-      </ThemeProvider>
-    </ChatbotMain>
+    <div className="chatbot-container">
+      <div
+        className={`chatbot-icon ${showChatBot ? "open" : ""}`}
+        onClick={handleChatBotToggle}
+      >
+        <span className="chatbot-icon-line"></span>
+        <span className="chatbot-icon-line"></span>
+        <span className="chatbot-icon-line"></span>
+      </div>
+      <div className={`chatbot-window ${showChatBot ? "open" : ""}`}>
+        <div className="chatbot-header">
+          <h3>Chatbot</h3>
+          <button onClick={handleChatBotToggle}>X</button>
+        </div>
+        <div className="chatbot-messages">
+          {chatMessages.map((message, index) => (
+            <div key={index} className={`chatbot-message ${message.sender}`}>
+              <p>{message.text}</p>
+            </div>
+          ))}
+        </div>
+        <form className="chatbot-form" onSubmit={handleUserMessageSubmit}>
+          <input
+            type="text"
+            value={userMessage}
+            onChange={handleUserMessageChange}
+            placeholder="Type your message..."
+          />
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </div>
   );
-}
-const ChatbotMain = styled.div`
-  text-align: center;
-  background-color: white;
-  border-radius: 30px;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  background-color: transparent;
-  z-index: 999099999999999;
+};
 
-  /* z-index: 999; */
-  img {
-    width: 50px;
-    border-radius: 50px;
-  }
-  section {
-    display: flex;
-    justify-content: flex-end;
-  }
-  .closeIcon {
-    position: relative;
-    color: rgba(40, 16, 78, 1);
-    font-size: 30px;
-    cursor: pointer;
-    background-color: white;
-    border-radius: 15px;
-    margin-bottom: 2px;
-    margin-right: 2px;
-    margin-top: 10px;
-  }
-`;
-const Chatfield = styled.div``;
-
-export default ChatBotIcon;
+export default ChatBot;
