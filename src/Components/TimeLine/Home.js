@@ -413,7 +413,10 @@ function Home(props) {
     if (activeTag === "All") {
       setFilteredArticles(articles);
     } else {
-      console.log("-------------useEffect activeTag:----------------- ", activeTag);
+      console.log(
+        "-------------useEffect activeTag:----------------- ",
+        activeTag
+      );
       getFilteredArticles(activeTag);
     }
     // console.log("-------------useEffect filtered:----------------- ", filteredArticles);
@@ -426,6 +429,31 @@ function Home(props) {
   const handleShowAllComments = () => {
     setShowAllComments(true);
   };
+  //delete comment
+ 
+const deleteComment = async (postId, commentId) => {
+    console.log("postId: ", postId, "commentId: ", commentId);
+  try {
+    await deleteDoc(doc(db, "articles", postId, "comments", commentId));
+    console.log("Document successfully deleted!");
+    
+    // update the state of comments in your React component
+    const updatedComments = comments[postId].filter(
+      (comment) => comment.id !== commentId
+    );
+    setComments((prevComments) => ({
+      ...prevComments,
+      [postId]: updatedComments,
+    }));
+  } catch (error) {
+    console.log("Error removing comment: ", error);
+  }
+};
+
+  // useEffect(() => {
+  //   // this useEffect is for the comments change
+    
+  // }, [comments]);
   return (
     <div
       style={{
@@ -759,8 +787,7 @@ function Home(props) {
             {articles.length > 0 &&
               filteredArticles?.map(({ id, article }) => {
                 const isCurrentUser =
-                  user &&
-                  (article.actor.email === user.email )
+                  user && article.actor.email === user.email;
                 return (
                   <>
                     <Article key={id}>
@@ -850,7 +877,6 @@ function Home(props) {
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                
                               }}
                             >
                               <Modal.Header closeButton>
@@ -866,89 +892,84 @@ function Home(props) {
                               </Modal.Header>
                               <Modal.Body>
                                 <div>
-                                 
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        margin: "0px 0px 0px 0px",
-                                        padding: "0px 0px 0px 0px",
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                      margin: "0px 0px 0px 0px",
+                                      padding: "0px 0px 0px 0px",
+                                    }}
+                                  >
+                                    <TextField
+                                      id="outlined-basic"
+                                      label="description"
+                                      multiline
+                                      variant="outlined"
+                                      value={getArticle.article.description}
+                                      onChange={(e) => {
+                                        setGetArticle({
+                                          ...getArticle,
+                                          article: {
+                                            ...getArticle.article,
+                                            description: e.target.value,
+                                          },
+                                        });
+                                        console.log(
+                                          "getArticle: ",
+                                          getArticle.article.description
+                                        );
                                       }}
-                                    >
-                                      <TextField
-                                        id="outlined-basic"
-                                        label="description"
-                                        multiline
-                                        variant="outlined"
-                                        value={getArticle.article.description}
-                                        onChange={(e) => {
-                                          setGetArticle({
-                                            ...getArticle,
-                                            article: {
-                                              ...getArticle.article,
-                                              description: e.target.value,
-                                            },
-                                          });
-                                          console.log(
-                                            "getArticle: ",
-                                            getArticle.article.description
-                                          );
-                                        }}
-                                        size="small"
-                                        sx={{
+                                      size="small"
+                                      sx={{
+                                        margin: "5px",
+                                        width: "90%",
+                                      }}
+                                    />
+                                    {article.sharedImg ? (
+                                      <div
+                                        style={{
+                                          width: "400px",
+                                          height: "300px",
                                           margin: "5px",
-                                          width: "90%",
+                                          borderRadius: "10px",
                                         }}
-                                      />
-                                      {article.sharedImg ? (
-                                        <div
+                                      >
+                                        <img
+                                          src={getArticle.article.sharedImg}
+                                          alt="shared"
                                           style={{
-                                            width: "400px",
-                                            height: "300px",
-                                            margin: "5px",
-                                            borderRadius: "10px",
+                                            width: "100%",
+                                            height: "100%",
+                                            objectFit: "contain",
                                           }}
-                                        >
-                                          <img
-                                            src={getArticle.article.sharedImg}
-                                            alt="shared"
-                                            style={{
-                                              width: "100%",
-                                              height: "100%",
-                                              objectFit: "contain",
-                                            }}
+                                        />
+                                      </div>
+                                    ) : (
+                                      article.video && (
+                                        <div>
+                                          <ReactPlayer
+                                            width={"100%"}
+                                            url={getArticle.article.video}
                                           />
                                         </div>
-                                      ) : (
-                                        article.video && (
-                                          <div>
-                                            <ReactPlayer
-                                              width={"100%"}
-                                              url={getArticle.article.video}
-                                            />
-                                            
-                                          </div>
-                                        )
-                                      )}
-                                    </div>
-                                    <div></div>
-                               
+                                      )
+                                    )}
+                                  </div>
+                                  <div></div>
                                 </div>
                               </Modal.Body>
                               <Modal.Footer>
                                 <Button
                                   variant="secondary"
                                   onClick={handleEditClose}
-                                 
                                 >
                                   Close
                                 </Button>
                                 <Button
                                   variant="primary"
                                   onClick={(handleEditClose, handleEditPost)}
-                                  
                                 >
                                   Save Changes
                                 </Button>
@@ -1052,6 +1073,9 @@ function Home(props) {
                           <div class="ui divider"></div>
                           {comments[id]?.map((comment, index) => {
                             if (!showAllComments && index >= 2) return null;
+                            const isCommentCreator =
+                              comment.userId === user?.id;
+                            const isPostCreator = article.userId === user?.id;
                             return (
                               <>
                                 <div
@@ -1077,15 +1101,30 @@ function Home(props) {
                                       />
                                     </i>
                                     <div className="content left float ">
-                                      <a className="header left float" style={{
-                                        color: "#6237a0",
-                                        fontWeight: "bold",
-                                      }}>
+                                      <a
+                                        className="header left float"
+                                        style={{
+                                          color: "#6237a0",
+                                          fontWeight: "bold",
+                                        }}
+                                      >
                                         {comment.username}
                                       </a>
                                       <div className="description">
                                         {comment.text}
                                       </div>
+                                      {/* {(isCommentCreator || isPostCreator) && (
+                                        <i
+                                          className="trash alternate icon"
+                                          onClick={() =>
+                                            deleteComment(id, comment)
+                                          }
+                                          style={{
+                                            color: "red",
+                                            cursor: "pointer",
+                                          }}
+                                        ></i>
+                                      )} */}
                                     </div>
                                   </div>
                                 </div>
