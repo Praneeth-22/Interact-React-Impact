@@ -36,10 +36,10 @@ export default function Input() {
     if (img) {
       const storageRef = ref(storage, `Chats/${currentUser.uid}/${uuid()}`);
 
-      const uploadTask =  uploadBytesResumable(storageRef, img);
+      const uploadTask = uploadBytesResumable(storageRef, img);
 
       // uploadTask.on(
-      
+
       //   (error) => {
       //     //TODO:Handle Error
       //   },
@@ -135,10 +135,13 @@ export default function Input() {
           // value={img}
         />
         <label htmlFor="file">
-          <img src={Img} alt="file" style={{
-            cursor: "pointer",
-            
-          }}/>
+          <img
+            src={Img}
+            alt="file"
+            style={{
+              cursor: "pointer",
+            }}
+          />
         </label>
         <button
           onClick={handleSend}
