@@ -163,74 +163,96 @@ function Event() {
               ))}
             </div>
           </div>
-          <div style={{ width: "100%" }}>
-            <h2 style={{ color: "#6237a0", fontFamily: "Roboto" }}>
-              Past Events
-            </h2>
-            {pastEvents.map((item) => (
-              <div className="myCard-style">
-                <Card
-                  sx={{
-                    maxWidth: 345,
-                    margin: "15px",
-                    minHeight: 400,
-                    maxHeight: 500,
-                  }}
-                >
-                  <CardMedia
-                    sx={{ height: 200, width: "100%" }}
-                    image={
-                      item.event.eventImage ? item.event.eventImage : bachelor
-                    }
-                    title={item.event.title}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {item.event.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {item.event.description}
-                    </Typography>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginTop: "10px",
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ width: "100%" }}>
+              <h2 style={{ color: "#6237a0", fontFamily: "Roboto" }}>
+                Past Events
+              </h2>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                }}
+              >
+                {pastEvents.map((item) => (
+                  <div className="myCard-style">
+                    <Card
+                      sx={{
+                        maxWidth: 345,
+                        margin: "15px",
+                        minHeight: 400,
+                        maxHeight: 500,
                       }}
                     >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <CalendarTodayRoundedIcon
-                          sx={{ color: "#6237a0", marginRight: "5px" }}
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                          {new Date(item.event.date).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            }
-                          )}
+                      <CardMedia
+                        sx={{ height: 200, width: "100%" }}
+                        image={
+                          item.event.eventImage
+                            ? item.event.eventImage
+                            : bachelor
+                        }
+                        title={item.event.title}
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                          {item.event.title}
                         </Typography>
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <LocationOnRoundedIcon
-                          sx={{ color: "#6237a0", marginRight: "5px" }}
-                        />
                         <Typography variant="body2" color="text.secondary">
-                          {item.event.location}
+                          {item.event.description}
                         </Typography>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary">
-                      Learn More
-                    </Button>
-                  </CardActions>
-                </Card>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginTop: "10px",
+                          }}
+                        >
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <CalendarTodayRoundedIcon
+                              sx={{ color: "#6237a0", marginRight: "5px" }}
+                            />
+                            <Typography variant="body2" color="text.secondary">
+                              {new Date(item.event.date).toLocaleDateString(
+                                "en-US",
+                                {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                }
+                              )}
+                            </Typography>
+                          </div>
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <LocationOnRoundedIcon
+                              sx={{ color: "#6237a0", marginRight: "5px" }}
+                            />
+                            <Typography variant="body2" color="text.secondary">
+                              {item.event.location}
+                            </Typography>
+                          </div>
+                        </div>
+                      </CardContent>
+                      <CardActions>
+                        <Button size="small" color="primary">
+                          Learn More
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </Container>
