@@ -5,7 +5,7 @@ import Chats from './Chats'
 function Slidebar() {
   return (
     <div className='sidebar'>
-      <Navbar/>
+      {/* <Navbar/> */}
       <Search/>
       <Chats/>
     </div>

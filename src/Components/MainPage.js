@@ -20,7 +20,7 @@ function MainPage() {
         {/* <button onClick={() => setOpenModel(true)} className="openModel">
             click
           </button> */}
-        <Header setOpenModel={setOpenModel} />
+        <Header setOpenModel={setOpenModel}/>
         <Home />
       </>
       {/* )} */}

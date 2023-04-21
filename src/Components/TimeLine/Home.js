@@ -59,6 +59,12 @@ import Divider from "@mui/material/Divider";
 import { Label } from "@material-ui/icons";
 import { filter } from "lodash";
 //
+// import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import Avatar from "@mui/material/Avatar";
+import Chip from "@mui/material/Chip";
+import LabelIcon from "@mui/icons-material/Label";
+//
 function Home(props) {
   const navigate = useNavigate();
   //
@@ -430,29 +436,29 @@ function Home(props) {
     setShowAllComments(true);
   };
   //delete comment
- 
-const deleteComment = async (postId, commentId) => {
+
+  const deleteComment = async (postId, commentId) => {
     console.log("postId: ", postId, "commentId: ", commentId);
-  try {
-    await deleteDoc(doc(db, "articles", postId, "comments", commentId));
-    console.log("Document successfully deleted!");
-    
-    // update the state of comments in your React component
-    const updatedComments = comments[postId].filter(
-      (comment) => comment.id !== commentId
-    );
-    setComments((prevComments) => ({
-      ...prevComments,
-      [postId]: updatedComments,
-    }));
-  } catch (error) {
-    console.log("Error removing comment: ", error);
-  }
-};
+    try {
+      await deleteDoc(doc(db, "articles", postId, "comments", commentId));
+      console.log("Document successfully deleted!");
+
+      // update the state of comments in your React component
+      const updatedComments = comments[postId].filter(
+        (comment) => comment.id !== commentId
+      );
+      setComments((prevComments) => ({
+        ...prevComments,
+        [postId]: updatedComments,
+      }));
+    } catch (error) {
+      console.log("Error removing comment: ", error);
+    }
+  };
 
   // useEffect(() => {
   //   // this useEffect is for the comments change
-    
+
   // }, [comments]);
   return (
     <div
@@ -978,7 +984,37 @@ const deleteComment = async (postId, commentId) => {
                           </div>
                         )}
                       </SharedActor>
-                      <Description>{article.description}</Description>
+                      <Description
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          margin: "10px 0px",
+                        }}
+                      >
+                        <div>{article.description} </div>
+
+                        {
+                          <Chip
+                            icon={
+                              <LabelIcon
+                                sx={{
+                                  // backgroundColor:"red",
+                                  color: "#6237a0 !important",
+                                }}
+                              />
+                            }
+                            label={article.tag}
+                            variant="outlined"
+                            sx={{
+                              color: "#28104E",
+                              fontWeight: 700,
+                              border: "1px solid #28104E",
+                              padding: "0px 10px ",
+                            }}
+                          />
+                        }
+                      </Description>
                       <SharedImg>
                         <a>
                           {!article.sharedImg && article.video ? (
@@ -1169,7 +1205,12 @@ const deleteComment = async (postId, commentId) => {
       <Rightbar>
         <MyEvent />
       </Rightbar>
-      <Modal show={openEvent} onHide={() => setOpenEvent(false)}>
+      <Modal
+        show={openEvent}
+        onHide={() => setOpenEvent(false)}
+        style={{}}
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title
             style={{
@@ -1194,12 +1235,9 @@ const deleteComment = async (postId, commentId) => {
               }}
               noValidate
             >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  alignItems: "baseline",
+              <Box
+                sx={{
+                  "& .MuiTextField-root": { m: 1, width: "90%" },
                 }}
               >
                 <TextField
@@ -1215,83 +1253,84 @@ const deleteComment = async (postId, commentId) => {
                   sx={{}}
                   size="small"
                 />
+              </Box>
+
+              <TextField
+                id="outlined-basic"
+                label="Event University"
+                variant="outlined"
+                onChange={(e) =>
+                  setEventInfo({
+                    ...eventInfo,
+                    university: e.target.value,
+                  })
+                }
+                size="small"
+              />
+
+              <TextField
+                id="outlined-basic"
+                label="location"
+                variant="outlined"
+                select
+                value={eventInfo.location}
+                InputProps={{
+                  startAdornment: <LocationOnIcon />,
+                }}
+                onChange={(e) =>
+                  setEventInfo({
+                    ...eventInfo,
+                    location: e.target.value,
+                  })
+                }
+                size="small"
+              >
+                {locations.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              <Box sx={{}}>
                 <TextField
                   id="outlined-basic"
-                  label="Event University"
+                  label="Time"
+                  type={"time"}
                   variant="outlined"
+                  value={eventInfo.time}
                   onChange={(e) =>
                     setEventInfo({
                       ...eventInfo,
-                      university: e.target.value,
+                      time: e.target.value,
                     })
                   }
                   size="small"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    step: 300, // 5 min
+                  }}
                 />
-
                 <TextField
                   id="outlined-basic"
-                  label="location"
+                  label="Date"
                   variant="outlined"
-                  select
-                  value={eventInfo.location}
-                  InputProps={{
-                    startAdornment: <LocationOnIcon />,
+                  type="date"
+                  size="small"
+                  value={eventInfo.date}
+                  InputLabelProps={{
+                    shrink: true,
                   }}
                   onChange={(e) =>
                     setEventInfo({
                       ...eventInfo,
-                      location: e.target.value,
+                      date: e.target.value,
                     })
                   }
-                  size="small"
-                >
-                  {locations.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-
-                <Box sx={{}}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Time"
-                    type={"time"}
-                    variant="outlined"
-                    value={eventInfo.time}
-                    onChange={(e) =>
-                      setEventInfo({
-                        ...eventInfo,
-                        time: e.target.value,
-                      })
-                    }
-                    size="small"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      step: 300, // 5 min
-                    }}
-                  />
-                  <TextField
-                    id="outlined-basic"
-                    label="Date"
-                    variant="outlined"
-                    type="date"
-                    size="small"
-                    value={eventInfo.date}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={(e) =>
-                      setEventInfo({
-                        ...eventInfo,
-                        date: e.target.value,
-                      })
-                    }
-                  />
-                </Box>
-              </div>
+                />
+              </Box>
             </Box>
             <Box
               sx={{
@@ -1335,6 +1374,9 @@ const deleteComment = async (postId, commentId) => {
                 accept="image/gif, image/jpeg, image/png"
                 name="image"
                 id="file"
+                style={{
+                  padding: "10px 10px",
+                }}
                 // style={{ display: "none" }}
                 onChange={(e) => {
                   setEventInfo({
@@ -1344,11 +1386,6 @@ const deleteComment = async (postId, commentId) => {
                   // alert("Image uploaded");
                 }}
               />
-              <p>
-                <label htmlFor="file" className="label">
-                  Select an image
-                </label>
-              </p>
             </Box>
           </Modal.Body>
           <Modal.Footer>
