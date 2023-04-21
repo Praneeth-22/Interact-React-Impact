@@ -85,11 +85,11 @@ function Header(props) {
 
   return (
     <AppBar
-      position="static"
+      position="sticky"
       style={{
         // backgroundColor: "#6237a0",
         backgroundColor: "#28104e",
-
+        
         // backgroundColor:"#deacf5",
         color: "white",
       }}

@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
-
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import Container from "@mui/material/Container";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
@@ -13,7 +13,7 @@ import { useUserAuth } from "../../context/UserContextApi";
 import bachelor from ".././TimeLine/Images/user.png";
 import { TextField, InputAdornment } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
-
+import { styled } from "@mui/material/styles";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import SortIcon from "@mui/icons-material/Sort";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
@@ -47,6 +47,15 @@ function Event() {
     setUpcommingEvents(upcoming);
     setPastEvents(past);
   }, [event]);
+  //
+  const NoMaxWidthTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))({
+    [`& .${tooltipClasses.tooltip}`]: {
+      maxWidth: "none",
+    },
+  });
+  //
   return (
     <>
       <Header />
@@ -94,6 +103,7 @@ function Event() {
                   <Card
                     sx={{
                       maxWidth: 345,
+                      minWidth: 345,
                       margin: "15px",
                       minHeight: 400,
                       maxHeight: 500,
@@ -110,9 +120,20 @@ function Event() {
                       <Typography gutterBottom variant="h5" component="div">
                         {item.event.title}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {item.event.description}
-                      </Typography>
+                      <Tooltip
+                        title={item.event.description}
+                        arrow
+                        placement="right"
+                      >
+                        <Typography variant="body2" color="text.secondary">
+                          {item.event.description?.toString().length > 100
+                            ? item.event.description
+                                .toString()
+                                .substring(0, 100) + "..."
+                            : item.event.description}
+                        </Typography>
+                      </Tooltip>
+
                       <div
                         style={{
                           display: "flex",
@@ -186,6 +207,7 @@ function Event() {
                     <Card
                       sx={{
                         maxWidth: 345,
+                        minWidth: 345,
                         margin: "15px",
                         minHeight: 400,
                         maxHeight: 500,
@@ -204,9 +226,19 @@ function Event() {
                         <Typography gutterBottom variant="h5" component="div">
                           {item.event.title}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {item.event.description}
-                        </Typography>
+                        <Tooltip
+                          title={item.event.description}
+                          arrow
+                          placement="right"
+                        >
+                          <Typography variant="body2" color="text.secondary">
+                            {item.event.description?.length > 100
+                              ? item.event.description
+                                  .toString()
+                                  .substring(0, 100) + "..."
+                              : item.event.description}
+                          </Typography>
+                        </Tooltip>
                         <div
                           style={{
                             display: "flex",

@@ -38,11 +38,11 @@ const theme = {
   background: "white",
   headerBgColor: "#28104e",
   headerFontSize: "20px",
-  botBubbleColor: "#0F3789",
+  botBubbleColor: "#28104e",
   headerFontColor: "white",
   botFontColor: "white",
-  userBubbleColor: "#FF5733",
-  userFontColor: "white",
+  userBubbleColor: "#CEB9F0",
+  userFontColor: "#28104e",
 };
 const config = {
   botAvatar: chatbotImg,

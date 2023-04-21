@@ -66,6 +66,8 @@ function MyEvent() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          // position:"sticky"
+          // position:"fixed"
         }}
       >
         <div

@@ -182,8 +182,15 @@ function Post(props) {
               </UserInfo>
               <Editor>
                 <FormControl sx={{}}>
-                  <FormLabel id="demo-row-radio-buttons-group-label">
-                    Tag
+                  <FormLabel
+                    id="demo-row-radio-buttons-group-label"
+                    sx={{
+                      color: "black",
+                      fontWeight: 600,
+                      // marginBottom: "10px",
+                    }}
+                  >
+                    Post Category
                   </FormLabel>
                   <RadioGroup
                     row
@@ -191,11 +198,20 @@ function Post(props) {
                     name="row-radio-buttons-group"
                     value={tag}
                     onChange={handleCatChange}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      flexWrap: "wrap",
+                      width: "100%",
+                      // marginRight: "10px",
+                    }}
                   >
                     <FormControlLabel
                       value="Sports"
                       control={<Radio />}
                       label="sport"
+                      // size='small'
                     />
                     <FormControlLabel
                       value="Academics"
@@ -219,6 +235,16 @@ function Post(props) {
                     />
                   </RadioGroup>
                 </FormControl>
+                <FormLabel
+                  id="demo-row-radio-buttons-group-label"
+                  sx={{
+                    color: "black",
+                    fontWeight: 600,
+                    marginBottom: "10px",
+                  }}
+                >
+                  Description
+                </FormLabel>
                 <textarea
                   placeholder="  Hi, there..."
                   value={text}
@@ -320,7 +346,7 @@ const Container = styled.div`
 const Content = styled.div`
   top: 10%;
   width: 100%;
-  max-width: 600px;
+  max-width: 650px;
   background-color: whitesmoke;
   max-height: 90%;
   overflow: initial;
