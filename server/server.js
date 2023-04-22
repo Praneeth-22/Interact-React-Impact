@@ -27,10 +27,10 @@ app.post("/sendEmail", async (req, res) => {
 
   let mailDetails = {
     from: "interactreactimpact@gmail.com",
-    to: email,
-    subject: subject,
+    to: "yennampraneeth@gmail.com",
+    subject: "New Post Uploaded",
     html: accountCreateTemplate({
-      name: "Praneeth",
+      name: subject,
     }),
   };
 

@@ -376,11 +376,12 @@ export function UserAuthContextProvider({ children }) {
     const users = querySnapshot.docs.map((doc) => doc.data());
     console.log("users:", users);
     //send email to all users
-    users.forEach((user) => {
+    const currUser = user.displayName
+    users.forEach((u) => {
       axios
         .post(`http://localhost:5000/sendEmail/`, {
-          email: user.email,
-          subject: "New Post",
+          email: u.email,
+          subject: currUser + " has posted a new article",
         })
         .then((res, req) => {
           console.log(" at client-sideemail sent");
