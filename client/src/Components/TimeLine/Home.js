@@ -1011,6 +1011,7 @@ function Home(props) {
                               fontWeight: 700,
                               border: "1px solid #28104E",
                               padding: "0px 10px ",
+                              marginLeft: "10px",
                             }}
                           />
                         }

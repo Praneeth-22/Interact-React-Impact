@@ -212,7 +212,9 @@ function MyEvent() {
           </span>
         </div>
       </Card>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} style={{
+
+      }} centered>
         <Modal.Header closeButton>
           <Modal.Title>
             {currentEvent.event?.title} {"-"} {currentEvent.event?.university}
