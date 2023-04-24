@@ -225,55 +225,55 @@ export function UserAuthContextProvider({ children }) {
       }
     });
   }
-// function googleSignIn() {
-//   // to sign in the user using google
-//   const googleAuthProvider = new GoogleAuthProvider();
-//   return signInWithPopup(auth, googleAuthProvider).then(async (user) => {
-//     const userRef = collection(db, "users");
-//     const q = query(userRef, where("email", "==", user.user.email));
-//     const querySnapshot = await getDocs(q);
-//     const currentUser = querySnapshot.docs.map((doc) => doc.data())[0];
-//     if (!currentUser) {
-//       const displayName = user.user.displayName;
-//       const useremail = user.user.email;
-//       const userAvator = user.user.photoURL;
-//       const avatarName = `${user.user.uid}-${new Date().getTime()}-avatar.jpg`;
-//       const storageRef = ref(storage, `googleSignimages/${avatarName}`);
-//       const snapshot = await uploadBytes(
-//         storageRef,
-//         // await fetch(userAvator).then((res) => res.blob())
-//         await fetch(userAvator, { mode: "cors" }).then((res) => res.blob())
-//       );
-//       const avatarUrl = await getDownloadURL(snapshot.ref);
-//       await setDoc(doc(db, "users", user.user.uid), {
-//         uid: user.user.uid,
-//         displayName: displayName,
-//         email: useremail,
-//         avatarUrl: avatarUrl,
-//       });
-//       await setDoc(doc(db, "userChats", user.user.uid), {});
+  // function googleSignIn() {
+  //   // to sign in the user using google
+  //   const googleAuthProvider = new GoogleAuthProvider();
+  //   return signInWithPopup(auth, googleAuthProvider).then(async (user) => {
+  //     const userRef = collection(db, "users");
+  //     const q = query(userRef, where("email", "==", user.user.email));
+  //     const querySnapshot = await getDocs(q);
+  //     const currentUser = querySnapshot.docs.map((doc) => doc.data())[0];
+  //     if (!currentUser) {
+  //       const displayName = user.user.displayName;
+  //       const useremail = user.user.email;
+  //       const userAvator = user.user.photoURL;
+  //       const avatarName = `${user.user.uid}-${new Date().getTime()}-avatar.jpg`;
+  //       const storageRef = ref(storage, `googleSignimages/${avatarName}`);
+  //       const snapshot = await uploadBytes(
+  //         storageRef,
+  //         // await fetch(userAvator).then((res) => res.blob())
+  //         await fetch(userAvator, { mode: "cors" }).then((res) => res.blob())
+  //       );
+  //       const avatarUrl = await getDownloadURL(snapshot.ref);
+  //       await setDoc(doc(db, "users", user.user.uid), {
+  //         uid: user.user.uid,
+  //         displayName: displayName,
+  //         email: useremail,
+  //         avatarUrl: avatarUrl,
+  //       });
+  //       await setDoc(doc(db, "userChats", user.user.uid), {});
 
-//       const preparedUser = {
-//         displayName,
-//         email: useremail,
-//         avatarUrl: avatarUrl,
-//         uid: user.user.uid,
-//       };
-//       setUser(preparedUser);
-//       localStorage.setItem("user", JSON.stringify(preparedUser));
-//     } else {
-//       const preparedUser = {
-//         displayName: currentUser.displayName,
-//         email: currentUser.email,
-//         avatarUrl: currentUser.avatarUrl,
-//         uid: currentUser.uid,
-//       };
-//       setUser(preparedUser);
-//       localStorage.setItem("user", JSON.stringify(preparedUser));
-//     }
-//   });
-// }
-  const postArticleAPI = async(payload)=> {
+  //       const preparedUser = {
+  //         displayName,
+  //         email: useremail,
+  //         avatarUrl: avatarUrl,
+  //         uid: user.user.uid,
+  //       };
+  //       setUser(preparedUser);
+  //       localStorage.setItem("user", JSON.stringify(preparedUser));
+  //     } else {
+  //       const preparedUser = {
+  //         displayName: currentUser.displayName,
+  //         email: currentUser.email,
+  //         avatarUrl: currentUser.avatarUrl,
+  //         uid: currentUser.uid,
+  //       };
+  //       setUser(preparedUser);
+  //       localStorage.setItem("user", JSON.stringify(preparedUser));
+  //     }
+  //   });
+  // }
+  const postArticleAPI = async (payload) => {
     // to post the article
     setLoading(true); // to start the loading
 
@@ -376,31 +376,40 @@ export function UserAuthContextProvider({ children }) {
     const users = querySnapshot.docs.map((doc) => doc.data());
     console.log("users:", users);
     //send email to all users
-    users.forEach((user) => {
-      axios
-        .post(`http://localhost:5000/sendEmail/`, {
-          email: user.email,
-          subject: "New Post",
-        })
-        .then((res, req) => {
-          console.log(" at client-sideemail sent");
-        })
-        .catch((err) => {
-          console.log(" at client-sideemail not sent", err);
-        });
-    });
-
+    //get user information from local storage
+    const userLocal = JSON.parse(localStorage.getItem("user"));
+    // console.log("------------------userLocal:--------------------", userLocal);
+    // const userAuth = auth.currentUser;
+    // console.log("------------------userAuth:--------------------", userAuth.displayName);
+    // const currUser = user.displayName;
+    // console.log("=========================currUser:===========================", currUser);
+    // users.forEach((u) => {
+    //   axios
+    //     .post(`http://localhost:5000/sendEmail/`, {
+    //       email: u.email,
+    //       subject: userLocal.displayName + " has uploaded a new post",
+    //       category: payload.tag,
+    //     })
+    //     .then((res, req) => {
+    //       console.log(" at client-sideemail sent");
+    //     })
+    //     .catch((err) => {
+    //       console.log(" at client-sideemail not sent", err);
+    //     });
+    // });
     // axios
-    //   .post(`http://localhost:5000/sendEmail/`,{email: payload.user.email,
-    //   subject: "New Post",
-    // })
-    //   .then((res,req)=>{
-    //     console.log(" at client-sideemail sent")
+    //   .post(`http://localhost:5000/sendEmail/`, {
+    //     email: "yennampraneeth@gmail.com",
+    //     subject: userLocal.displayName + " has posted a new article",
+    //     category: payload.tag,
     //   })
-    //   .catch((err)=>{
-    //     console.log(" at client-sideemail not sent",err)
+    //   .then((res, req) => {
+    //     console.log(" at client-sideemail sent");
+    //   })
+    //   .catch((err) => {
+    //     console.log(" at client-sideemail not sent", err);
     //   });
-  }
+  };
 
   function getArticlesAPI() {
     // to get the articles
@@ -463,35 +472,37 @@ export function UserAuthContextProvider({ children }) {
         // update user's password in Firebase Authentication
         const newPassword = "new-password"; // replace with new password
         const user = auth.currentUser;
-        if(user){
-          user.updatePassword(newPassword)
-          .then(() => {
-            console.log("user password updated successfully");
-            // update user's password in your user collection in database
-            const userId = user.uid; // get user id
-            const userRef = collection("users").doc(userId);
-            userRef
-              .update({
-                password: newPassword,
-              })
-              .then(() => {
-                console.log("user password updated in database successfully");
-              })
-              .catch((error) => {
-                console.error(
-                  "error updating user password in database",
-                  error
-                );
-              });
-          })
-          .catch((error) => {
-            console.error(
-              "error updating user password in Firebase Authentication",
-              error
-            );
-          });}else{
-            console.log("user not found");
-          }
+        if (user) {
+          user
+            .updatePassword(newPassword)
+            .then(() => {
+              console.log("user password updated successfully");
+              // update user's password in your user collection in database
+              const userId = user.uid; // get user id
+              const userRef = collection("users").doc(userId);
+              userRef
+                .update({
+                  password: newPassword,
+                })
+                .then(() => {
+                  console.log("user password updated in database successfully");
+                })
+                .catch((error) => {
+                  console.error(
+                    "error updating user password in database",
+                    error
+                  );
+                });
+            })
+            .catch((error) => {
+              console.error(
+                "error updating user password in Firebase Authentication",
+                error
+              );
+            });
+        } else {
+          console.log("user not found");
+        }
       })
       .catch((error) => {
         console.log("error in forgot password:", error);

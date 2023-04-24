@@ -64,6 +64,13 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import LabelIcon from "@mui/icons-material/Label";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 //
 function Home(props) {
   const navigate = useNavigate();
@@ -283,21 +290,29 @@ function Home(props) {
     setActiveArticleId(id);
     setIsMenuOpen(!isMenuOpen);
   };
-  //
-  const deleteArticle = async (id) => {
-    alert("Are you sure you want to delete this article?");
-    // console.log(
-    //   "--------------going to delete article id:---------------- ",
-    //   id
-    // );
+  // delete article
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [articleIdToDelete, setArticleIdToDelete] = useState(null);
+  const handleDeleteClick = (id) => {
+    setArticleIdToDelete(id);
+    setIsDeleting(true);
+  };
+
+  const handleDeleteConfirm = async () => {
     try {
-      const docRef = doc(db, "articles", id);
+      const docRef = doc(db, "articles", articleIdToDelete);
       await deleteDoc(docRef);
-      // console.log("Document successfully deleted!");
+      setIsDeleting(false);
     } catch (error) {
       console.error("Error removing document: ", error);
     }
   };
+
+  const handleDeleteCancel = () => {
+    setArticleIdToDelete(null);
+    setIsDeleting(false);
+  };
+///
   const editTest = async (id) => {
     // alert("Are you sure you want to edit this article?");
     // console.log("--------------going to edit article id:---------------- ", articleId);
@@ -869,13 +884,51 @@ function Home(props) {
                                     "------------------------delete--------------------: ",
                                     id
                                   );
-                                  deleteArticle(id);
+                                  handleDeleteClick(id);
                                   handleMenuClose();
                                 }}
                               >
                                 Delete
                               </MenuItem>
                             </Menu>
+                            <Dialog
+                              open={isDeleting}
+                              onClose={handleDeleteCancel}
+                              sx={{
+                                borderRadius: "20px",
+                              }}
+                            >
+                              <DialogTitle sx={{
+                                color: "#28104e",
+                                fontWeight: 600,
+                                letterSpacing: "1.5px",
+
+                              }}>Delete Post</DialogTitle>
+                              <DialogContent>
+                                <DialogContentText sx={{
+                                  color:"black",
+                                  fontSize: "14px",
+
+                                }}>
+                                  Are you sure you want to delete this post?
+                                </DialogContentText>
+                              </DialogContent>
+                              <DialogActions>
+                                <Button onClick={handleDeleteCancel} sx={{
+                                  color:"grey",
+                                  border: "1px solid grey",
+                                }}>
+                                  Cancel
+                                </Button>
+                                <Button onClick={handleDeleteConfirm} sx={{
+                                  color: "#28104e",
+                                  border: "1px solid #28104e",
+                                
+                                }}>
+                                  Delete
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
                             <Modal
                               show={editPost}
                               onHide={handleEditClose}
@@ -884,6 +937,7 @@ function Home(props) {
                                 alignItems: "center",
                                 justifyContent: "center",
                               }}
+                              centered
                             >
                               <Modal.Header closeButton>
                                 <Modal.Title
@@ -970,12 +1024,20 @@ function Home(props) {
                                 <Button
                                   variant="secondary"
                                   onClick={handleEditClose}
+                                  sx={{
+                                    color: "grey",
+                      
+                                  }}
                                 >
                                   Close
                                 </Button>
                                 <Button
                                   variant="primary"
                                   onClick={(handleEditClose, handleEditPost)}
+                                  sx={{
+                                    color: "#28104e",
+                           
+                                  }}
                                 >
                                   Save Changes
                                 </Button>
