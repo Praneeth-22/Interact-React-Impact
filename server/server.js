@@ -15,7 +15,7 @@ const accountCreateTemplate = handlebars.compile(accountCreateHtml);
 
 
 app.post("/sendEmail", async (req, res) => {
-  const { email, subject } = req.body;
+  const { email, subject, category } = req.body;
   //console.log(email, subject, message);
   let mailTransporter = nodemailer.createTransport({
     service: "gmail",
@@ -27,10 +27,11 @@ app.post("/sendEmail", async (req, res) => {
 
   let mailDetails = {
     from: "interactreactimpact@gmail.com",
-    to: "yennampraneeth@gmail.com",
+    to: email,
     subject: "New Post Uploaded",
     html: accountCreateTemplate({
       name: subject,
+      category: category,
     }),
   };
 
