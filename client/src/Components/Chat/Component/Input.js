@@ -12,6 +12,8 @@ import {
 import { db, storage } from "../../../firebase_service";
 import { v4 as uuid } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import axios from "axios";
+
 export default function Input() {
   const currentUser = JSON.parse(localStorage.getItem("user"));
   const [avatarUrl, setavatarUrl] = useState("");
@@ -37,30 +39,6 @@ export default function Input() {
       const storageRef = ref(storage, `Chats/${currentUser.uid}/${uuid()}`);
 
       const uploadTask = uploadBytesResumable(storageRef, img);
-
-      // uploadTask.on(
-
-      //   (error) => {
-      //     //TODO:Handle Error
-      //   },
-      //    () => {
-      //      getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-      //       await updateDoc(doc(db, "chats", data.chatId), {
-      //         messages: arrayUnion({
-      //           id: uuid(),
-      //           text,
-      //           senderId: currentUser.uid,
-      //           date: Timestamp.now(),
-      //           img: downloadURL,
-      //         }),
-      //       });
-      //     })
-      //     .catch((error) => {
-      //       // TODO: Handle download URL error
-      //       console.log("--------error in img send--------",error);
-      //     })
-      //   }
-      // );
       uploadTask
         .then((snapshot) => {
           // Upload completed successfully, get download URL
@@ -107,6 +85,17 @@ export default function Input() {
       },
       [data.chatId + ".date"]: serverTimestamp(),
     });
+      //mail notification
+      axios.post("http://localhost:5000/sendEmail", {
+        email: data.user.email,
+        subject: "New Message",
+        info: {
+          type: "chat",
+          sender: currentUser.displayName,
+          text: text,
+        },
+      })
+
     console.log("send");
     setText("");
     setImg(null);
