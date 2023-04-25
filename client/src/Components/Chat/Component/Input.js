@@ -85,6 +85,8 @@ export default function Input() {
       },
       [data.chatId + ".date"]: serverTimestamp(),
     });
+    console.log("----------------------------------------------data.use", data.user);
+    console.log("----------------------------------------------data.user.email", data.user.email);
       //mail notification
       axios.post("http://localhost:5000/sendEmail", {
         email: data.user.email,

@@ -52,6 +52,7 @@ function Profile() {
   // const [bio, setBio] = useState(user?.bio);
   const [pno, setPno] = useState(user?.contact_no);
   const [userUniversity, setUserUniversity] = useState(user?.userUniversity);
+  const [bio, setBio] = useState(user?.bio);
   // console.log("user in profile page is:", user);
   //
   const [changeImg, setChangeImg] = useState("");
@@ -130,6 +131,7 @@ function Profile() {
       location: location ? location : user.location,
       userUniversity: userUniversity ? userUniversity : user.userUniversity,
       contact_no: pno ? pno : user.contact_no,
+      bio: bio ? bio : user.bio,
     };
     console.log("---------------------------payload", payload);
     await updateDoc(userDocRef, payload);
@@ -140,19 +142,20 @@ function Profile() {
     //update the user in local storage
     const updatedUser = {
       ...user,
-      displayName: newName,
-      avatarUrl: avatarUrl,
-      password: newPassword,
-      location: location,
-      userUniversity: userUniversity,
-      contact_no: pno,
+      displayName: newName ? newName : user.displayName,
+      avatarUrl: avatarUrl ? avatarUrl : user.avatarUrl,
+      password: newPassword ? newPassword : user.password,
+      location: location ? location : user.location,
+      userUniversity: userUniversity ? userUniversity : user.userUniversity,
+      contact_no: pno ? pno : user.contact_no,
+      bio: bio ? bio : user.bio,
     };
     localStorage.setItem("user", JSON.stringify(updatedUser));
     //update the user in context
     getUsersAPI();
     toast("updated profile", {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: 1000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -160,9 +163,23 @@ function Profile() {
       progress: undefined,
       theme: "light",
     });
+    
   };
   const handleEditPictureClick = () => {
     fileInputRef.current.click();
+  };
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleInputChange = (event) => {
+    const { value } = event.target;
+    setPno(value);
+
+    const isValidPhoneNumber = /^\d{10}$/.test(value);
+    if (!isValidPhoneNumber) {
+      setErrorMessage("Phone number must be a 10-digit number");
+    } else {
+      setErrorMessage("");
+    }
   };
   return (
     <div>
@@ -269,9 +286,16 @@ function Profile() {
             label="Phone Number"
             variant="outlined"
             defaultValue={user?.contact_no}
-            onChange={(e) => setPno(e.target.value)}
+            onChange={handleInputChange}
             size="small"
           />
+          {errorMessage && <div style={{ color: "red" ,
+          fontSize:"12px",
+          fontWeight:"bold",
+          letterSpacing:"1px",
+          marginTop:"5px",
+          float:"right"
+          }}>{errorMessage}</div>}
           <TextField
             id="outlined-multiline-static"
             label="University"
@@ -280,6 +304,22 @@ function Profile() {
             onChange={(e) => setUserUniversity(e.target.value)}
             size="small"
           />
+          <Box
+            sx={{
+              "& .MuiTextField-root": { m: 1, width: "90%" },
+            }}
+          >
+            <TextField
+              id="outlined-multiline-static"
+              label="Bio"
+              variant="outlined"
+              defaultValue={user?.bio}
+              onChange={(e) => setBio(e.target.value)}
+              size="small"
+              multiline
+              row={3}
+            />
+          </Box>
         </div>
         <Box sx={{ mt: 2, float: "right" }}>
           <Button
