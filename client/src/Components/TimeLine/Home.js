@@ -19,7 +19,7 @@ import userImgUnLoad from "./Images/user.png";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import spinner from "./Images/spin.svg";
-// import demo2 from "../images/demo2.jpg";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Post from "./Post";
 import { faker } from "@faker-js/faker";
@@ -232,6 +232,32 @@ function Home(props) {
     } catch (error) {
       console.error("Error adding event: ", error);
     }
+    //send email to all users
+    const q = query(collection(db, "users"));
+    const querySnapshot = await getDocs(q);
+    const users = querySnapshot.docs.map((doc) => doc.data());
+    console.log("users:", users);
+     const userLocal = JSON.parse(localStorage.getItem("user"));
+        users.forEach((u) => {
+          axios
+            .post(`http://localhost:5000/sendEmail/`, {
+              email: u.email,
+              subject: "New Event Added",
+              info: {
+                type: "event",
+                title: preparedData.title,
+                university: preparedData.university,
+                des:userLocal.displayName + " have added an event",
+              },
+            })
+            .then((res, req) => {
+              console.log(" at client-sideemail sent");
+            })
+            .catch((err) => {
+              console.log(" at client-sideemail not sent", err);
+            });
+        });
+          
     setEventInfo({
       title: "",
       description: "",

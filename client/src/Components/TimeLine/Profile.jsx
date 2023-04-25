@@ -39,51 +39,67 @@ import _ from "lodash";
 import { GoogleMap, Autocomplete } from "@react-google-maps/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import { v4 } from "uuid";
 function Profile() {
+  const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const { getUsersAPI } = useUserAuth();
   const user = JSON.parse(localStorage.getItem("user"));
-  const [avatarUrl, setavatarUrl] = useState(user?.avatarUrl);
+  const [avatarUrl, setavatarUrl] = useState();
   const [displayName, setDisplayName] = useState(user?.displayName);
   const [location, setLocation] = useState(user?.location);
   // const [bio, setBio] = useState(user?.bio);
   const [pno, setPno] = useState(user?.contact_no);
   const [userUniversity, setUserUniversity] = useState(user?.userUniversity);
-  console.log("user in profile page is:", user);
+  // console.log("user in profile page is:", user);
   //
-  const handleProfilePictureChange = (event) => {
-    console.log("event.target.files[0]:", event.target.files[0]);
+  const [changeImg, setChangeImg] = useState("");
+  const [storeImg, setatoreImg] = useState("");
+
+  const handleProfilePictureChange = async (event) => {
     event.preventDefault();
+    console.log("event.target.files[0]:", event.target.files[0]);
     const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-      const dataUrl = event.target.result;
-      console.log("Selected file:", file);
-      console.log("File data URL:", dataUrl);
-      setChangeImg(dataUrl);
-      console.log("changeImg-------------------------------------:", changeImg);
-      setavatarUrl(dataUrl);
-      console.log("------changed avatarUrl:-------", avatarUrl);
-    };
+    console.log("file:", file);
+    setChangeImg(file.name);
+    try {
+      const storageRef = ref(
+        storage,
+        `users/${user?.uid}/profilePicture//${file.name + v4()}`
+      );
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          if (snapshot.state === "running") {
+            console.log("Upload is running");
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          console.log("File available at", downloadURL);
+          setavatarUrl(downloadURL);
+          console.log("avatarUrl", avatarUrl);
+        }
+      );
+    } catch (err) {
+      console.log("error in storageRef:", err);
+    }
   };
 
-  const handleEditPictureClick = () => {
-    fileInputRef.current.click();
-  };
-  useEffect(() => {
-    if (user) {
-      setavatarUrl(user.avatarUrl);
-      setDisplayName(user.displayName);
-      console.log("user in useeffect profile page is:", user);
-    }
-  }, [user]);
-  console.log("users in profile page is:", user);
-  //changing the profile values
+  console.log("*************** updated url", avatarUrl);
+
   const [newPassword, setNewPassword] = useState(user?.password);
   const [newName, setNewName] = useState(displayName);
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [changeImg, setChangeImg] = useState("");
+
   const [userDocId, setUserDocId] = useState("");
   const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
@@ -92,6 +108,8 @@ function Profile() {
 
   const handleNewProfileChanges = async (event) => {
     event.preventDefault();
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log("avatarUrl", avatarUrl);
     const userDoc = await getDocs(
       query(collection(db, "users"), where("email", "==", user.email))
     );
@@ -106,14 +124,14 @@ function Profile() {
     console.log("values", newName, changeImg, newPassword);
     const payload = {
       ...user,
-      displayName: newName,
-      avatarUrl: avatarUrl,
-      password: newPassword,
-      location: location,
-      userUniversity: userUniversity,
-      contact_no: pno,
+      displayName: newName ? newName : user.displayName,
+      avatarUrl: avatarUrl ? avatarUrl : user.avatarUrl,
+      password: newPassword ? newPassword : user.password,
+      location: location ? location : user.location,
+      userUniversity: userUniversity ? userUniversity : user.userUniversity,
+      contact_no: pno ? pno : user.contact_no,
     };
-    console.log("payload", payload);
+    console.log("---------------------------payload", payload);
     await updateDoc(userDocRef, payload);
     console.log(
       "after updating the profile page -------------------is:",
@@ -123,7 +141,7 @@ function Profile() {
     const updatedUser = {
       ...user,
       displayName: newName,
-      avatarUrl: changeImg,
+      avatarUrl: avatarUrl,
       password: newPassword,
       location: location,
       userUniversity: userUniversity,
@@ -143,18 +161,8 @@ function Profile() {
       theme: "light",
     });
   };
-  //  google api
-  //  const [location, setLocation] = useState("");
-  const [autocomplete, setAutocomplete] = useState(null);
-  const handlePlaceSelect = (place) => {
-    console.log(place);
-  };
-  const handleAutocompleteLoad = (autocomplete) => {
-    console.log("autocomplete:", autocomplete);
-    setAutocomplete(autocomplete);
-  };
-  const handleAutocompleteChange = () => {
-    setLocation(autocomplete.getPlace().formatted_address);
+  const handleEditPictureClick = () => {
+    fileInputRef.current.click();
   };
   return (
     <div>
@@ -186,22 +194,25 @@ function Profile() {
         <input
           type="file"
           accept="image/*"
+          name="name"
+          id="file"
           ref={fileInputRef}
+          // value={user.avatarUrl}
           style={{ display: "none" }}
           onChange={handleProfilePictureChange}
         />
-        <label htmlFor="icon-button-file">
+        <label htmlFor="file">
           <IconButton
             color="primary"
             aria-label="upload picture"
             component="span"
             sx={{ mb: 1 }}
-            onClick={handleEditPictureClick}
+            // onClick={handleEditPictureClick}
           >
             <div style={{ position: "relative" }}>
               <Avatar
                 alt="Profile Picture"
-                src={avatarUrl}
+                src={avatarUrl !== undefined ? avatarUrl : user.avatarUrl}
                 sx={{ width: 90, height: 90 }}
               />
               <div style={{ position: "absolute", bottom: 0, right: 0 }}>
@@ -245,18 +256,6 @@ function Profile() {
             defaultValue={user.email}
             size="small"
           />
-          {/* <Autocomplete
-            onLoad={handleAutocompleteLoad}
-            onPlaceChanged={handlePlaceSelect}
-            style={{
-              width: 300,
-              position: "absolute",
-              top: 0,
-              left: "50%",
-              transform: "translateX(-50%)",
-              zIndex: 100000000,
-            }}
-          > */}
           <TextField
             id="outlined-multiline-static"
             label="location"
@@ -265,8 +264,6 @@ function Profile() {
             onChange={(e) => setLocation(e.target.value)}
             size="small"
           />
-          {/* </Autocomplete> */}
-
           <TextField
             id="outlined-multiline-static"
             label="Phone Number"
