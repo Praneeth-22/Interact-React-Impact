@@ -240,7 +240,7 @@ function Home(props) {
     const userLocal = JSON.parse(localStorage.getItem("user"));
     users.forEach((u) => {
       axios
-        .post(`http://3.87.56.207:3000/sendEmail`, {
+        .post(`http://34.226.155.3:3000/sendEmail`, {
           email: u.email,
           subject: "New Event Added",
           info: {
