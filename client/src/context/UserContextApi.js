@@ -251,7 +251,7 @@ export function UserAuthContextProvider({ children }) {
     // console.log("=========================currUser:===========================", currUser);
     users.forEach((u) => {
       axios
-        .post(`http://54.162.106.90:3000/sendEmail`, {
+        .post(`http://3.87.56.207:3000/sendEmail`, {
           email: u.email,
           subject: "New Post Added",
           info: {
@@ -267,7 +267,6 @@ export function UserAuthContextProvider({ children }) {
           console.log(" at client-sideemail not sent", err);
         });
     });
-  
   };
 
   function getArticlesAPI() {
@@ -323,7 +322,7 @@ export function UserAuthContextProvider({ children }) {
   //get users
   function forgotPasswordAPI(email) {
     return sendPasswordResetEmail(auth, email, {
-      url: "http://54.162.106.90:3000/login",
+      url: "http://3.87.56.207:3000/login",
     })
       .then((res) => {
         console.log("password reset email sent");

@@ -85,18 +85,24 @@ export default function Input() {
       },
       [data.chatId + ".date"]: serverTimestamp(),
     });
-    console.log("----------------------------------------------data.use", data.user);
-    console.log("----------------------------------------------data.user.email", data.user.email);
-      //mail notification
-      axios.post("http://54.162.106.90:3000/sendEmail", {
-        email: data.user.email,
-        subject: "New Message",
-        info: {
-          type: "chat",
-          sender: currentUser.displayName,
-          text: text,
-        },
-      });
+    console.log(
+      "----------------------------------------------data.use",
+      data.user
+    );
+    console.log(
+      "----------------------------------------------data.user.email",
+      data.user.email
+    );
+    //mail notification
+    axios.post("http://3.87.56.207:3000/sendEmail", {
+      email: data.user.email,
+      subject: "New Message",
+      info: {
+        type: "chat",
+        sender: currentUser.displayName,
+        text: text,
+      },
+    });
 
     console.log("send");
     setText("");

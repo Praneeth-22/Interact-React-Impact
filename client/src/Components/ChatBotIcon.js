@@ -100,7 +100,7 @@ function ChatBotIcon() {
     console.log("eventInfo:", eventInfo);
     if (conversationHistory.length > 0) {
       axios
-        .post(`http://54.162.106.90:3000/sendEmail`, {
+        .post(`http://3.87.56.207:3000/sendEmail`, {
           email: emails,
           subject: "IRI Chatbot",
           info: {
