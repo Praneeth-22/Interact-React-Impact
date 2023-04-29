@@ -88,7 +88,7 @@ export default function Input() {
     console.log("----------------------------------------------data.use", data.user);
     console.log("----------------------------------------------data.user.email", data.user.email);
       //mail notification
-      axios.post("http://localhost:5000/sendEmail", {
+      axios.post("http://54.162.106.90:3000/sendEmail", {
         email: data.user.email,
         subject: "New Message",
         info: {
@@ -96,7 +96,7 @@ export default function Input() {
           sender: currentUser.displayName,
           text: text,
         },
-      })
+      });
 
     console.log("send");
     setText("");
