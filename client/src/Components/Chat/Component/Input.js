@@ -94,7 +94,7 @@ export default function Input() {
       data.user.email
     );
     //mail notification
-    axios.post("http://3.87.56.207:3000/sendEmail", {
+    axios.post("http://34.226.155.3:3000/sendEmail", {
       email: data.user.email,
       subject: "New Message",
       info: {
