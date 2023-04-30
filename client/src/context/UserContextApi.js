@@ -251,7 +251,7 @@ export function UserAuthContextProvider({ children }) {
     // console.log("=========================currUser:===========================", currUser);
     users.forEach((u) => {
       axios
-        .post(`http://54.89.205.132:3000/sendEmail`, {
+        .post(`https://se-team-o.web.app/sendEmail`, {
           email: u.email,
           subject: "New Post Added",
           info: {

@@ -1,0 +1,28 @@
+{
+  "name": "spring-2023-se-team-o",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "npm start --prefix api",
+    "start": "concurrently \"npm run server\" ",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Praneeth-22/Spring-2023-SE-Team-O.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Praneeth-22/Spring-2023-SE-Team-O/issues"
+  },
+  "homepage": "https://github.com/Praneeth-22/Spring-2023-SE-Team-O#readme",
+  "dependencies": {
+    "concurrently": "^8.0.1"
+  },
+  "engines": {
+    "node": "16.16.0"
+  }
+}
