@@ -20,10 +20,12 @@ import Backdrop from "@mui/material/Backdrop";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Profile from "./TimeLine/Profile";
+import { useNavigate } from "react-router-dom";
 //
 const pages = ["Home", "Events","Chat"]; // change the caterogy
 const settings = ["Profile", "Logout"];
 function Header(props) {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { setOpenModel } = props;
@@ -58,14 +60,14 @@ function Header(props) {
 
   const handleCloseNavMenu = (option) => {
     if (option === "Home") {
-      window.location.href = "/home";
+      navigate("/");
     } else if (option === "Category") {
       setOpenModel(true);
     } else if (option === "Chat") {
-      window.location.href = "/chat-home";
+     navigate("/chat-home");
     }
     else if (option === "Events") {
-      window.location.href = "/events";
+     navigate("/events");
     }
     console.log("option", option);
     setAnchorElNav(null);
