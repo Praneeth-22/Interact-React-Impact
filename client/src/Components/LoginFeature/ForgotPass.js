@@ -112,8 +112,20 @@ function ForgotPass() {
                 </button>
               </div>
             
-              <p className="forgot-password text-right">
-                Wanna login ?  <a href="/login"> Sign In</a>
+              <p className="forgot-password text-right" style={{
+                float: "right",
+              }}>
+                Wanna login ?  <span
+                    style={{
+                      color: "#28104e",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                  
+                    }}
+                    onClick={() => {
+                      navigate("/");
+                    }}
+                  >{`Login`}</span>
               </p>
             </form>
           </div>
