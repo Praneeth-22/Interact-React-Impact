@@ -60,7 +60,7 @@ function Header(props) {
 
   const handleCloseNavMenu = (option) => {
     if (option === "Home") {
-      navigate("/");
+      navigate("/home");
     } else if (option === "Category") {
       setOpenModel(true);
     } else if (option === "Chat") {
