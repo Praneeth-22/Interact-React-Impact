@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "npm start --prefix api",
     "start": "concurrently \"npm run server\" ",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install",
+    "heroku-buildpacks": "add --index 1 heroku/nodejs"
   },
   "repository": {
     "type": "git",
