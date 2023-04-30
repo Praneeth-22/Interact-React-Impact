@@ -2,7 +2,7 @@
   "name": "spring-2023-se-team-o",
   "version": "1.0.0",
   "description": "",
-    "scripts": {
+  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "npm start --prefix api",
     "start": "concurrently \"npm run server\" ",
@@ -22,6 +22,6 @@
     "concurrently": "^8.0.1"
   },
   "engines": {
-    "node": "16.16.0"
+    "node": "16.17.0"
   }
 }
