@@ -68,6 +68,7 @@ export function UserAuthContextProvider({ children }) {
             contact_no: currentUser.contact_no,
             location: currentUser.location,
             userUniversity: currentUser.userUniversity,
+            bio: currentUser.bio,
           };
           setUser(preparedUser);
           console.log("user in userContext after setUser:", user);
@@ -250,13 +251,13 @@ export function UserAuthContextProvider({ children }) {
     // console.log("=========================currUser:===========================", currUser);
     users.forEach((u) => {
       axios
-        .post(`http://localhost:5000/sendEmail/`, {
+        .post(`https://interact-react-impact.herokuapp.com/sendEmail`, {
           email: u.email,
           subject: "New Post Added",
           info: {
             type: "userPost",
             category: payload.tag,
-            des:userLocal.displayName + " has uploaded a new post",
+            des: userLocal.displayName + " has uploaded a new post",
           },
         })
         .then((res, req) => {
@@ -266,18 +267,6 @@ export function UserAuthContextProvider({ children }) {
           console.log(" at client-sideemail not sent", err);
         });
     });
-    // axios
-    //   .post(`http://localhost:5000/sendEmail/`, {
-    //     email: "yennampraneeth@gmail.com",
-    //     subject: userLocal.displayName + " has posted a new article",
-    //     category: payload.tag,
-    //   })
-    //   .then((res, req) => {
-    //     console.log(" at client-sideemail sent");
-    //   })
-    //   .catch((err) => {
-    //     console.log(" at client-sideemail not sent", err);
-    //   });
   };
 
   function getArticlesAPI() {
@@ -333,7 +322,7 @@ export function UserAuthContextProvider({ children }) {
   //get users
   function forgotPasswordAPI(email) {
     return sendPasswordResetEmail(auth, email, {
-      url: "http://localhost:3000/login",
+      url: "http://54.89.205.132:3000/login",
     })
       .then((res) => {
         console.log("password reset email sent");

@@ -85,16 +85,24 @@ export default function Input() {
       },
       [data.chatId + ".date"]: serverTimestamp(),
     });
-      //mail notification
-      axios.post("http://localhost:5000/sendEmail", {
-        email: data.user.email,
-        subject: "New Message",
-        info: {
-          type: "chat",
-          sender: currentUser.displayName,
-          text: text,
-        },
-      })
+    console.log(
+      "----------------------------------------------data.use",
+      data.user
+    );
+    console.log(
+      "----------------------------------------------data.user.email",
+      data.user.email
+    );
+    //mail notification
+    axios.post("https://interact-react-impact.herokuapp.com/sendEmail", {
+      email: data.user.email,
+      subject: "New Message",
+      info: {
+        type: "chat",
+        sender: currentUser.displayName,
+        text: text,
+      },
+    });
 
     console.log("send");
     setText("");

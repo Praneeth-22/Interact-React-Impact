@@ -100,7 +100,7 @@ function ChatBotIcon() {
     console.log("eventInfo:", eventInfo);
     if (conversationHistory.length > 0) {
       axios
-        .post(`http://localhost:5000/sendEmail/`, {
+        .post(`https://interact-react-impact.herokuapp.com/sendEmail`, {
           email: emails,
           subject: "IRI Chatbot",
           info: {
@@ -108,11 +108,11 @@ function ChatBotIcon() {
             des: eventInfo,
           },
         })
-        .then((res)=>{
+        .then((res) => {
           console.log(res);
         })
-        .catch((err)=>{
-          console.log("error",err);
+        .catch((err) => {
+          console.log("error", err);
         });
     }
   }, [conversationHistory]);

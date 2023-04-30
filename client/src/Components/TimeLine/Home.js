@@ -237,27 +237,27 @@ function Home(props) {
     const querySnapshot = await getDocs(q);
     const users = querySnapshot.docs.map((doc) => doc.data());
     console.log("users:", users);
-     const userLocal = JSON.parse(localStorage.getItem("user"));
-        users.forEach((u) => {
-          axios
-            .post(`http://localhost:5000/sendEmail/`, {
-              email: u.email,
-              subject: "New Event Added",
-              info: {
-                type: "event",
-                title: preparedData.title,
-                university: preparedData.university,
-                des:userLocal.displayName + " have added an event",
-              },
-            })
-            .then((res, req) => {
-              console.log(" at client-sideemail sent");
-            })
-            .catch((err) => {
-              console.log(" at client-sideemail not sent", err);
-            });
+    const userLocal = JSON.parse(localStorage.getItem("user"));
+    users.forEach((u) => {
+      axios
+        .post(`https://interact-react-impact.herokuapp.com/sendEmail`, {
+          email: u.email,
+          subject: "New Event Added",
+          info: {
+            type: "event",
+            title: preparedData.title,
+            university: preparedData.university,
+            des: userLocal.displayName + " have added an event",
+          },
+        })
+        .then((res, req) => {
+          console.log(" at client-sideemail sent");
+        })
+        .catch((err) => {
+          console.log(" at client-sideemail not sent", err);
         });
-          
+    });
+
     setEventInfo({
       title: "",
       description: "",
@@ -338,7 +338,7 @@ function Home(props) {
     setArticleIdToDelete(null);
     setIsDeleting(false);
   };
-///
+  ///
   const editTest = async (id) => {
     // alert("Are you sure you want to edit this article?");
     // console.log("--------------going to edit article id:---------------- ", articleId);
@@ -924,33 +924,42 @@ function Home(props) {
                                 borderRadius: "20px",
                               }}
                             >
-                              <DialogTitle sx={{
-                                color: "#28104e",
-                                fontWeight: 600,
-                                letterSpacing: "1.5px",
-
-                              }}>Delete Post</DialogTitle>
+                              <DialogTitle
+                                sx={{
+                                  color: "#28104e",
+                                  fontWeight: 600,
+                                  letterSpacing: "1.5px",
+                                }}
+                              >
+                                Delete Post
+                              </DialogTitle>
                               <DialogContent>
-                                <DialogContentText sx={{
-                                  color:"black",
-                                  fontSize: "14px",
-
-                                }}>
+                                <DialogContentText
+                                  sx={{
+                                    color: "black",
+                                    fontSize: "14px",
+                                  }}
+                                >
                                   Are you sure you want to delete this post?
                                 </DialogContentText>
                               </DialogContent>
                               <DialogActions>
-                                <Button onClick={handleDeleteCancel} sx={{
-                                  color:"grey",
-                                  border: "1px solid grey",
-                                }}>
+                                <Button
+                                  onClick={handleDeleteCancel}
+                                  sx={{
+                                    color: "grey",
+                                    border: "1px solid grey",
+                                  }}
+                                >
                                   Cancel
                                 </Button>
-                                <Button onClick={handleDeleteConfirm} sx={{
-                                  color: "#28104e",
-                                  border: "1px solid #28104e",
-                                
-                                }}>
+                                <Button
+                                  onClick={handleDeleteConfirm}
+                                  sx={{
+                                    color: "#28104e",
+                                    border: "1px solid #28104e",
+                                  }}
+                                >
                                   Delete
                                 </Button>
                               </DialogActions>
@@ -1052,7 +1061,6 @@ function Home(props) {
                                   onClick={handleEditClose}
                                   sx={{
                                     color: "grey",
-                      
                                   }}
                                 >
                                   Close
@@ -1062,7 +1070,6 @@ function Home(props) {
                                   onClick={(handleEditClose, handleEditPost)}
                                   sx={{
                                     color: "#28104e",
-                           
                                   }}
                                 >
                                   Save Changes
