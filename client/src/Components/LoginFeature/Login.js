@@ -178,7 +178,9 @@ const [isSubmitting, setIsSubmitting] = useState(false);
                     marginButtom: "0px",
                   }}
                 >
-                  Forgot password <a href="/forgot-password"> {`reset?`}</a>
+                  Forgot password <p style={{color:"blue"}}onClick={()=>{navigate(
+                                                                             "/forgot-password"
+                                                                           );}}> {`reset?`}</p>
                 </span>
                 <span
                   className="forgot-password text-right"
@@ -187,7 +189,9 @@ const [isSubmitting, setIsSubmitting] = useState(false);
                     float: "right",
                   }}
                 >
-                  Don't have an account? <a href="/sign-up"> {`signup`}</a>
+                  Don't have an account? <p style={{color:"blue"}}onClick={()=>{navigate(
+                                                                             "/sign-up"
+                                                                           )}} > {`signup`}</p>
                 </span>
               </div>
               {isSubmitting && <CircularProgress color="secondary" />}

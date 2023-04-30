@@ -12,7 +12,11 @@ import { Alert } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Add from "./img/add.png";
 import { auth, db, storage } from "../../firebase_service";
-import { getAuth, createUserWithEmailAndPassword,sendEmailVerification } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import {
   getFirestore,
   collection,
@@ -29,7 +33,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const { signUp } = useUserAuth();
   //loader
-    const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   //
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,37 +58,37 @@ const SignUp = () => {
       return;
     }
     try {
-          //  await signUp(email, password);
-          //Create user
-          const { user } = await createUserWithEmailAndPassword(
-            auth,
-            useremail,
-            userpassword
-          );
-          //Create a unique image name
-          const avatarName = `SignUp/${user.uid}-${new Date().getTime()}-${
-            userAvator.name
-          }`;
-          const storageRef = ref(storage, avatarName);
-          const snapshot = await uploadBytes(storageRef, userAvator);
-          const avatarUrl = await getDownloadURL(snapshot.ref);
-          console.log(" ---user id for creating ----", user.id);
-          await setDoc(doc(db, "users", user.uid), {
-            uid: user.uid,
-            displayName: displayName,
-            email: useremail,
-            avatarUrl: avatarUrl,
-            password: userpassword,
-          });
+      //  await signUp(email, password);
+      //Create user
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        useremail,
+        userpassword
+      );
+      //Create a unique image name
+      const avatarName = `SignUp/${user.uid}-${new Date().getTime()}-${
+        userAvator.name
+      }`;
+      const storageRef = ref(storage, avatarName);
+      const snapshot = await uploadBytes(storageRef, userAvator);
+      const avatarUrl = await getDownloadURL(snapshot.ref);
+      console.log(" ---user id for creating ----", user.id);
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        displayName: displayName,
+        email: useremail,
+        avatarUrl: avatarUrl,
+        password: userpassword,
+      });
 
-          await setDoc(doc(db, "userChats", user.uid), {});
+      await setDoc(doc(db, "userChats", user.uid), {});
 
-          //  await setDoc(doc(db, "userChats", userDocRef.id), {});
-          // Send email verification
-          await sendEmailVerification(user);
-          console.log("verification email sent");
-          navigate("/login");
-        } catch (err) {
+      //  await setDoc(doc(db, "userChats", userDocRef.id), {});
+      // Send email verification
+      await sendEmailVerification(user);
+      console.log("verification email sent");
+      navigate("/login");
+    } catch (err) {
       setError(err.message);
     }
     setIsSubmitting(false);
@@ -255,7 +259,15 @@ const SignUp = () => {
                   marginTop: "10px",
                 }}
               >
-                Already registered <a href="/">sign in?</a>
+                Already registered{" "}
+                <p
+                  style={{ color: "blue" }}
+                  onClick={() => {
+                    navigate("/");
+                  }}
+                >
+                  sign in?
+                </p>
               </p>
               {isSubmitting && <CircularProgress color="secondary" />}
             </form>
