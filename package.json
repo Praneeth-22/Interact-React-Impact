@@ -2,8 +2,7 @@
   "name": "spring-2023-se-team-o",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
+    "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "npm start --prefix api",
     "start": "concurrently \"npm run server\" ",
