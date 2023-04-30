@@ -94,7 +94,7 @@ export default function Input() {
       data.user.email
     );
     //mail notification
-    axios.post("https://se-team-o.web.app/sendEmail", {
+    axios.post("https://interact-react-impact.herokuapp.com/sendEmail", {
       email: data.user.email,
       subject: "New Message",
       info: {

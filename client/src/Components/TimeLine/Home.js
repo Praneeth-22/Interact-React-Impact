@@ -240,7 +240,7 @@ function Home(props) {
     const userLocal = JSON.parse(localStorage.getItem("user"));
     users.forEach((u) => {
       axios
-        .post(`https://se-team-o.web.app/sendEmail`, {
+        .post(`https://interact-react-impact.herokuapp.com/sendEmail`, {
           email: u.email,
           subject: "New Event Added",
           info: {
