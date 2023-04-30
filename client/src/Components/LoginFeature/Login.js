@@ -178,9 +178,21 @@ const [isSubmitting, setIsSubmitting] = useState(false);
                     marginButtom: "0px",
                   }}
                 >
-                  Forgot password <p style={{color:"blue"}}onClick={()=>{navigate(
-                                                                             "/forgot-password"
-                                                                           );}}> {`reset?`}</p>
+                  Forgot password{" "}
+                  <span
+                    style={{
+                      color: "#28104e",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                  
+                    }}
+                    onClick={() => {
+                      navigate("/forgot-password");
+                    }}
+                  >
+                    {" "}
+                    {`reset?`}
+                  </span>
                 </span>
                 <span
                   className="forgot-password text-right"
@@ -189,9 +201,21 @@ const [isSubmitting, setIsSubmitting] = useState(false);
                     float: "right",
                   }}
                 >
-                  Don't have an account? <p style={{color:"blue"}}onClick={()=>{navigate(
-                                                                             "/sign-up"
-                                                                           )}} > {`signup`}</p>
+                  Don't have an account?{" "}
+                  <span
+                    style={{
+                      color: "#28104e",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                  
+                    }}
+                    onClick={() => {
+                      navigate("/sign-up");
+                    }}
+                  >
+                    {" "}
+                    {`signup`}
+                  </span>
                 </span>
               </div>
               {isSubmitting && <CircularProgress color="secondary" />}

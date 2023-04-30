@@ -260,14 +260,14 @@ const SignUp = () => {
                 }}
               >
                 Already registered{" "}
-                <p
-                  style={{ color: "blue" }}
+                <span
+                  style={{ color: "#28104e", fontWeight: "600", cursor: "pointer",fontSize:"16px" }}
                   onClick={() => {
                     navigate("/");
                   }}
                 >
-                  sign in?
-                </p>
+                  Login?
+                </span>
               </p>
               {isSubmitting && <CircularProgress color="secondary" />}
             </form>
