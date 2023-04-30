@@ -1,60 +1,40 @@
 {
-  "name": "se-project",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@faker-js/faker": "^7.6.0",
-    "@mui/icons-material": "^5.11.0",
-    "@mui/styles": "^5.11.13",
-    "@mui/utils": "^5.11.13",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "bootstrap": "^5.2.3",
-    "firebase": "^9.17.1",
-    "lodash": "^4.17.21",
-    "react": "^18.2.0",
-    "react-bootstrap": "^2.7.2",
-    "react-chatbot-kit": "^2.1.2",
-    "react-dom": "^18.2.0",
-    "react-google-button": "^0.7.2",
-    "react-player": "^2.11.2",
-    "react-router-dom": "^6.8.1",
-    "react-scripts": "5.0.1",
-    "react-simple-chatbot": "^0.6.1",
-    "sass": "^1.58.3",
-    "scss": "^0.2.4",
-    "semantic-ui-css": "^2.5.0",
-    "semantic-ui-react": "^2.1.4",
-    "styled-components": "^4.4.1",
-    "web-vitals": "^2.1.4"
-  },
+  "name": "spring-2023-se-team-o",
+  "version": "1.0.0",
+  "description": "",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "npm start --prefix api",
+    "start": "concurrently \"npm run server\" ",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install",
+    "heroku-buildpacks": "add --index 1 heroku/nodejs"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Praneeth-22/Spring-2023-SE-Team-O.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Praneeth-22/Spring-2023-SE-Team-O/issues"
   },
-  "devDependencies": {
-    "tailwind-styled-components": "^2.2.0",
-    "tailwindcss": "^3.2.6"
+  "homepage": "https://github.com/Praneeth-22/Spring-2023-SE-Team-O#readme",
+  "dependencies": {
+    "concurrently": "^8.0.1",
+    "http-errors": "^1.8.0",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "fs": "^0.0.1-security",
+    "handlebars": "^4.7.7",
+    "heroku": "^8.1.1",
+    "morgan": "~1.9.1",
+    "nodemailer": "^6.9.1"
+  },
+  "engines": {
+    "node": "16.17.0",
+    "npm": "9.2.0"
   }
 }
