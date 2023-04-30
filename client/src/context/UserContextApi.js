@@ -251,7 +251,7 @@ export function UserAuthContextProvider({ children }) {
     // console.log("=========================currUser:===========================", currUser);
     users.forEach((u) => {
       axios
-        .post(`http://34.226.155.3:3000/sendEmail`, {
+        .post(`http://54.89.205.132:3000/sendEmail`, {
           email: u.email,
           subject: "New Post Added",
           info: {
@@ -322,7 +322,7 @@ export function UserAuthContextProvider({ children }) {
   //get users
   function forgotPasswordAPI(email) {
     return sendPasswordResetEmail(auth, email, {
-      url: "http://34.226.155.3:3000/login",
+      url: "http://54.89.205.132:3000/login",
     })
       .then((res) => {
         console.log("password reset email sent");
