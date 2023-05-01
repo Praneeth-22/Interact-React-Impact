@@ -4,10 +4,12 @@ import Input from './Input'
 import { ChatContext } from '../ChatContext';
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import _ from "lodash";
+import { useNavigate } from "react-router-dom";
 function Chat() {
+  const navigate = useNavigate();
   const {data} = React.useContext(ChatContext)
   const backHome = () => {
-    window.location.href = "/home"
+    navigate("/home");
   }
   return (
     <div className="chat">
