@@ -322,7 +322,7 @@ export function UserAuthContextProvider({ children }) {
   //get users
   function forgotPasswordAPI(email) {
     return sendPasswordResetEmail(auth, email, {
-      url: "http://54.89.205.132:3000/login",
+      url: "https://interact-react-impact.herokuapp.com/",
     })
       .then((res) => {
         console.log("password reset email sent");

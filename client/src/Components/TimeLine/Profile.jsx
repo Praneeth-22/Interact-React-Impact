@@ -41,7 +41,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
-function Profile() {
+function Profile(props) {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const { getUsersAPI } = useUserAuth();
@@ -330,7 +330,7 @@ function Profile() {
               // color: "#28104E",
               // borderColor: "#28104E",
             }}
-            onClick={() => (window.location.href = "/home")}
+            onClick={props.onClose}
           >
             Close
           </Button>

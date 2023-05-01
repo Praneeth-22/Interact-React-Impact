@@ -38,6 +38,8 @@ function Header(props) {
   const handleOpenModel = () => setModelOpen(true);
   const handleCloseModel = () => setModelOpen(false);
   // const [user, setUser] = useState()
+  const [profileOpen, setProfileOpen] = useState(false);
+
   const user = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     console.log("user in header:", user);
@@ -75,11 +77,12 @@ function Header(props) {
 
   const handleCloseUserMenu = (setting) => {
     if (setting === "Profile") {
-      handleOpenModel();
+      // handleOpenModel();
+      setProfileOpen(!profileOpen);
       // window.location.href = "/profile";
     } else if (setting === "Logout") {
       logOut(); // to logout the user
-      window.location.href = "/";
+      navigate("/");
     } else if (setting === "Edit Profile") {
     }
     setAnchorElUser(null);
@@ -91,7 +94,7 @@ function Header(props) {
       style={{
         // backgroundColor: "#6237a0",
         backgroundColor: "#28104e",
-        
+
         // backgroundColor:"#deacf5",
         color: "white",
       }}
@@ -232,7 +235,7 @@ function Header(props) {
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
-          open={modelOpen}
+          open={profileOpen}
           onClose={handleCloseModel}
           closeAfterTransition
           slots={{ backdrop: Backdrop }}
@@ -242,7 +245,7 @@ function Header(props) {
             },
           }}
         >
-          <Fade in={modelOpen}>
+          <Fade in={profileOpen}>
             <Box
               sx={{
                 position: "absolute",
@@ -256,7 +259,7 @@ function Header(props) {
                 p: 4,
               }}
             >
-              <Profile />
+              <Profile onClose={() => setProfileOpen(false)} />
             </Box>
           </Fade>
         </Modal>
