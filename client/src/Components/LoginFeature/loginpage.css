@@ -11,8 +11,10 @@ span {
 }
 .loginpage,
 .signup {
-  display: grid;
-  place-items: center;
+  /* display: grid;
+  place-items: center; */
+  display: flex;
+  flex-direction: column;
   width: 100vw;
   height: 100vh;
   background-color: #f8f8f8;
@@ -105,4 +107,19 @@ span {
 }
 .my-nav-item {
   color: black;
+}
+@media (max-width : 990px){
+  #NavEle .navbar-nav {
+    display: flex;
+    flex-direction: row;
+  
+  }
+  .nav-item{
+    margin-right: 10px;
+
+  }
+  .bgImg{
+    display: none;
+
+  }
 }

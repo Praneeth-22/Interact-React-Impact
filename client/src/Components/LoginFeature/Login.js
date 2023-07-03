@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Alert, stepClasses } from "@mui/material";
 import GoogleButton from "react-google-button";
 import CircularProgress from "@mui/material/CircularProgress";
+
 const Login = () => {
   /*const navigate = useNavigate();*/
   let navigate = useNavigate();
@@ -53,11 +54,14 @@ const [isSubmitting, setIsSubmitting] = useState(false);
               class="img-circle"
               width="40"
               height="40"
+              style={{
+                borderRadius: "50%",
+              }}
               alt="pic"
             />
           </Link>
-          <div id="navbarTogglerDemo02">
-            <ul className="navbar-nav ml-auto">
+          <div id="NavEle">
+            <ul className="navbar-nav ">
               <li className="nav-item">
                 <Link
                   className="nav-link my-nav-item active"
@@ -146,21 +150,6 @@ const [isSubmitting, setIsSubmitting] = useState(false);
                   Sign In
                 </button>
               </div>
-              {/* <div className="d-grid mt-2">
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  onClick={handleGoogleSignIn}
-                  style={{
-                    color: "#28104e",
-                    backgroundColor: "#f5f5f5",
-                    border: "1px solid #28104e",
-                  }}
-                >
-                  <a>Sign In via Google</a>&nbsp;&nbsp;
-                  <img src={google} alt="click" />
-                </button>
-              </div> */}
               <div
                 style={{
                   display: "flex",
@@ -184,7 +173,6 @@ const [isSubmitting, setIsSubmitting] = useState(false);
                       color: "#28104e",
                       fontWeight: "600",
                       cursor: "pointer",
-                  
                     }}
                     onClick={() => {
                       navigate("/forgot-password");
@@ -207,7 +195,6 @@ const [isSubmitting, setIsSubmitting] = useState(false);
                       color: "#28104e",
                       fontWeight: "600",
                       cursor: "pointer",
-                  
                     }}
                     onClick={() => {
                       navigate("/sign-up");
@@ -220,9 +207,9 @@ const [isSubmitting, setIsSubmitting] = useState(false);
               </div>
               {isSubmitting && <CircularProgress color="secondary" />}
             </form>
+            <ChatBotIcon />
           </div>
         </div>
-        <ChatBotIcon />
       </div>
     </div>
   );

@@ -104,9 +104,12 @@ const SignUp = () => {
               width="40"
               height="40"
               alt="pic"
+              style={{
+                borderRadius: "50%",
+              }}
             />
           </Link>
-          <div id="navbarTogglerDemo02">
+          <div id="NavEle">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Link
